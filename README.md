@@ -1,2 +1,4 @@
-# Biseo SSO Front
-Test Front app for Biseo SSO
+# Biseo Front
+Sparcs Biseo Project
+On progress.
+Please Wait.
