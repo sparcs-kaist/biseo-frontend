@@ -1,15 +1,11 @@
 import React, { useEffect } from 'react';
 import { Switch, useRouteMatch } from 'react-router-dom';
+import axios from '../utils/axios'
 
-
-const LoginRedirect = () => {// 32807
-  // http://kong.sparcs.org:8030/login
+const LoginRedirect = () => {
   useEffect(() => {
-    fetch('http://kong.sparcs.org:32807/api/login', { method: 'POST', credentials: 'include' })
-    // fetch('http://kong.sparcs.org:8030/login', { method: 'POST', credentials: 'include'})
-      .then(data => data.json())
-      .then(({ url }) => {
-        console.log(url)
+    axios.post('/login')
+      .then(({ data: { url } }) => {
         window.location.href = url
       })
   }, [])
