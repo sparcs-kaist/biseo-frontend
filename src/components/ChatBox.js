@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Chatbox.css'
+import './ChatBox.css'
 
-function Chatbox(props) {
+function ChatBox(props) {
   // chatting_height = "50%" // 채팅방 크기 (전체 html 태그 기준 * 70% * 현재 퍼센트가 채팅방 높이가 됨)
   const chattings = useRef(null)
   const [prev_time] = useState([0,0,0,0,0,0])
@@ -148,4 +148,4 @@ function Chatbox(props) {
 
 }
 
-export default Chatbox
+export default ChatBox

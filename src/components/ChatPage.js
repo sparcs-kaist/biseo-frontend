@@ -1,6 +1,6 @@
 import React from 'react'
 import socketio from 'socket.io-client'
-import Chatbox from './Chatbox'
+import ChatBox from './ChatBox'
 import './ChatPage.css'
 
 const ChatPage = () => {
@@ -12,7 +12,7 @@ const ChatPage = () => {
         <h1>Chatting room</h1>
         <h2 id="username"></h2>
       </div>
-      <Chatbox socket={socket}></Chatbox>
+      <ChatBox socket={socket} />
     </div>
   )
 }
