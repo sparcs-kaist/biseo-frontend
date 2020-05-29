@@ -1,42 +1,8 @@
-ol, ul {
-    list-style: none;
-}
-
-.content{
-    display: flex;
-    width: 100%;
-    height: 70%;
-}
-
-.aside{
-    width: 10%;
-}
-
-.display{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
-    height: 100%;
-}
-
-ul.chatting{
-    padding: 0;
-    border: 2px solid black;
-    width: 70%;
-    height: 40%;
+div.chatbox {
+    border: 1px solid #a6a6a6;
+    padding: 20px;
+    height: 600px;
     overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
 }
-
-li.recieved{
-    text-align: left;
-}
-
-li.mine{
-    text-align: right;
-}
-
-li.enter{
-    text-align: center;
-}
-
