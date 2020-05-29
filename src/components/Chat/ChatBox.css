@@ -1,0 +1,8 @@
+div.chatbox {
+    border: 1px solid #a6a6a6;
+    padding: 20px;
+    height: 600px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+}

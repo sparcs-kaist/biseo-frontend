@@ -1,14 +1,21 @@
 import axios from 'axios'
 
-const jwtHeader = () => {
-  const token = localStorage.getItem('sparcssso-token')
-  return token ? `Bearer ${token}` : ''
-}
-
-export default axios.create({
-  baseURL: 'http://kong.sparcs.org:8030',
-  headers: {
-    'X-Access-Token': jwtHeader()
-  },
+const instance = axios.create({
+  // baseURL: 'http://kong.sparcs.org:8030',
+  baseURL: 'http://kong.sparcs.org:32813/api',
   withCredentials: true
 })
+
+instance.interceptors.request.use(config => {
+  const token = localStorage.getItem('biseo-jwt')
+
+  if (token)
+    config.headers = {
+      'X-Access-Token': `Bearer ${token}`
+    }
+
+  return config
+})
+
+export default instance
+
