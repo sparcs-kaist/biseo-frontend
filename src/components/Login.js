@@ -13,12 +13,15 @@ const Login = () => {
       })
   }, [])
 
-
   if (loggedIn)
     return <Redirect to='/dashboard'/>
 
   return (
-    <div id='login'>
+    <div id='biseo-login'>
+      <div>
+        <h1>스비서</h1>
+        <h4>Login to Enter</h4>
+      </div>
       <a href='/login/redirect'>LOGIN</a>
     </div>
   )
