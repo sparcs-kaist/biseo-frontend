@@ -6,7 +6,7 @@ const AuthedRoute = ({ children, ...rest }) => {
   const [authed, setAuthed] = useState(null)
 
   useEffect(() => {
-    axios.get('/auth')
+    axios.get('/auth/check')
       .then(({ data }) => {
         setAuthed(data.success)
       })

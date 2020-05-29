@@ -11,7 +11,7 @@ const LoginCallback = () => {
   const [valid, setValid] = useState(null)
 
   useEffect(() => {
-    axios.get(`/account/login/callback?code=${code}&state=${state}`)
+    axios.get(`/login/callback?code=${code}&state=${state}`)
       .then(({ data }) => {
         if (data.token) {
           saveToken(data.token)

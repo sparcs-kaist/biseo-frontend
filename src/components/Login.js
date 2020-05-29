@@ -7,7 +7,7 @@ const Login = () => {
   const [loggedIn, setLoggedIn] = useState(null)
 
   useEffect(() => {
-    axios.get('/auth')
+    axios.get('/auth/check')
       .then(({ data }) => {
         setLoggedIn(data.success)
       })
