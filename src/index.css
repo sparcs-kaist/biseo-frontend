@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'NanumGothic';
+    src: url('./fonts/NanumGothic.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic';
+    src: url('./fonts/NanumGothicBold.ttf');
+    font-weight: bold;
+}
+
+body {
+    font-family: NanumGothic;
+    background-color: rgb(247, 246, 243);
+}
