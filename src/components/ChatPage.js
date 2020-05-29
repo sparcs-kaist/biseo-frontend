@@ -1,10 +1,11 @@
 import React from 'react'
 import socketio from 'socket.io-client'
 import ChatBox from './ChatBox'
+import { getToken } from '../utils/auth'
 import './ChatPage.css'
 
 const ChatPage = () => {
-  const socket = socketio.connect('aria.sparcs.org:32888')
+  const socket = socketio.connect('kong.sparcs.org:32811', { query: `token=${getToken()}`})
 
   return (
     <div className="App">
