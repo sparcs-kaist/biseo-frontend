@@ -14,6 +14,7 @@ const Dashboard = () => {
     <div>
       <h1>Hello, Dashboard</h1>
       <button onClick={handleLogout}>Logout</button>
+      <button onClick={() => { history.push('/chat') }}>Chat</button>
     </div>
   )
 }
