@@ -9,7 +9,7 @@ import LoginRedirect from './LoginRedirect'
 import LoginCallback from './LoginCallback'
 import AuthedRoute from './Authed'
 import Dashboard from './Dashboard'
-import ChatPage from './ChatPage'
+import ChatPage from './Chat'
 
 const App = () => {
   return (

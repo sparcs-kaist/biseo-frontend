@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import ChatBox from './ChatBox'
 import socketio from 'socket.io-client'
-import { getToken } from '../utils/auth'
+import { getToken } from '../../utils/auth'
 
 const MessageTypes = {
   NEW: 'new',
