@@ -38,7 +38,7 @@ const ChatPage = () => {
       setChatlog(chatlog => [{
         type: MessageTypes.MESSAGE,
         payload: message,
-        ...(user === name && { issuer: user })
+        ...(user !== name && { issuer: user })
       }, ...chatlog])
     })
 
