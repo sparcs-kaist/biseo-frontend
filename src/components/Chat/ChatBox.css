@@ -17,21 +17,23 @@
 
 #biseo-chatbox .message {
     display: flex;
-    margin-top: 50px;
     position: relative;
 }
 
 #biseo-chatbox .message.start {
     justify-content: flex-start;
+    margin-top: 50px;
 }
 
 #biseo-chatbox .message.end {
     justify-content: flex-end;
+    margin-top: 50px;
 }
 
 #biseo-chatbox .message.around {
     justify-content: space-around;
     font-weight: bold;
+    margin-top: 20px;
 }
 
 #biseo-chatbox .message > div {
