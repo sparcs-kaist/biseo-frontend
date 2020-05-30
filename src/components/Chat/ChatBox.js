@@ -9,34 +9,47 @@ const MessageTypes = {
 }
 
 const Message = ({ message }) => {
-  const justification = message.type === MessageTypes.MESSAGE ?
-    ('issuer' in message ? 'flex-start' : 'flex-end') :
-    (message.type === MessageTypes.NEW || message.type === MessageTypes.OUT ? 'space-around' : '')
+  const user = message.type === MessageTypes.MESSAGE ?  message.issuer || 'Me' : ''
 
   const getContent = () => {
     switch (message.type) {
       case MessageTypes.MESSAGE:
-        if ('issuer' in message)
-          return `${message.issuer}: ${message.payload}`
-        else
-          return `Me: ${message.payload}`
+        return message.payload
       case MessageTypes.NEW:
         return `${message.payload} has entered`
       case MessageTypes.OUT:
         return `${message.payload} has left`
     }
   }
+
+  const getJustification = () => {
+    switch (message.type) {
+      case MessageTypes.MESSAGE:
+        return 'issuer' in message ? 'start' : 'end'
+      case MessageTypes.NEW:
+      case MessageTypes.OUT:
+        return 'around'
+      default:
+        return ''
+    }
+  }
+
   return (
-    <div style={{ display: 'flex', justifyContent: justification}}>
-      {getContent()}
+    <div className={`message ${getJustification()}`} >
+      {user && <span>{user}</span>}
+      <div>
+        {getContent()}
+      </div>
     </div>
   )
 }
 
 const ChatBox = ({ chatlog }) => {
   return (
-    <div className="chatbox">
-      {chatlog.map((chat, idx) => <Message key={idx} message={chat} />)}
+    <div id='biseo-chatbox'>
+      <div id='biseo-chatbox-scrollable'>
+        {chatlog.map((chat, idx) => <Message key={idx} message={chat} />)}
+      </div>
     </div>
   )
 }
