@@ -35,6 +35,14 @@ const ChatPage = () => {
 
     socket.on('members', members => setMembers(members))
 
+    socket.on('out', username => {
+      setChatlog(chatlog => [{ type: MessageTypes.OUT, payload: username }, ...chatlog])
+      setMembers(members => members.filter(member => member !== username))
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.off('chat message')
     socket.on('chat message', (user, message) => {
       setChatlog(chatlog => [{
         type: MessageTypes.MESSAGE,
@@ -42,12 +50,7 @@ const ChatPage = () => {
         ...(user !== name && { issuer: user })
       }, ...chatlog])
     })
-
-    socket.on('out', username => {
-      setChatlog(chatlog => [{ type: MessageTypes.OUT, payload: username }, ...chatlog])
-      setMembers(members => members.filter(member => member !== username))
-    })
-  }, [])
+  }, [name])
 
   const handleMessageChange = e => { setMessage(e.target.value) }
 
