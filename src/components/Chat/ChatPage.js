@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import ChatBox from './ChatBox'
 import socketio from 'socket.io-client'
 import { getToken } from '../../utils/auth'
+import './ChatPage.css'
 
 const MessageTypes = {
   NEW: 'new',
@@ -63,14 +64,16 @@ const ChatPage = () => {
   return (
     <>
       <h3>Hello, {name}</h3>
-      <div style={{ display: 'flex' }}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        {members.map(member => <div key={member}>{member}</div>)}
+      <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {members.map(member => <div key={member}>{member}</div>)}
         </div>
-        <div style={{ flexGrow: 10 }}>
+        <div id='biseo-chat'>
           <ChatBox chatlog={chatlog} />
-          <input type="text" value={message} onChange={handleMessageChange} onKeyPress={handleMessageKeypress}/>
-          <button onClick={sendMessage}>Send</button>
+          <div id='biseo-chatbox-input'>
+            <input type="text" value={message} onChange={handleMessageChange} onKeyPress={handleMessageKeypress}/>
+            <button onClick={sendMessage}>SEND</button>
+          </div>
         </div>
       </div>
     </>
