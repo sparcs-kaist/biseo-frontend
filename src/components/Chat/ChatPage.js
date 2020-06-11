@@ -43,23 +43,33 @@ const ChatPage = () => {
 
   useEffect(() => {
     socket.off('chat message')
-    socket.on('chat message', (user, message) => {
+    socket.on('chat message', (user, msgObject) => {
       setChatlog(chatlog => [{
         type: MessageTypes.MESSAGE,
-        payload: message,
+        payload: msgObject.message,
+        date: msgObject.date,
         ...(user !== name && { issuer: user })
       }, ...chatlog])
     })
   }, [name])
 
+  const currentTime = () => {
+    const offset = (new Date()).getTimezoneOffset() * 60000
+    return new Date(Date.now() - offset).toISOString()
+  }
+
   const handleMessageChange = e => { setMessage(e.target.value) }
 
   const sendMessage = () => {
     if (message.trim() === '') return;
-
+    const msgObject = { message, date: currentTime() }
     setMessage('')
-    socket.emit('chat message', message)
-    setChatlog([{ type: MessageTypes.MESSAGE, payload: message }, ...chatlog])
+    socket.emit('chat message', msgObject)
+    setChatlog([{
+      type: MessageTypes.MESSAGE,
+      payload: msgObject.message,
+      date: msgObject.date
+    }, ...chatlog])
   }
 
   const handleMessageKeypress = e => { if (e.key === 'Enter') sendMessage() }
