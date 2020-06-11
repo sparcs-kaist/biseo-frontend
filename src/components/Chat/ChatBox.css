@@ -1,8 +1,52 @@
-div.chatbox {
-    border: 1px solid #a6a6a6;
-    padding: 20px;
+#biseo-chatbox {
     height: 600px;
+    width: 100%;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+
+#biseo-chatbox-scrollable {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 20px 40px;
     overflow: auto;
     display: flex;
     flex-direction: column-reverse;
+}
+
+#biseo-chatbox .message {
+    display: flex;
+    position: relative;
+}
+
+#biseo-chatbox .message.start {
+    justify-content: flex-start;
+    margin-top: 50px;
+}
+
+#biseo-chatbox .message.end {
+    justify-content: flex-end;
+    margin-top: 50px;
+}
+
+#biseo-chatbox .message.around {
+    justify-content: space-around;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+#biseo-chatbox .message > div {
+    background-color: #F7F6F3;
+    box-sizing: border-box;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+#biseo-chatbox .message > span {
+    position: absolute;
+    font-size: 15px;
+    font-weight: bold;
+    bottom: 120%;
 }
