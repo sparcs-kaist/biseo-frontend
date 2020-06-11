@@ -42,6 +42,7 @@
     padding: 10px 15px;
     border-radius: 10px;
     font-size: 18px;
+    position: relative;
 }
 
 #biseo-chatbox .message > span {
@@ -49,4 +50,26 @@
     font-size: 15px;
     font-weight: bold;
     bottom: 120%;
+}
+
+#biseo-chatbox .message > div > div {
+    position: absolute;
+    display: flex;
+    bottom: 5%;
+    flex-direction: column;
+}
+
+#biseo-chatbox .message.end > div > div {
+    right: 110%;
+    align-items: flex-end;
+}
+
+#biseo-chatbox .message.start > div > div {
+    left: 110%;
+    align-items: flex-start;
+}
+
+#biseo-chatbox .message > div > div > span {
+    font-size: 0.6rem;
+    white-space: nowrap;
 }

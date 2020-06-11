@@ -9,7 +9,12 @@ const MessageTypes = {
 }
 
 const Message = ({ message }) => {
-  const user = message.type === MessageTypes.MESSAGE ?  message.issuer || 'Me' : ''
+  const parseDate = date => {
+    const splitted = date.split('T')
+    const day = splitted[0]
+    const time = (splitted[1].split(":").slice(0, 2)).join(':')
+    return { day, time }
+  }
 
   const getContent = () => {
     switch (message.type) {
@@ -34,11 +39,21 @@ const Message = ({ message }) => {
     }
   }
 
+  const user = message.type === MessageTypes.MESSAGE ?  message.issuer || 'Me' : ''
+  const date = message.type === MessageTypes.MESSAGE ? parseDate(message.date) : null
+
   return (
     <div className={`message ${getJustification()}`} >
       {user && <span>{user}</span>}
       <div>
         {getContent()}
+        {
+          date &&
+          <div>
+            <span>{date.day}</span>
+            <span>{date.time}</span>
+          </div>
+        }
       </div>
     </div>
   )
