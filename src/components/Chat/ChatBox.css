@@ -42,7 +42,9 @@
     padding: 10px 15px;
     border-radius: 10px;
     font-size: 18px;
+    max-width: 500px;
     position: relative;
+    word-break: break-word;
 }
 
 #biseo-chatbox .message > span {
