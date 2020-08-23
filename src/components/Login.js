@@ -19,7 +19,7 @@ const Login = () => {
   return (
     <div id='biseo-login'>
       <div>
-        <h1>스비서</h1>
+        <h1>BISEO</h1>
         <h4>Login To Enter</h4>
       </div>
       <a href='/login/redirect'>LOGIN</a>

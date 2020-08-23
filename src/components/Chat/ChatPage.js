@@ -78,7 +78,7 @@ const ChatPage = () => {
     <>
       <h3>Hello, {name}</h3>
       <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', overflow: 'auto', marginRight: '30px' }}>
           {members.map(member => <div key={member}>{member}</div>)}
         </div>
         <div id='biseo-chat'>
