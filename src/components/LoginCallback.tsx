@@ -4,7 +4,7 @@ import querystring from 'querystring'
 import axios from '../utils/axios'
 import { saveToken } from '../utils/auth'
 
-const LoginCallback = () => {
+const LoginCallback: React.FC = () => {
   const location = useLocation()
   const query = location.search
   const { code, state } = querystring.parse(query[0] === '?' ? query.slice(1) : query)

@@ -1,40 +1,51 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const crypto = require('crypto')
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const crypto = require("crypto");
 
 module.exports = {
-  entry: './src/index.js',
+  entry: "./src/index.tsx",
   output: {
-    path: path.join(__dirname, '/dist'),
-    filename: `bundle.${crypto.createHash('sha1').update(Math.random().toString()).digest('hex')}.js`,
-    publicPath: '/'
+    path: path.join(__dirname, "/dist"),
+    filename: `bundle.${crypto
+      .createHash("sha1")
+      .update(Math.random().toString())
+      .digest("hex")}.js`,
+    publicPath: "/",
+  },
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: "babel-loader",
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: 'file-loader'
-      }
-    ]
+        use: "file-loader",
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html'
-    })
+      template: "./src/index.html",
+    }),
+    new CleanWebpackPlugin(),
   ],
   devServer: {
     port: 3000,
-    host: '0.0.0.0',
-    public: 'kong.sparcs.org:7300',
-    historyApiFallback: true
-  }
-}
+    host: "0.0.0.0",
+    public: "kong.sparcs.org:7300",
+    historyApiFallback: true,
+  },
+};

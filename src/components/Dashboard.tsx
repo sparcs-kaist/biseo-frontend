@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { logout } from '../utils/auth'
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const history = useHistory()
 
   const handleLogout = () => {

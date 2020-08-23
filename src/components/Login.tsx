@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import './Login.css'
 import axios from '../utils/axios'
 
-const Login = () => {
+const Login: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(null)
 
   useEffect(() => {

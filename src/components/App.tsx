@@ -11,7 +11,7 @@ import AuthedRoute from './Authed'
 import Dashboard from './Dashboard'
 import ChatPage from './Chat'
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <Router>
       <Switch>
