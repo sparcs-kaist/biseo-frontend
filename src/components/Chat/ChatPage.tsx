@@ -1,89 +1,126 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { ChatBox, MessageType, MessageEnum } from './ChatBox'
-import socketio from 'socket.io-client'
-import { getToken } from '../../utils/auth'
-import './ChatPage.css'
+import React, { useState, useEffect, useMemo } from 'react';
+import { ChatBox, MessageType, MessageEnum } from './ChatBox';
+import socketio from 'socket.io-client';
+import { getToken } from '../../utils/auth';
+import './ChatPage.css';
 
 const ChatPage: React.FC = () => {
-  const socket = useMemo(() => socketio.connect(
-    'kong.sparcs.org:32811',
-    {
-      transports: ['websocket'],
-      upgrade: false,
-      query: `token=${getToken()}`
-    }
-  ), [])
-  const [name, setName] = useState('')
-  const [chatlog, setChatlog] = useState<MessageType[]>([]) // elements of chatlog have two required fields: type, payload
-  const [members, setMembers] = useState([])
-  const [message, setMessage] = useState('')
+  const socket = useMemo(
+    () =>
+      socketio.connect('kong.sparcs.org:32811', {
+        transports: ['websocket'],
+        upgrade: false,
+        query: `token=${getToken()}`
+      }),
+    []
+  );
+  const [name, setName] = useState('');
+  const [chatlog, setChatlog] = useState<MessageType[]>([]); // elements of chatlog have two required fields: type, payload
+  const [members, setMembers] = useState<string[]>([]);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
-    socket.on('name', username => setName(username))
+    socket.on('name', (username: string) => setName(username));
 
-    socket.on('enter', username => {
-      setChatlog(chatlog => [{ type: MessageEnum.NEW, payload: username }, ...chatlog])
-      setMembers(members => [...members, username])
-    })
+    socket.on('enter', (username: string) => {
+      setChatlog(chatlog => [
+        { type: MessageEnum.NEW, payload: username },
+        ...chatlog
+      ]);
+      setMembers(members => [...members, username]);
+    });
 
-    socket.on('members', members => setMembers(members))
+    socket.on('members', (members: string[]) => setMembers(members));
 
-    socket.on('out', username => {
-      setChatlog(chatlog => [{ type: MessageEnum.OUT, payload: username }, ...chatlog])
-      setMembers(members => members.filter(member => member !== username))
-    })
-  }, [])
+    socket.on('out', (username: string) => {
+      setChatlog(chatlog => [
+        { type: MessageEnum.OUT, payload: username },
+        ...chatlog
+      ]);
+      setMembers(members => members.filter(member => member !== username));
+    });
+  }, []);
 
   useEffect(() => {
-    socket.off('chat message')
-    socket.on('chat message', (user, msgObject) => {
-      setChatlog(chatlog => [{
-        type: MessageEnum.MESSAGE,
-        payload: msgObject.message,
-        date: msgObject.date,
-        ...(user !== name && { issuer: user })
-      }, ...chatlog])
-    })
-  }, [name])
+    socket.off('chat message');
+    socket.on(
+      'chat message',
+      (
+        user: string,
+        msg: { type: MessageEnum; message: string; date: string }
+      ) => {
+        setChatlog(chatlog => [
+          {
+            type: MessageEnum.MESSAGE,
+            payload: msg.message,
+            date: msg.date,
+            ...(user !== name && { issuer: user })
+          },
+          ...chatlog
+        ]);
+      }
+    );
+  }, [name]);
 
   const currentTime = () => {
-    const offset = (new Date()).getTimezoneOffset() * 60000
-    return new Date(Date.now() - offset).toISOString()
-  }
+    const offset = new Date().getTimezoneOffset() * 60000;
+    return new Date(Date.now() - offset).toISOString();
+  };
 
-  const handleMessageChange = e => { setMessage(e.target.value) }
+  const handleMessageChange = e => {
+    setMessage(e.target.value);
+  };
 
   const sendMessage = () => {
     if (message.trim() === '') return;
-    const msgObject = { message, date: currentTime() }
-    setMessage('')
-    socket.emit('chat message', msgObject)
-    setChatlog([{
-      type: MessageEnum.MESSAGE,
-      payload: msgObject.message,
-      date: msgObject.date
-    }, ...chatlog])
-  }
+    const msgObject = { message, date: currentTime() };
+    setMessage('');
+    socket.emit('chat message', msgObject);
+    setChatlog([
+      {
+        type: MessageEnum.MESSAGE,
+        payload: msgObject.message,
+        date: msgObject.date
+      },
+      ...chatlog
+    ]);
+  };
 
-  const handleMessageKeypress = e => { if (e.key === 'Enter') sendMessage() }
+  const handleMessageKeypress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') sendMessage();
+  };
 
   return (
     <>
       <h3>Hello, {name}</h3>
       <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', overflow: 'auto', marginRight: '30px' }}>
-          {members.map(member => <div key={member}>{member}</div>)}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+            marginRight: '30px'
+          }}
+        >
+          {members.map(member => (
+            <div key={member}>{member}</div>
+          ))}
         </div>
-        <div id='biseo-chat'>
+        <div id="biseo-chat">
           <ChatBox chatlog={chatlog} />
-          <div id='biseo-chatbox-input'>
-            <input type="text" value={message} onChange={handleMessageChange} onKeyPress={handleMessageKeypress}/>
+          <div id="biseo-chatbox-input">
+            <input
+              type="text"
+              value={message}
+              onChange={handleMessageChange}
+              onKeyPress={handleMessageKeypress}
+            />
             <button onClick={sendMessage}>SEND</button>
           </div>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ChatPage
+export default ChatPage;
