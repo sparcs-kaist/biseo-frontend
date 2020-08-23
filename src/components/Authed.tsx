@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import React, { ReactChild, useState, useEffect } from 'react'
+import { Route, Redirect, RouteComponentProps } from 'react-router-dom'
 import axios from '../utils/axios'
 
-const AuthedRoute = ({ children, ...rest }) => {
+const AuthedRoute = ({ children, ...rest }: { children: ReactChild, rest: RouteComponentProps }) => {
   const [authed, setAuthed] = useState(null)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const AuthedRoute = ({ children, ...rest }) => {
   else
     return (
       <Route {...rest}>
-        { authed ? { ...children } : <Redirect to='/login'/> }
+        { authed ? children : <Redirect to='/login'/> }
       </Route>
     )
 }

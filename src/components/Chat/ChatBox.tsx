@@ -1,15 +1,22 @@
 import React from 'react'
 import './ChatBox.css'
 
-const MessageTypes = {
-  NEW: 'new',
-  MEMBERS: 'members',
-  MESSAGE: 'message',
-  OUT: 'out'
+export enum MessageEnum {
+  NEW = 'new',
+  MEMBERS = 'members',
+  MESSAGE = 'message',
+  OUT = 'out',
 }
 
-const Message = ({ message }) => {
-  const parseDate = date => {
+export interface MessageType {
+  type: MessageEnum;
+  payload: string;
+  issuer?: string;
+  date?: string;
+}
+
+const Message: React.FC<{ message: MessageType }> = ({ message }: { message: MessageType }) => {
+  const parseDate = (date: string) => {
     const splitted = date.split('T')
     const day = splitted[0]
     const time = (splitted[1].split(":").slice(0, 2)).join(':')
@@ -18,29 +25,29 @@ const Message = ({ message }) => {
 
   const getContent = () => {
     switch (message.type) {
-      case MessageTypes.MESSAGE:
+      case MessageEnum.MESSAGE:
         return message.payload
-      case MessageTypes.NEW:
+      case MessageEnum.NEW:
         return `${message.payload} has entered`
-      case MessageTypes.OUT:
+      case MessageEnum.OUT:
         return `${message.payload} has left`
     }
   }
 
   const getJustification = () => {
     switch (message.type) {
-      case MessageTypes.MESSAGE:
+      case MessageEnum.MESSAGE:
         return 'issuer' in message ? 'start' : 'end'
-      case MessageTypes.NEW:
-      case MessageTypes.OUT:
+      case MessageEnum.NEW:
+      case MessageEnum.OUT:
         return 'around'
       default:
         return ''
     }
   }
 
-  const user = message.type === MessageTypes.MESSAGE ?  message.issuer || 'Me' : ''
-  const date = message.type === MessageTypes.MESSAGE ? parseDate(message.date) : null
+  const user = message.type === MessageEnum.MESSAGE ?  message.issuer || 'Me' : ''
+  const date = message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null
 
   return (
     <div className={`message ${getJustification()}`} >
@@ -59,7 +66,7 @@ const Message = ({ message }) => {
   )
 }
 
-const ChatBox = ({ chatlog }) => {
+export const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({ chatlog }: { chatlog: MessageType[] }) => {
   return (
     <div id='biseo-chatbox'>
       <div id='biseo-chatbox-scrollable'>
@@ -68,6 +75,3 @@ const ChatBox = ({ chatlog }) => {
     </div>
   )
 }
-
-
-export default ChatBox
