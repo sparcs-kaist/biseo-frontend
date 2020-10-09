@@ -1,5 +1,5 @@
 import React from 'react';
-import './ChatBox.css';
+import styled from 'styled-components';
 
 export enum MessageEnum {
   NEW = 'new',
@@ -15,6 +15,59 @@ export interface MessageType {
   date?: string;
 }
 
+interface JustificationProps {
+  justification: string;
+}
+
+const MessageContainer = styled.div`
+  display: flex;
+  justify-content: ${(props: JustificationProps) =>
+    props.justification === 'around'
+      ? 'space-around'
+      : `flex-${props.justification}`};
+  margin-top: ${(props: JustificationProps) =>
+    props.justification === 'around' ? '20px' : '50px'};
+  ${(props: JustificationProps) =>
+    props.justification === 'around' && `font-weight: bold`};
+  position: relative;
+`;
+
+const MessageUsername = styled.span`
+  bottom: calc(100% + 8px);
+  font-size: 15px;
+  font-weight: bold;
+  position: absolute;
+`;
+
+const MessageContent = styled.div`
+  background-color: #f7f6f3;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-size: 18px;
+  max-width: 500px;
+  padding: 10px 15px;
+  position: relative;
+  word-break: break-word;
+`;
+
+const MessageDate = styled.div`
+  ${(props: JustificationProps) =>
+    props.justification === 'start'
+      ? `
+        right: calc(100% + 8px);
+        align-items: flex-end;
+      `
+      : `
+        left: calc(100% + 8px);
+        align-items: flex-start;
+      `}
+
+  & > span {
+    font-size: 0.6rem;
+    white-space: nowrap;
+  }
+`;
+
 const Message: React.FC<{ message: MessageType }> = ({
   message
 }: {
@@ -27,7 +80,7 @@ const Message: React.FC<{ message: MessageType }> = ({
     return { day, time };
   };
 
-  const getContent = () => {
+  const content = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return message.payload;
@@ -36,9 +89,9 @@ const Message: React.FC<{ message: MessageType }> = ({
       case MessageEnum.OUT:
         return `${message.payload} has left`;
     }
-  };
+  })();
 
-  const getJustification = () => {
+  const justification = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return 'issuer' in message ? 'start' : 'end';
@@ -48,7 +101,7 @@ const Message: React.FC<{ message: MessageType }> = ({
       default:
         return '';
     }
-  };
+  })();
 
   const user =
     message.type === MessageEnum.MESSAGE ? message.issuer || 'Me' : '';
@@ -56,20 +109,37 @@ const Message: React.FC<{ message: MessageType }> = ({
     message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
 
   return (
-    <div className={`message ${getJustification()}`}>
-      {user && <span>{user}</span>}
-      <div>
-        {getContent()}
+    <MessageContainer justification={justification}>
+      {user && <MessageUsername>{user}</MessageUsername>}
+      <MessageContent>
+        {content}
         {date && (
-          <div>
+          <MessageDate justification={justification}>
             <span>{date.day}</span>
             <span>{date.time}</span>
-          </div>
+          </MessageDate>
         )}
-      </div>
-    </div>
+      </MessageContent>
+    </MessageContainer>
   );
 };
+
+const ChatBoxContainer = styled.div`
+  background-color: #ffffff;
+  box-sizing: border-box;
+  height: 80vh;
+  padding-top: 20px;
+  width: 100%;
+`;
+
+const ChatBoxScrollable = styled.div`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  overflow: auto;
+  padding: 20px 40px;
+`;
 
 export const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
   chatlog
@@ -77,12 +147,12 @@ export const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
   chatlog: MessageType[];
 }) => {
   return (
-    <div id="biseo-chatbox">
-      <div id="biseo-chatbox-scrollable">
+    <ChatBoxContainer>
+      <ChatBoxScrollable>
         {chatlog.map((chat, idx) => (
           <Message key={idx} message={chat} />
         ))}
-      </div>
-    </div>
+      </ChatBoxScrollable>
+    </ChatBoxContainer>
   );
 };
