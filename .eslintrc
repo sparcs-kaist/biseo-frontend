@@ -3,7 +3,8 @@
     "parser": "@typescript-eslint/parser",
     "plugins": [
         "@typescript-eslint",
-        "prettier"
+        "prettier",
+        "better-styled-components"
     ],
     "extends": [
         "eslint:recommended",
@@ -14,6 +15,7 @@
     ],
     "rules": {
         "prettier/prettier": 2,
+        "better-styled-components/sort-declarations-alphabetically": 2,
         "no-empty": ["error", { "allowEmptyCatch": true  }]
     }
 }

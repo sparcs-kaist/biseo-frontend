@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChatBox, MessageType, MessageEnum } from './ChatBox';
+import ChatBox, { MessageType, MessageEnum } from '@/components/ChatBox';
 import socketio from 'socket.io-client';
-import { getToken } from '../../utils/auth';
-import './ChatPage.css';
+import { getToken } from '@/utils/auth';
+import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
 
 const ChatPage: React.FC = () => {
   const socket = useMemo(
@@ -67,7 +67,7 @@ const ChatPage: React.FC = () => {
     return new Date(Date.now() - offset).toISOString();
   };
 
-  const handleMessageChange = e => {
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
 
@@ -106,9 +106,9 @@ const ChatPage: React.FC = () => {
             <div key={member}>{member}</div>
           ))}
         </div>
-        <div id="biseo-chat">
+        <ChatBoxContainer>
           <ChatBox chatlog={chatlog} />
-          <div id="biseo-chatbox-input">
+          <ChatBoxInputGroup>
             <input
               type="text"
               value={message}
@@ -116,8 +116,8 @@ const ChatPage: React.FC = () => {
               onKeyPress={handleMessageKeypress}
             />
             <button onClick={sendMessage}>SEND</button>
-          </div>
-        </div>
+          </ChatBoxInputGroup>
+        </ChatBoxContainer>
       </div>
     </>
   );

@@ -1,5 +1,12 @@
 import React from 'react';
-import './ChatBox.css';
+import {
+  MessageContainer,
+  MessageUsername,
+  MessageContent,
+  MessageDate,
+  ChatBoxContainer,
+  ChatBoxScrollable
+} from './styled';
 
 export enum MessageEnum {
   NEW = 'new',
@@ -27,7 +34,7 @@ const Message: React.FC<{ message: MessageType }> = ({
     return { day, time };
   };
 
-  const getContent = () => {
+  const content = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return message.payload;
@@ -36,9 +43,9 @@ const Message: React.FC<{ message: MessageType }> = ({
       case MessageEnum.OUT:
         return `${message.payload} has left`;
     }
-  };
+  })();
 
-  const getJustification = () => {
+  const justification = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return 'issuer' in message ? 'start' : 'end';
@@ -48,7 +55,7 @@ const Message: React.FC<{ message: MessageType }> = ({
       default:
         return '';
     }
-  };
+  })();
 
   const user =
     message.type === MessageEnum.MESSAGE ? message.issuer || 'Me' : '';
@@ -56,33 +63,35 @@ const Message: React.FC<{ message: MessageType }> = ({
     message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
 
   return (
-    <div className={`message ${getJustification()}`}>
-      {user && <span>{user}</span>}
-      <div>
-        {getContent()}
+    <MessageContainer justification={justification}>
+      {user && <MessageUsername>{user}</MessageUsername>}
+      <MessageContent>
+        {content}
         {date && (
-          <div>
+          <MessageDate justification={justification}>
             <span>{date.day}</span>
             <span>{date.time}</span>
-          </div>
+          </MessageDate>
         )}
-      </div>
-    </div>
+      </MessageContent>
+    </MessageContainer>
   );
 };
 
-export const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
+const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
   chatlog
 }: {
   chatlog: MessageType[];
 }) => {
   return (
-    <div id="biseo-chatbox">
-      <div id="biseo-chatbox-scrollable">
+    <ChatBoxContainer>
+      <ChatBoxScrollable>
         {chatlog.map((chat, idx) => (
           <Message key={idx} message={chat} />
         ))}
-      </div>
-    </div>
+      </ChatBoxScrollable>
+    </ChatBoxContainer>
   );
 };
+
+export default ChatBox;

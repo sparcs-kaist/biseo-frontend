@@ -1,11 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Login from './Login';
-import LoginRedirect from './LoginRedirect';
-import LoginCallback from './LoginCallback';
-import AuthedRoute from './Authed';
-import Dashboard from './Dashboard';
-import ChatPage from './Chat';
+import AuthedRoute from '@/components/AuthedRoute';
+import {
+  Login,
+  LoginRedirect,
+  LoginCallback,
+  Dashboard,
+  ChatPage
+} from '@/pages';
 
 const App: React.FC = () => {
   return (
