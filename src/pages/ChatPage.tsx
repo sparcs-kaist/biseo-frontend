@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChatBox, MessageType, MessageEnum } from './ChatBox';
+import ChatBox, { MessageType, MessageEnum } from '@/components/ChatBox';
 import styled from 'styled-components';
 import socketio from 'socket.io-client';
-import { getToken } from '../../utils/auth';
+import { getToken } from '@/utils/auth';
 
 const ChatBoxContainer = styled.div`
   -moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
