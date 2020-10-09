@@ -1,8 +1,54 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ChatBox, MessageType, MessageEnum } from './ChatBox';
+import styled from 'styled-components';
 import socketio from 'socket.io-client';
 import { getToken } from '../../utils/auth';
-import './ChatPage.css';
+
+const ChatBoxContainer = styled.div`
+  -moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  width: 70vw;
+`;
+
+const ChatBoxInputGroup = styled.div`
+  background-color: #fffbf0;
+  border-top: 0.7px solid #f2a024;
+  display: flex;
+  width: 100%;
+
+  & input {
+    background-color: inherit;
+    border: 0;
+    color: #444444;
+    flex-grow: 1;
+    font-size: 18px;
+    font-weight: bold;
+    min-height: 60px;
+    outline: 0;
+    padding: 0 20px;
+  }
+
+  & button {
+    background-color: inherit;
+    border: 0;
+    border-radius: 5px;
+    color: #f2a024;
+    font-size: 15px;
+    font-weight: bold;
+    min-width: 80px;
+
+    &:focus {
+      outline: 0;
+    }
+
+    &:hover {
+      background-color: #f7f3e9;
+    }
+  }
+`;
 
 const ChatPage: React.FC = () => {
   const socket = useMemo(
@@ -67,7 +113,7 @@ const ChatPage: React.FC = () => {
     return new Date(Date.now() - offset).toISOString();
   };
 
-  const handleMessageChange = e => {
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
 
@@ -106,9 +152,9 @@ const ChatPage: React.FC = () => {
             <div key={member}>{member}</div>
           ))}
         </div>
-        <div id="biseo-chat">
+        <ChatBoxContainer>
           <ChatBox chatlog={chatlog} />
-          <div id="biseo-chatbox-input">
+          <ChatBoxInputGroup>
             <input
               type="text"
               value={message}
@@ -116,8 +162,8 @@ const ChatPage: React.FC = () => {
               onKeyPress={handleMessageKeypress}
             />
             <button onClick={sendMessage}>SEND</button>
-          </div>
-        </div>
+          </ChatBoxInputGroup>
+        </ChatBoxContainer>
       </div>
     </>
   );
