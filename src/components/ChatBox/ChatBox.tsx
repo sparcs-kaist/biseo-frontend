@@ -1,5 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import {
+  MessageContainer,
+  MessageUsername,
+  MessageContent,
+  MessageDate,
+  ChatBoxContainer,
+  ChatBoxScrollable
+} from './styled';
 
 export enum MessageEnum {
   NEW = 'new',
@@ -14,59 +21,6 @@ export interface MessageType {
   issuer?: string;
   date?: string;
 }
-
-interface JustificationProps {
-  justification: string;
-}
-
-const MessageContainer = styled.div`
-  display: flex;
-  justify-content: ${(props: JustificationProps) =>
-    props.justification === 'around'
-      ? 'space-around'
-      : `flex-${props.justification}`};
-  margin-top: ${(props: JustificationProps) =>
-    props.justification === 'around' ? '20px' : '50px'};
-  ${(props: JustificationProps) =>
-    props.justification === 'around' && `font-weight: bold`};
-  position: relative;
-`;
-
-const MessageUsername = styled.span`
-  bottom: calc(100% + 8px);
-  font-size: 15px;
-  font-weight: bold;
-  position: absolute;
-`;
-
-const MessageContent = styled.div`
-  background-color: #f7f6f3;
-  border-radius: 10px;
-  box-sizing: border-box;
-  font-size: 18px;
-  max-width: 500px;
-  padding: 10px 15px;
-  position: relative;
-  word-break: break-word;
-`;
-
-const MessageDate = styled.div`
-  ${(props: JustificationProps) =>
-    props.justification === 'start'
-      ? `
-        right: calc(100% + 8px);
-        align-items: flex-end;
-      `
-      : `
-        left: calc(100% + 8px);
-        align-items: flex-start;
-      `}
-
-  & > span {
-    font-size: 0.6rem;
-    white-space: nowrap;
-  }
-`;
 
 const Message: React.FC<{ message: MessageType }> = ({
   message
@@ -124,24 +78,7 @@ const Message: React.FC<{ message: MessageType }> = ({
   );
 };
 
-const ChatBoxContainer = styled.div`
-  background-color: #ffffff;
-  box-sizing: border-box;
-  height: 80vh;
-  padding-top: 20px;
-  width: 100%;
-`;
-
-const ChatBoxScrollable = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column-reverse;
-  height: 100%;
-  overflow: auto;
-  padding: 20px 40px;
-`;
-
-export const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
+const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
   chatlog
 }: {
   chatlog: MessageType[];
@@ -156,3 +93,5 @@ export const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
     </ChatBoxContainer>
   );
 };
+
+export default ChatBox;
