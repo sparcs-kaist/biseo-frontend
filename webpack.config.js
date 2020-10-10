@@ -1,10 +1,14 @@
 const path = require("path");
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const crypto = require("crypto");
 
 module.exports = {
   entry: "./src/index.tsx",
+  node: {
+    fs: "empty",
+  },
   output: {
     path: path.join(__dirname, "/dist"),
     filename: `bundle.${crypto
