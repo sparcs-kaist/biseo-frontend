@@ -6,7 +6,8 @@ import {
   LoginRedirect,
   LoginCallback,
   Dashboard,
-  ChatPage
+  ChatPage,
+  AdminPage,
 } from '@/pages';
 
 
@@ -14,6 +15,9 @@ const App: React.FC = () => {
   return (
     <Router>
       <Switch>
+        <Route exact path="/admin">
+          <AdminPage />
+        </Route>
         <Route exact path="/chat">
           <ChatPage />
         </Route>
