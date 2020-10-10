@@ -39,6 +39,11 @@ const ChatPage: React.FC = () => {
       ]);
       setMembers(members => members.filter(member => member !== username));
     });
+
+    return function cleanup() {
+      socket.close()
+    };
+
   }, []);
 
   useEffect(() => {
