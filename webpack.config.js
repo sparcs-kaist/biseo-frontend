@@ -43,9 +43,9 @@ module.exports = {
     new CleanWebpackPlugin(),
   ],
   devServer: {
-    port: 3000,
+    port: 8000,
     host: "0.0.0.0",
-    public: "kong.sparcs.org:7300",
+    public: "aria.sparcs.org:33383",
     historyApiFallback: true,
   },
 };
