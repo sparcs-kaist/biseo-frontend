@@ -7,7 +7,7 @@ import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
 const ChatPage: React.FC = () => {
   const socket = useMemo(
     () =>
-      socketio.connect('aria.sparcs.org:33332', {
+      socketio.connect(process.env.SOCKET_URL, {
         transports: ['websocket'],
         upgrade: false,
         query: `token=${getToken()}`
