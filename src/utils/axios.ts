@@ -1,8 +1,8 @@
 import axios from 'axios'
- 
+
 const instance = axios.create({
   // baseURL: 'http://kong.sparcs.org:8030',
-  baseURL: 'http://aria.sparcs.org:33330/api',
+  baseURL: process.env.API_URL,
   withCredentials: true
 })
 

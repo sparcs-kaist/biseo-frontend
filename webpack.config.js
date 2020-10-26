@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const Dotenv = require("dotenv-webpack")
 const crypto = require("crypto");
 
 module.exports = {
@@ -45,11 +46,12 @@ module.exports = {
       template: "./src/index.html",
     }),
     new CleanWebpackPlugin(),
+    new Dotenv()
   ],
   devServer: {
     port: 8000,
     host: "0.0.0.0",
-    public: "aria.sparcs.org:33383",
+    public: "aria.sparcs.org:38000",
     historyApiFallback: true,
-  },
+  }
 };
