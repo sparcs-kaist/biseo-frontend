@@ -1,71 +1,48 @@
 import styled from 'styled-components';
 
-interface JustificationProps {
-  justification: string;
-}
-
-export const MessageContainer = styled.div`
-  display: flex;
-  justify-content: ${(props: JustificationProps) =>
-    props.justification === 'around'
-      ? 'space-around'
-      : `flex-${props.justification}`};
-  margin-top: ${(props: JustificationProps) =>
-    props.justification === 'around' ? '20px' : '50px'};
-  ${(props: JustificationProps) =>
-    props.justification === 'around' && `font-weight: bold`};
-  position: relative;
-`;
-
-export const MessageUsername = styled.span`
-  bottom: calc(100% + 8px);
-  font-size: 15px;
-  font-weight: bold;
-  position: absolute;
-`;
-
-export const MessageContent = styled.div`
-  background-color: #f7f6f3;
-  border-radius: 10px;
-  box-sizing: border-box;
-  font-size: 18px;
-  max-width: 500px;
-  padding: 10px 15px;
-  position: relative;
-  word-break: break-word;
-`;
-
-export const MessageDate = styled.div`
-  ${(props: JustificationProps) =>
-    props.justification === 'start'
-      ? `
-        right: calc(100% + 8px);
-        align-items: flex-end;
-      `
-      : `
-        left: calc(100% + 8px);
-        align-items: flex-start;
-      `}
-
-  & > span {
-    font-size: 0.6rem;
-    white-space: nowrap;
-  }
-`;
-
 export const ChatBoxContainer = styled.div`
-  background-color: #ffffff;
-  box-sizing: border-box;
-  height: 80vh;
-  padding-top: 20px;
+  -moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   width: 100%;
 `;
 
-export const ChatBoxScrollable = styled.div`
-  box-sizing: border-box;
+export const ChatBoxInputGroup = styled.div`
+  background-color: #fffbf0;
+  border-top: 0.7px solid #f2a024;
   display: flex;
-  flex-direction: column-reverse;
-  height: 100%;
-  overflow: auto;
-  padding: 20px 40px;
+  width: 100%;
+
+  & input {
+    background-color: inherit;
+    border: 0;
+    color: #444444;
+    flex-grow: 1;
+    font-size: 18px;
+    font-weight: bold;
+    min-height: 60px;
+    outline: 0;
+    padding: 0 20px;
+  }
+
+  & button {
+    background-color: inherit;
+    border: 0;
+    border-radius: 5px;
+    color: #f2a024;
+    font-size: 15px;
+    font-weight: bold;
+    min-width: 80px;
+
+    &:focus {
+      outline: 0;
+    }
+
+    &:hover {
+      background-color: #f7f3e9;
+    }
+  }
 `;
