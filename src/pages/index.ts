@@ -1,4 +1,4 @@
-export { default as ChatPage } from './ChatPage';
+export { default as Main } from './Main';
 export { default as AdminPage } from './AdminPage';
 export { default as Dashboard } from './Dashboard';
 export { default as Login } from './Login';

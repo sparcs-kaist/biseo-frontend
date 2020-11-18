@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
       <button onClick={handleLogout}>Logout</button>
       <button
         onClick={() => {
-          history.push('/chat');
+          history.push('/main');
         }}
       >
         Chat

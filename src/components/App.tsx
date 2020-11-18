@@ -6,10 +6,9 @@ import {
   LoginRedirect,
   LoginCallback,
   Dashboard,
-  ChatPage,
-  AdminPage,
+  Main,
+  AdminPage
 } from '@/pages';
-
 
 const App: React.FC = () => {
   return (
@@ -18,8 +17,8 @@ const App: React.FC = () => {
         <Route exact path="/admin">
           <AdminPage />
         </Route>
-        <Route exact path="/chat">
-          <ChatPage />
+        <Route exact path="/main">
+          <Main />
         </Route>
         <Route exact path="/login/redirect">
           <LoginRedirect />
