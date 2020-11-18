@@ -21,17 +21,13 @@ interface ActiveUserVoteItemProps {
 interface InactiveUserVoteItemProps {
   active: false;
   content: string;
+  choices?: string[];
 }
 
-type UserVoteItemProps = ActiveUserVoteItemProps & InactiveUserVoteItemProps;
+type UserVoteItemProps = ActiveUserVoteItemProps | InactiveUserVoteItemProps;
 
-const UserVoteItem: React.FC<UserVoteItemProps> = ({
-  active,
-  title,
-  content,
-  subtitle,
-  choices = []
-}: UserVoteItemProps) => {
+const UserVoteItem: React.FC<UserVoteItemProps> = props => {
+  const choices = props.choices || [];
   const [selectedState, setSelectedState] = useState(choices.map(_ => false));
 
   const handleButtonClick = (index: number) => {
@@ -50,11 +46,11 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     []
   );
 
-  return active ? (
+  return props.active ? (
     <ActiveContainer>
-      <ActiveContainerTitle>{title}</ActiveContainerTitle>
-      <ActiveContainerContent>{content}</ActiveContainerContent>
-      <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
+      <ActiveContainerTitle>{props.title}</ActiveContainerTitle>
+      <ActiveContainerContent>{props.content}</ActiveContainerContent>
+      <ActiveContainerSubtitle>{props.subtitle}</ActiveContainerSubtitle>
       <ButtonGroup>
         {choices.map((choice, index) => (
           <BiseoButton
@@ -72,7 +68,7 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     </ActiveContainer>
   ) : (
     <InactiveContainer>
-      <VoteItemContent>{content}</VoteItemContent>
+      <VoteItemContent>{props.content}</VoteItemContent>
     </InactiveContainer>
   );
 };
