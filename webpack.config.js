@@ -1,57 +1,58 @@
-const path = require("path");
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const Dotenv = require("dotenv-webpack")
-const crypto = require("crypto");
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  entry: "./src/index.tsx",
-  node: {
-    fs: "empty",
-  },
+  entry: './src/index.tsx',
   output: {
-    path: path.join(__dirname, "/dist"),
-    filename: `bundle.${crypto
-      .createHash("sha1")
-      .update(Math.random().toString())
-      .digest("hex")}.js`,
-    publicPath: "/",
+    path: path.join(__dirname, '/dist'),
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
+      '@': path.resolve(__dirname, 'src')
+    }
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        use: "babel-loader",
+        use: 'babel-loader'
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: "file-loader",
-      },
-    ],
+        test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)|\.(png|jpg|gif)($|\?)/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              esModule: false
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
+    new ForkTsCheckerWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: './src/index.html'
     }),
     new CleanWebpackPlugin(),
     new Dotenv()
   ],
   devServer: {
     port: 8000,
-    host: "0.0.0.0",
-    public: "aria.sparcs.org:38000",
-    historyApiFallback: true,
+    host: '0.0.0.0',
+    public: 'aria.sparcs.org:38000',
+    historyApiFallback: true
   }
 };
