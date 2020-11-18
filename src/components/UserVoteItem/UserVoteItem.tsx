@@ -10,20 +10,27 @@ import {
   VoteItemContent
 } from './styled';
 
-interface UserVoteItemProps {
-  active?: boolean;
-  title?: string;
-  subtitle?: string;
-  content?: string;
-  choices?: string[];
+interface ActiveUserVoteItemProps {
+  active: true;
+  title: string;
+  subtitle: string;
+  content: string;
+  choices: string[];
 }
+
+interface InactiveUserVoteItemProps {
+  active: false;
+  content: string;
+}
+
+type UserVoteItemProps = ActiveUserVoteItemProps & InactiveUserVoteItemProps;
 
 const UserVoteItem: React.FC<UserVoteItemProps> = ({
   active,
   title,
   content,
   subtitle,
-  choices
+  choices = []
 }: UserVoteItemProps) => {
   const [selectedState, setSelectedState] = useState(choices.map(_ => false));
 
@@ -65,7 +72,7 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     </ActiveContainer>
   ) : (
     <InactiveContainer>
-      <VoteItemContent>hello world</VoteItemContent>
+      <VoteItemContent>{content}</VoteItemContent>
     </InactiveContainer>
   );
 };
