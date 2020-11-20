@@ -7,16 +7,11 @@ import socketio from 'socket.io-client';
 import { getToken } from '@/utils/auth';
 import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
 
-const ChatBox: React.FC = () => {
-  const socket = useMemo(
-    () =>
-      socketio.connect(process.env.SOCKET_URL, {
-        transports: ['websocket'],
-        upgrade: false,
-        query: `token=${getToken()}`
-      }),
-    []
-  );
+interface ChatBoxProps {
+  socket: SocketIOClient.Socket;
+}
+
+const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
   const [name, setName] = useState('');
   const [chatlog, setChatlog] = useState<MessageType[]>([]); // elements of chatlog have two required fields: type, payload
   const [members, setMembers] = useState<string[]>([]);
