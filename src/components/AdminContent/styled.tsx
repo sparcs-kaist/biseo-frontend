@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const AdminContentContainer = styled.section`
+  background: white;
   border: 1px solid #f2a024;
   box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.4);
   display: flex;

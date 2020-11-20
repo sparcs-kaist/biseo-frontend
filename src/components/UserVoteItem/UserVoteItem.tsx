@@ -48,19 +48,22 @@ const UserVoteItem: React.FC<UserVoteItemProps> = props => {
           <BiseoButton
             key={choice}
             onClick={() => handleButtonClick(index)}
+            // use selectedStyle as props if button is selected, use unselectedStyle otherwise
             {...(selectedState[index] ? selectedStyle : unselectedStyle)}
           >
             {choice}
           </BiseoButton>
         ))}
-        <BiseoButton style={{ marginLeft: 'auto' }}>
-          <strong>제출</strong>
+
+        {/* adding `margin-left: auto` puts the rightmost element at the end */}
+        <BiseoButton style={{ marginLeft: 'auto', fontWeight: 600 }}>
+          제출
         </BiseoButton>
       </ButtonGroup>
     </ActiveContainer>
   ) : (
     <InactiveContainer>
-      <VoteItemContent>{props.content}</VoteItemContent>
+      <VoteItemContent>{props.title}</VoteItemContent>
     </InactiveContainer>
   );
 };
