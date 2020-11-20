@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import AdminTabs from '@/components/AdminTabs';
 import AdminContent from '@/components/AdminContent';
 
-interface AdminProps {
+interface AdminBoardProps {
   tabs: {
     title: string;
     choices: string[];
     extendableChoices?: boolean;
   }[];
+  style?: React.CSSProperties;
 }
 
-const Admin: React.FC<AdminProps> = ({ tabs }: AdminProps) => {
+const AdminBoard: React.FC<AdminBoardProps> = ({ tabs }: AdminBoardProps) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
   const selectedTab = tabs[selectedTabIndex];
 
   return (
-    <div>
+    <>
       <AdminTabs
         selected={selectedTabIndex}
         handleTabClick={setSelectedTabIndex}
@@ -26,8 +27,8 @@ const Admin: React.FC<AdminProps> = ({ tabs }: AdminProps) => {
         choices={selectedTab.choices}
         extendable={selectedTab.extendableChoices}
       />
-    </div>
+    </>
   );
 };
 
-export default Admin;
+export default AdminBoard;
