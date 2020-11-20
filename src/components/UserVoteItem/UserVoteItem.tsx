@@ -10,21 +10,13 @@ import {
   VoteItemContent
 } from './styled';
 
-interface ActiveUserVoteItemProps {
-  active: true;
+export interface UserVoteItemProps {
+  active: boolean;
   title: string;
-  subtitle: string;
-  content: string;
-  choices: string[];
-}
-
-interface InactiveUserVoteItemProps {
-  active: false;
-  content: string;
+  subtitle?: string; // used when active === true
+  content?: string; // used when active === true
   choices?: string[];
 }
-
-type UserVoteItemProps = ActiveUserVoteItemProps | InactiveUserVoteItemProps;
 
 const UserVoteItem: React.FC<UserVoteItemProps> = props => {
   const choices = props.choices || [];
