@@ -3,13 +3,13 @@ import BiseoButton from '@/components/BiseoButton';
 import { VoteItemContainer, VoteItemContent } from './styled';
 
 interface AdminVoteItemProps {
-  active?: boolean;
-  children: React.ReactChild;
+  active: boolean;
+  title: string;
 }
 
 const AdminVoteItem: React.FC<AdminVoteItemProps> = ({
   active,
-  children
+  title
 }: AdminVoteItemProps) => {
   const buttonProps = active
     ? { background: '#f2a024', foreground: '#ffffff' }
@@ -19,7 +19,7 @@ const AdminVoteItem: React.FC<AdminVoteItemProps> = ({
   return (
     <VoteItemContainer>
       <VoteItemContent>
-        {children}
+        {title}
         <BiseoButton {...buttonProps}>{buttonText}</BiseoButton>
       </VoteItemContent>
     </VoteItemContainer>
