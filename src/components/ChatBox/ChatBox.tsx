@@ -12,11 +12,12 @@ interface ChatBoxProps {
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState<string>('');
   const [chatlog, setChatlog] = useState<MessageType[]>([]); // elements of chatlog have two required fields: type, payload
   const [members, setMembers] = useState<string[]>([]);
   const [message, setMessage] = useState('');
 
+  // initialize socket events for 'name', 'enter', 'members', 'out'
   useEffect(() => {
     socket.on('name', (username: string) => setName(username));
 
@@ -38,15 +39,15 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
       setMembers(members => members.filter(member => member !== username));
     });
 
-    return function cleanup() {
-      socket.close();
-    };
+    // close socket on component unmount
+    return () => socket.close();
   }, []);
 
+  // this useEffect has a `name` dependency because it has to run once again
+  // if the `name` state changes.
   useEffect(() => {
-    socket.off('chat message');
     socket.on(
-      'chat message',
+      'chat',
       (
         user: string,
         msg: { type: MessageEnum; message: string; date: string }
@@ -56,12 +57,15 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
             type: MessageEnum.MESSAGE,
             payload: msg.message,
             date: msg.date,
-            ...(user !== name && { issuer: user })
+            ...(user !== name && { issuer: user }) // if user === name, then should be displayed as 'Me'
           },
           ...chatlog
         ]);
       }
     );
+
+    // remove the event listener on dependency modification
+    return () => socket.off('chat');
   }, [name]);
 
   const currentTime = () => {
@@ -77,7 +81,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
     if (message.trim() === '') return;
     const msgObject = { message, date: currentTime() };
     setMessage('');
-    socket.emit('chat message', msgObject);
+    socket.emit('chat', msgObject);
     setChatlog([
       {
         type: MessageEnum.MESSAGE,
