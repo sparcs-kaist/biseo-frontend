@@ -1,29 +1,35 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import socketio from 'socket.io-client';
+import io from 'socket.io-client';
 import AdminBoard from '@/components/AdminBoard';
 import AdminVoteItem from '@/components/AdminVoteItem';
 import ChatBox from '@/components/ChatBox';
-import UserVoteItem from '@/components/UserVoteItem';
+import UserVoteItem, { UserVoteItemProps } from '@/components/UserVoteItem';
 import { getToken } from '@/utils/auth';
 import { mockTabs, mockVoteItems } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
 
-const UserMain: React.FC = () => {
-  const socket: SocketIOClient.Socket = useMemo(
-    () =>
-      socketio.connect(process.env.SOCKET_URL, {
-        transports: ['websocket'],
-        upgrade: false,
-        query: `token=${getToken()}`
-      }),
-    []
-  );
+interface CommonMainProps {
+  socket: SocketIOClient.Socket;
+  voteItems: UserVoteItemProps[];
+}
+
+const UserMain: React.FC<CommonMainProps> = ({
+  socket,
+  voteItems
+}: CommonMainProps) => {
 
   return (
     <UserMainContainer>
       <div className="vote-items">
-        {mockVoteItems.map(item => (
-          <UserVoteItem key={item.title} {...item} />
+        {voteItems.map(item => (
+          <UserVoteItem
+            key={item.title}
+            active={item.active}
+            title={item.title}
+            subtitle={item.subtitle}
+            content={item.content}
+            choices={item.choices}
+          />
         ))}
       </div>
       <div className="chat">
@@ -33,25 +39,21 @@ const UserMain: React.FC = () => {
   );
 };
 
-const AdminMain: React.FC = () => {
-  const socket: SocketIOClient.Socket = useMemo(
-    () =>
-      socketio.connect(process.env.SOCKET_URL, {
-        transports: ['websocket'],
-        upgrade: false,
-        query: `token=${getToken()}`
-      }),
-    []
-  );
-
+const AdminMain: React.FC<CommonMainProps> = ({
+  socket,
+  voteItems
+}: CommonMainProps) => {
   return (
     <AdminMainContainer>
       <div className="vote-items">
-        {mockVoteItems.map(item => (
+        {voteItems.map(item => (
           <AdminVoteItem
             key={item.title}
             active={item.active}
             title={item.title}
+            subtitle={item.subtitle}
+            content={item.content}
+            choices={item.choices}
           />
         ))}
       </div>
@@ -66,9 +68,23 @@ const AdminMain: React.FC = () => {
 };
 
 const Main: React.FC = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [voteItems, setVoteItems] = useState<UserVoteItemProps[]>([]);
 
-  return isAdmin ? <AdminMain /> : <UserMain />;
+  const socket = useMemo(
+    () =>
+      io(process.env.SOCKET_URL, {
+        transports: ['websocket'],
+        upgrade: false,
+        query: `token=${getToken()}`
+      }),
+    []
+  );
+
+  const MainComponent = isAdmin ? AdminMain : UserMain;
+  return (
+      <MainComponent socket={socket} voteItems={voteItems} />
+  );
 };
 
 export default Main;

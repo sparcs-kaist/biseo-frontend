@@ -42,8 +42,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
       setMembers(members => members.filter(member => member !== username));
     });
 
-    // close socket on component unmount
-    return () => socket.close();
+    return () => {
+      socket.off('chat:name');
+      socket.off('chat:enter');
+      socket.off('chat:members');
+      socket.off('chat:out');
+    };
   }, []);
 
   // this useEffect has a `name` dependency because it has to run once again
