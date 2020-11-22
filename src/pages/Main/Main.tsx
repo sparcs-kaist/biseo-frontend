@@ -48,14 +48,18 @@ const AdminMain: React.FC = () => {
     <AdminMainContainer>
       <div className="vote-items">
         {mockVoteItems.map(item => (
-          <AdminVoteItem active={item.active} title={item.title} />
+          <AdminVoteItem
+            key={item.title}
+            active={item.active}
+            title={item.title}
+          />
         ))}
       </div>
       <div className="chat">
         <ChatBox socket={socket} />
       </div>
       <div className="admin">
-        <AdminBoard tabs={mockTabs} />
+        <AdminBoard socket={socket} tabs={mockTabs} />
       </div>
     </AdminMainContainer>
   );

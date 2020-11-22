@@ -34,7 +34,7 @@ export const ContentInput = styled.textarea`
   }
 `;
 
-export const FooterInput = styled.input`
+export const SubtitleInput = styled.input`
   border: none;
   font-size: 1.2rem;
   font-weight: 600;
