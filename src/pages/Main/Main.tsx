@@ -5,8 +5,18 @@ import AdminVoteItem from '@/components/AdminVoteItem';
 import ChatBox from '@/components/ChatBox';
 import UserVoteItem, { UserVoteItemProps } from '@/components/UserVoteItem';
 import { getToken } from '@/utils/auth';
-import { mockTabs, mockVoteItems } from './mock';
+import axios from '@/utils/axios';
+import { mockTabs } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
+
+interface VoteCreatedPayload {
+  id: string;
+  choices: string[];
+  content: string;
+  subtitle: string;
+  title: string;
+  expires: string; // Date ISO String
+}
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -17,7 +27,6 @@ const UserMain: React.FC<CommonMainProps> = ({
   socket,
   voteItems
 }: CommonMainProps) => {
-
   return (
     <UserMainContainer>
       <div className="vote-items">
@@ -70,7 +79,6 @@ const AdminMain: React.FC<CommonMainProps> = ({
 const Main: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [voteItems, setVoteItems] = useState<UserVoteItemProps[]>([]);
-
   const socket = useMemo(
     () =>
       io(process.env.SOCKET_URL, {
@@ -81,9 +89,39 @@ const Main: React.FC = () => {
     []
   );
 
+  useEffect(() => {
+    async function getVotes() {
+      const { data } = await axios.get('/votes');
+      const votes: UserVoteItemProps[] = data.votes || [];
+      setVoteItems(votes);
+    }
+
+    getVotes();
+  }, []);
+
+  useEffect(() => {
+    socket.on('vote:created', (payload: VoteCreatedPayload) => {
+      const newVoteItem = {
+        active: Date.now() < Date.parse(payload.expires),
+        id: payload.id,
+        choices: payload.choices,
+        content: payload.content,
+        subtitle: payload.subtitle,
+        title: payload.title
+      };
+
+      setVoteItems(prevState => [newVoteItem, ...prevState]);
+    });
+  }, []);
+
   const MainComponent = isAdmin ? AdminMain : UserMain;
   return (
+    <div>
+      <button onClick={() => setIsAdmin(prevState => !prevState)}>
+        {isAdmin ? 'To User' : 'To Admin'}
+      </button>
       <MainComponent socket={socket} voteItems={voteItems} />
+    </div>
   );
 };
 
