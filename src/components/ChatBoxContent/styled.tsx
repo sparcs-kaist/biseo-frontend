@@ -62,7 +62,7 @@ export const ChatBoxContainer = styled.div`
   background-color: #ffffff;
   box-sizing: border-box;
   height: 100%;
-  min-height: 500px;
+  min-height: 200px;
   padding-top: 20px;
   width: 100%;
 `;

@@ -21,7 +21,6 @@ export const UserMainContainer = styled.div`
 
   & > .chat {
     grid-area: chat;
-    min-height: 90vh;
   }
 
   & > .admin {
@@ -61,7 +60,6 @@ export const AdminMainContainer = styled.div`
 
   & > .chat {
     grid-area: chat;
-    min-height: 90vh;
   }
 
   & > .admin {

@@ -15,6 +15,7 @@ export const ChatBoxInputGroup = styled.div`
   border-top: 0.7px solid #f2a024;
   display: flex;
   width: 100%;
+  min-height: 60px;
 
   & input {
     background-color: inherit;
@@ -23,7 +24,7 @@ export const ChatBoxInputGroup = styled.div`
     flex-grow: 1;
     font-size: 18px;
     font-weight: bold;
-    min-height: 60px;
+    height: 100%;
     outline: 0;
     padding: 0 20px;
   }
