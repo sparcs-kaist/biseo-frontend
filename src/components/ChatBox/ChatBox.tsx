@@ -22,9 +22,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
    *    https://github.com/sparcs-kaist/biseo_backend/blob/master/socket.js
    */
   useEffect(() => {
-    socket.on('name', (username: string) => setName(username));
+    socket.on('chat:name', (username: string) => setName(username));
 
-    socket.on('enter', (username: string) => {
+    socket.on('chat:enter', (username: string) => {
       setChatlog(chatlog => [
         { type: MessageEnum.NEW, payload: username },
         ...chatlog
@@ -32,9 +32,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
       setMembers(members => [...members, username]);
     });
 
-    socket.on('members', (members: string[]) => setMembers(members));
+    socket.on('chat:members', (members: string[]) => setMembers(members));
 
-    socket.on('out', (username: string) => {
+    socket.on('chat:out', (username: string) => {
       setChatlog(chatlog => [
         { type: MessageEnum.OUT, payload: username },
         ...chatlog
@@ -50,7 +50,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
   //   if the `name` state changes.
   useEffect(() => {
     socket.on(
-      'chat',
+      'chat:message',
       (
         user: string,
         msg: { type: MessageEnum; message: string; date: string }
@@ -68,7 +68,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
     );
 
     // remove the event listener on dependency modification
-    return () => socket.off('chat');
+    return () => socket.off('chat:message');
   }, [name]);
 
   const currentTime = () => {
@@ -84,7 +84,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
     if (message.trim() === '') return;
     const msgObject = { message, date: currentTime() };
     setMessage('');
-    socket.emit('chat', msgObject);
+    socket.emit('chat:message', msgObject);
     setChatlog([
       {
         type: MessageEnum.MESSAGE,
