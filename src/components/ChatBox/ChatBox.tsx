@@ -17,7 +17,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
   const [members, setMembers] = useState<string[]>([]);
   const [message, setMessage] = useState('');
 
-  // initialize socket events for 'name', 'enter', 'members', 'out'
+  /* Initialize socket events for 'name', 'enter', 'members', 'out'.
+   * For detailed description on all socket events, please refer to
+   *    https://github.com/sparcs-kaist/biseo_backend/blob/master/socket.js
+   */
   useEffect(() => {
     socket.on('name', (username: string) => setName(username));
 
@@ -44,7 +47,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
   }, []);
 
   // this useEffect has a `name` dependency because it has to run once again
-  // if the `name` state changes.
+  //   if the `name` state changes.
   useEffect(() => {
     socket.on(
       'chat',

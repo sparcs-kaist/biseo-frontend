@@ -20,6 +20,11 @@ export interface UserVoteItemProps {
 
 const UserVoteItem: React.FC<UserVoteItemProps> = props => {
   const choices = props.choices || [];
+
+  /* if we're dealing with only single-choice options, we wouldn't have to
+   * keep an entire array, but just the selected index.
+   * here we use an array just for potential use of mult-choice options.
+   */
   const [selectedState, setSelectedState] = useState(choices.map(_ => false));
 
   const handleButtonClick = (index: number) => {
