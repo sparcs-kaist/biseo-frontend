@@ -36,15 +36,20 @@ export const MessageContent = styled.div`
 `;
 
 export const MessageDate = styled.div`
+  position: absolute;
+  display: flex;
+  bottom: 5%;
+  flex-direction: column;
+
   ${(props: JustificationProps) =>
     props.justification === 'start'
       ? `
-        right: calc(100% + 8px);
-        align-items: flex-end;
-      `
-      : `
         left: calc(100% + 8px);
         align-items: flex-start;
+      `
+      : `
+        right: calc(100% + 8px);
+        align-items: flex-end;
       `}
 
   & > span {
