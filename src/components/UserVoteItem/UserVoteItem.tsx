@@ -13,13 +13,13 @@ import {
 export interface UserVoteItemProps {
   active: boolean;
   title: string;
-  subtitle?: string; // used when active === true
-  content?: string; // used when active === true
-  choices?: string[];
+  subtitle: string;
+  content: string;
+  choices: string[];
 }
 
 const UserVoteItem: React.FC<UserVoteItemProps> = props => {
-  const choices = props.choices || [];
+  const { choices } = props;
 
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the selected index.

@@ -1,16 +1,12 @@
 import React from 'react';
 import BiseoButton from '@/components/BiseoButton';
+import { UserVoteItemProps } from '@/components/UserVoteItem';
 import { VoteItemContainer, VoteItemContent } from './styled';
 
-interface AdminVoteItemProps {
-  active: boolean;
-  title: string;
-}
-
-const AdminVoteItem: React.FC<AdminVoteItemProps> = ({
+const AdminVoteItem: React.FC<UserVoteItemProps> = ({
   active,
   title
-}: AdminVoteItemProps) => {
+}: UserVoteItemProps) => {
   const buttonProps = active
     ? { background: '#f2a024', foreground: '#ffffff' }
     : {};
