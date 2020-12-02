@@ -1,95 +1,120 @@
-import React from 'react';
-import {
-  MessageContainer,
-  MessageUsername,
-  MessageContent,
-  MessageDate,
-  ChatBoxContainer,
-  ChatBoxScrollable
-} from './styled';
+import React, { useState, useEffect, useMemo } from 'react';
+import ChatBoxContent, {
+  MessageType,
+  MessageEnum
+} from '@/components/ChatBoxContent';
+import socketio from 'socket.io-client';
+import { getToken } from '@/utils/auth';
+import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
 
-export enum MessageEnum {
-  NEW = 'new',
-  MEMBERS = 'members',
-  MESSAGE = 'message',
-  OUT = 'out'
+interface ChatBoxProps {
+  socket: SocketIOClient.Socket;
 }
 
-export interface MessageType {
-  type: MessageEnum;
-  payload: string;
-  issuer?: string;
-  date?: string;
-}
+const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
+  const [name, setName] = useState<string>('');
+  const [chatlog, setChatlog] = useState<MessageType[]>([]); // elements of chatlog have two required fields: type, payload
+  const [members, setMembers] = useState<string[]>([]);
+  const [message, setMessage] = useState('');
 
-const Message: React.FC<{ message: MessageType }> = ({
-  message
-}: {
-  message: MessageType;
-}) => {
-  const parseDate = (date: string) => {
-    const splitted = date.split('T');
-    const day = splitted[0];
-    const time = splitted[1].split(':').slice(0, 2).join(':');
-    return { day, time };
+  /* Initialize socket events for 'name', 'enter', 'members', 'out'.
+   * For detailed description on all socket events, please refer to
+   *    https://github.com/sparcs-kaist/biseo_backend/blob/master/socket.js
+   */
+  useEffect(() => {
+    socket.on('chat:name', (username: string) => setName(username));
+
+    socket.on('chat:enter', (username: string) => {
+      setChatlog(chatlog => [
+        { type: MessageEnum.NEW, payload: username },
+        ...chatlog
+      ]);
+      setMembers(members => [...members, username]);
+    });
+
+    socket.on('chat:members', (members: string[]) => setMembers(members));
+
+    socket.on('chat:out', (username: string) => {
+      setChatlog(chatlog => [
+        { type: MessageEnum.OUT, payload: username },
+        ...chatlog
+      ]);
+      setMembers(members => members.filter(member => member !== username));
+    });
+
+    return () => {
+      socket.off('chat:name');
+      socket.off('chat:enter');
+      socket.off('chat:members');
+      socket.off('chat:out');
+    };
+  }, []);
+
+  // this useEffect has a `name` dependency because it has to run once again
+  //   if the `name` state changes.
+  useEffect(() => {
+    socket.on(
+      'chat:message',
+      (
+        user: string,
+        msg: { type: MessageEnum; message: string; date: string }
+      ) => {
+        setChatlog(chatlog => [
+          {
+            type: MessageEnum.MESSAGE,
+            payload: msg.message,
+            date: msg.date,
+            ...(user !== name && { issuer: user }) // if user === name, then should be displayed as 'Me'
+          },
+          ...chatlog
+        ]);
+      }
+    );
+
+    // remove the event listener on dependency modification
+    return () => socket.off('chat:message');
+  }, [name]);
+
+  const currentTime = () => {
+    const offset = new Date().getTimezoneOffset() * 60000;
+    return new Date(Date.now() - offset).toISOString();
   };
 
-  const content = (() => {
-    switch (message.type) {
-      case MessageEnum.MESSAGE:
-        return message.payload;
-      case MessageEnum.NEW:
-        return `${message.payload} has entered`;
-      case MessageEnum.OUT:
-        return `${message.payload} has left`;
-    }
-  })();
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+  };
 
-  const justification = (() => {
-    switch (message.type) {
-      case MessageEnum.MESSAGE:
-        return 'issuer' in message ? 'start' : 'end';
-      case MessageEnum.NEW:
-      case MessageEnum.OUT:
-        return 'around';
-      default:
-        return '';
-    }
-  })();
+  const sendMessage = () => {
+    if (message.trim() === '') return;
+    const msgObject = { message, date: currentTime() };
+    setMessage('');
+    socket.emit('chat:message', msgObject);
+    setChatlog([
+      {
+        type: MessageEnum.MESSAGE,
+        payload: msgObject.message,
+        date: msgObject.date
+      },
+      ...chatlog
+    ]);
+  };
 
-  const user =
-    message.type === MessageEnum.MESSAGE ? message.issuer || 'Me' : '';
-  const date =
-    message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
+  const handleMessageKeypress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') sendMessage();
+  };
 
-  return (
-    <MessageContainer justification={justification}>
-      {user && <MessageUsername>{user}</MessageUsername>}
-      <MessageContent>
-        {content}
-        {date && (
-          <MessageDate justification={justification}>
-            <span>{date.day}</span>
-            <span>{date.time}</span>
-          </MessageDate>
-        )}
-      </MessageContent>
-    </MessageContainer>
-  );
-};
-
-const ChatBox: React.FC<{ chatlog: MessageType[] }> = ({
-  chatlog
-}: {
-  chatlog: MessageType[];
-}) => {
   return (
     <ChatBoxContainer>
-      <ChatBoxScrollable>
-        {chatlog.map((chat, idx) => (
-          <Message key={idx} message={chat} />
-        ))}
-      </ChatBoxScrollable>
+      <ChatBoxContent chatlog={chatlog} />
+      <ChatBoxInputGroup>
+        <input
+          type="text"
+          value={message}
+          onChange={handleMessageChange}
+          onKeyPress={handleMessageKeypress}
+        />
+        <button onClick={sendMessage}>SEND</button>
+      </ChatBoxInputGroup>
     </ChatBoxContainer>
   );
 };
