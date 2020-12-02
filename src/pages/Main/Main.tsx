@@ -10,7 +10,7 @@ import { mockTabs } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
 
 interface VoteCreatedPayload {
-  id: string;
+  _id: string;
   choices: string[];
   content: string;
   subtitle: string;
@@ -31,14 +31,7 @@ const UserMain: React.FC<CommonMainProps> = ({
     <UserMainContainer>
       <div className="vote-items">
         {voteItems.map(item => (
-          <UserVoteItem
-            key={item.title}
-            active={item.active}
-            title={item.title}
-            subtitle={item.subtitle}
-            content={item.content}
-            choices={item.choices}
-          />
+          <UserVoteItem key={item._id} {...item} />
         ))}
       </div>
       <div className="chat">
@@ -56,14 +49,7 @@ const AdminMain: React.FC<CommonMainProps> = ({
     <AdminMainContainer>
       <div className="vote-items">
         {voteItems.map(item => (
-          <AdminVoteItem
-            key={item.title}
-            active={item.active}
-            title={item.title}
-            subtitle={item.subtitle}
-            content={item.content}
-            choices={item.choices}
-          />
+          <AdminVoteItem key={item._id} {...item} />
         ))}
       </div>
       <div className="chat">
@@ -103,7 +89,7 @@ const Main: React.FC = () => {
     socket.on('vote:created', (payload: VoteCreatedPayload) => {
       const newVoteItem = {
         active: Date.now() < Date.parse(payload.expires),
-        id: payload.id,
+        _id: payload._id,
         choices: payload.choices,
         content: payload.content,
         subtitle: payload.subtitle,
