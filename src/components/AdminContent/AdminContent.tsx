@@ -29,7 +29,7 @@ const AdminContent: React.FC<AdminContentProps> = ({
   const [subtitle, setSubtitle] = useState<string>('');
 
   const handleButtonClick = (): void => {
-    if (choices.length <= 0) return;
+    if (choices.length < 1) return;
     onVoteCreate(title, content, subtitle, choices);
   };
 
