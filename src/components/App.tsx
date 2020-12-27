@@ -9,6 +9,7 @@ import {
   Main,
   AdminPage
 } from '@/pages';
+import BiseoToastContainer from '@/components/BiseoToastContainer';
 
 const App: React.FC = () => {
   return (
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Dashboard />
         </AuthedRoute>
       </Switch>
+      <BiseoToastContainer />
     </Router>
   );
 };
