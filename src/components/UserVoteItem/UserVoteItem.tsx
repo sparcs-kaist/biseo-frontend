@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { toast } from 'react-toastify';
 import BiseoButton from '@/components/BiseoButton';
 import {
   ActiveContainer,
@@ -10,6 +11,10 @@ import {
   VoteItemContent
 } from './styled';
 import axios from '@/utils/axios';
+
+interface PutVoteResponse {
+  success: boolean;
+}
 
 export interface UserVoteItemProps {
   _id: string;
@@ -46,11 +51,23 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
   };
 
   const handleSubmit = async () => {
-    const { data } = await axios.put(`/votes/${_id}`, {
-      choice: selectedState
-        .filter(state => state)
-        .map((_, idx) => choices[idx])[0]
-    });
+    // get first index containing true
+    const selectedIndex = selectedState.findIndex(x => x);
+
+    if (selectedIndex === -1) {
+      toast.warning('❌ Please choose an option!');
+      return;
+    }
+
+    const { data }: { data: PutVoteResponse } = await axios.put(
+      `/votes/${_id}`,
+      {
+        choice: choices[selectedIndex]
+      }
+    );
+
+    if (data.success) toast.success('🎉 Vote Successful!');
+    else toast.error('Vote Failed');
 
     setAlreadySubmitted(true);
   };
