@@ -21,6 +21,12 @@ const BiseoButton = styled.button<{
   &:hover {
     cursor: ${props => (props.nocursor ? 'default' : 'pointer')};
   }
+
+  &:disabled,
+  &[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
 
 export default BiseoButton;
