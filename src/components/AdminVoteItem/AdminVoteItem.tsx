@@ -4,9 +4,10 @@ import { UserVoteItemProps } from '@/components/UserVoteItem';
 import { VoteItemContainer, VoteItemContent } from './styled';
 
 const AdminVoteItem: React.FC<UserVoteItemProps> = ({
-  active,
-  title
+  title,
+  expires
 }: UserVoteItemProps) => {
+  const active = Date.now() < Date.parse(expires);
   const buttonProps = active
     ? { background: '#f2a024', foreground: '#ffffff' }
     : {};

@@ -13,20 +13,20 @@ import axios from '@/utils/axios';
 
 export interface UserVoteItemProps {
   _id: string;
-  active: boolean;
   title: string;
   subtitle: string;
   content: string;
   choices: string[];
+  expires: string; // ISO Date String
 }
 
 const UserVoteItem: React.FC<UserVoteItemProps> = ({
   _id,
-  active,
   title,
   subtitle,
   content,
-  choices
+  choices,
+  expires
 }: UserVoteItemProps) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the currently selected index.
@@ -36,6 +36,8 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     choices.map(_ => false)
   );
   const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(false);
+
+  const active = Date.now() < Date.parse(expires);
 
   const handleChoiceClick = (index: number) => {
     setSelectedState(state =>
@@ -82,7 +84,7 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
 
         {/* adding `margin-left: auto` puts the rightmost element at the end */}
         <BiseoButton
-          style={{ marginLeft: 'auto', fontWeight: 600 }}
+          style={{ marginLeft: 'auto' }}
           onClick={handleSubmit}
           disabled={alreadySubmitted}
         >
