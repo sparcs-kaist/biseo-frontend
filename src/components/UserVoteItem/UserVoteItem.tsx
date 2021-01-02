@@ -23,6 +23,10 @@ export interface UserVoteItemProps {
   content: string;
   choices: string[];
   expires: string; // ISO Date String
+  hasAlreadyVoted: boolean;
+
+  // contains a string if user has already voted to this item. null otherwise
+  userChoice: string | null;
 }
 
 const UserVoteItem: React.FC<UserVoteItemProps> = ({
@@ -31,16 +35,20 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
   subtitle,
   content,
   choices,
-  expires
+  expires,
+  hasAlreadyVoted,
+  userChoice
 }: UserVoteItemProps) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the currently selected index.
    * here we use an array just for potential use of mult-choice options.
    */
   const [selectedState, setSelectedState] = useState<boolean[]>(
-    choices.map(_ => false)
+    choices.map(choice => choice === userChoice)
   );
-  const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(false);
+  const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(
+    hasAlreadyVoted
+  );
 
   const active = Date.now() < Date.parse(expires);
 
@@ -91,7 +99,8 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
         {choices.map((choice, index) => (
           <BiseoButton
             key={choice}
-            onClick={() => handleChoiceClick(index)}
+            // clickable only if user has not submitted
+            onClick={() => !alreadySubmitted && handleChoiceClick(index)}
             // use selectedStyle as props if button is selected, use unselectedStyle otherwise
             {...(selectedState[index] ? selectedStyle : unselectedStyle)}
           >

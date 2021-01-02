@@ -86,9 +86,14 @@ const Main: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('vote:created', (payload: VoteCreatedPayload) =>
-      setVoteItems(prevState => [payload, ...prevState])
-    );
+    socket.on('vote:created', (payload: VoteCreatedPayload) => {
+      const newVoteItem = {
+        ...payload,
+        hasAlreadyVoted: false,
+        userChoice: null
+      };
+      setVoteItems(prevState => [newVoteItem, ...prevState]);
+    });
   }, []);
 
   const MainComponent = isAdmin ? AdminMain : UserMain;
