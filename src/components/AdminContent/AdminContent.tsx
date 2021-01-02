@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import BiseoButton from '@/components/BiseoButton';
 import {
   AdminContentContainer,
-  TitleInput,
-  ContentInput,
+  ButtonGroup,
+  ContentTextArea,
   SubtitleInput,
-  ButtonGroup
+  TitleInput
 } from './styled';
 
 interface AdminContentProps {
@@ -19,36 +20,43 @@ interface AdminContentProps {
   ) => void;
 }
 
+interface FormInputs {
+  title: string;
+  content: string;
+  subtitle: string;
+}
+
 const AdminContent: React.FC<AdminContentProps> = ({
   choices,
   extendable,
   onVoteCreate
 }: AdminContentProps) => {
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [subtitle, setSubtitle] = useState<string>('');
-
-  const handleButtonClick = (): void => {
+  const { register, handleSubmit, errors, reset } = useForm<FormInputs>();
+  const onSubmit = ({ title, content, subtitle }: FormInputs) => {
     if (choices.length < 1) return;
     onVoteCreate(title, content, subtitle, choices);
+    reset();
   };
 
   return (
-    <AdminContentContainer>
+    <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
       <TitleInput
+        name="title"
         placeholder="투표 제목을 입력하세요"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
+        className={errors.title && 'error'}
+        ref={register({ required: true })}
       />
-      <ContentInput
+      <ContentTextArea
+        name="content"
         placeholder="투표 내용을 입력하세요"
-        value={content}
-        onChange={e => setContent(e.target.value)}
+        className={errors.content && 'error'}
+        ref={register({ required: true })}
       />
       <SubtitleInput
+        name="subtitle"
         placeholder="의결문안을 입력하세요"
-        value={subtitle}
-        onChange={e => setSubtitle(e.target.value)}
+        className={errors.subtitle && 'error'}
+        ref={register({ required: true })}
       />
       <ButtonGroup>
         {choices.map(choice => (
@@ -59,11 +67,7 @@ const AdminContent: React.FC<AdminContentProps> = ({
         {extendable && <BiseoButton>+</BiseoButton>}
       </ButtonGroup>
       <ButtonGroup alignRight={true}>
-        <BiseoButton
-          background="#f2a024"
-          foreground="#ffffff"
-          onClick={handleButtonClick}
-        >
+        <BiseoButton type="submit" background="#f2a024" foreground="#ffffff">
           만들기
         </BiseoButton>
       </ButtonGroup>

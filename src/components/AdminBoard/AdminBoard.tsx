@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
+import { toast } from 'react-toastify';
 import AdminTabs from '@/components/AdminTabs';
 import AdminContent from '@/components/AdminContent';
-import { toast } from 'react-toastify';
 
 interface AdminBoardProps {
   socket: SocketIOClient.Socket;

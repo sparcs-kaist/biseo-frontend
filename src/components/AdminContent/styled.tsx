@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const AdminContentContainer = styled.section`
+export const AdminContentContainer = styled.form`
   background: white;
   border: 1px solid #f2a024;
   box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.4);
@@ -18,9 +18,14 @@ export const TitleInput = styled.input`
   &:focus {
     outline: none;
   }
+
+  &.error::placeholder {
+    color: #ff775e;
+    opacity: 1;
+  }
 `;
 
-export const ContentInput = styled.textarea`
+export const ContentTextArea = styled.textarea`
   border: none;
   border-bottom: 1px solid #f2a024;
   border-top: 1px solid #f2a024;
@@ -32,6 +37,11 @@ export const ContentInput = styled.textarea`
   &:focus {
     outline: none;
   }
+
+  &.error::placeholder {
+    color: #ff775e;
+    opacity: 1;
+  }
 `;
 
 export const SubtitleInput = styled.input`
@@ -42,6 +52,11 @@ export const SubtitleInput = styled.input`
 
   &:focus {
     outline: none;
+  }
+
+  &.error::placeholder {
+    color: #ff775e;
+    opacity: 1;
   }
 `;
 
