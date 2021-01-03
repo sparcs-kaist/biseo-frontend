@@ -20,12 +20,23 @@ const BiseoButton = styled.button<{
 
   &:hover {
     cursor: ${props => (props.nocursor ? 'default' : 'pointer')};
+    ${props => !props.nocursor && 'filter: brightness(0.98);'}
   }
 
   &:disabled,
   &[disabled] {
-    opacity: 0.6;
     cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:active {
+    ${props =>
+      !props.nocursor &&
+      `
+        filter: brightness(0.95);
+        transform: translateY(1px);
+        box-shadow: 1px 2px 5px -1px rgba(0, 0, 0, 0.6);
+      `}
   }
 `;
 
