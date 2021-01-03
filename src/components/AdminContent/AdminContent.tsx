@@ -60,7 +60,8 @@ const AdminContent: React.FC<AdminContentProps> = ({
       />
       <ButtonGroup>
         {choices.map(choice => (
-          <BiseoButton nocursor key={choice}>
+          // a button's default type is 'submit', but we don't want this button to submit
+          <BiseoButton type="button" nocursor key={choice}>
             {choice}
           </BiseoButton>
         ))}
