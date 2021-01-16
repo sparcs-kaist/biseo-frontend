@@ -23,7 +23,6 @@ export interface UserVoteItemProps {
   content: string;
   choices: string[];
   expires: string; // ISO Date String
-  hasAlreadyVoted: boolean;
 
   // contains a string if user has already voted to this item. null otherwise
   userChoice: string | null;
@@ -36,7 +35,6 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
   content,
   choices,
   expires,
-  hasAlreadyVoted,
   userChoice
 }: UserVoteItemProps) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
@@ -47,7 +45,7 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     choices.map(choice => choice === userChoice)
   );
   const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(
-    hasAlreadyVoted
+    userChoice !== null
   );
 
   const active = Date.now() < Date.parse(expires);

@@ -89,7 +89,6 @@ const Main: React.FC = () => {
     socket.on('vote:created', (payload: VoteCreatedPayload) => {
       const newVoteItem = {
         ...payload,
-        hasAlreadyVoted: false,
         userChoice: null
       };
       setVoteItems(prevState => [newVoteItem, ...prevState]);
