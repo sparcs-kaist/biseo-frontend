@@ -7,8 +7,7 @@ import {
   ActiveContainerContent,
   ActiveContainerSubtitle,
   ButtonGroup,
-  InactiveContainer,
-  VoteItemContent
+  InactiveContainer
 } from './styled';
 import axios from '@/utils/axios';
 
@@ -26,6 +25,7 @@ export interface UserVoteItemProps {
 
   // contains a string if user has already voted to this item. null otherwise
   userChoice: string | null;
+  submissions?: Record<string, number>;
 }
 
 const UserVoteItem: React.FC<UserVoteItemProps> = ({
@@ -35,7 +35,8 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
   content,
   choices,
   expires,
-  userChoice
+  userChoice,
+  submissions
 }: UserVoteItemProps) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the currently selected index.
@@ -88,6 +89,19 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     []
   );
 
+  const totalParticipants = submissions
+    ? Object.values(submissions).reduce((sum, count) => sum + count, 0)
+    : 0;
+
+  const voteResultMessage =
+    submissions && Object.keys(submissions).length > 0
+      ? '중 ' +
+        Object.entries(submissions)
+          .sort()
+          .map(([choice, count]) => `${choice} ${count}명`)
+          .join(', ')
+      : '';
+
   return active ? (
     <ActiveContainer>
       <ActiveContainerTitle>{title}</ActiveContainerTitle>
@@ -118,7 +132,8 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     </ActiveContainer>
   ) : (
     <InactiveContainer>
-      <VoteItemContent>{title}</VoteItemContent>
+      <div className="title">{title}</div>
+      <div className="result-info">{`재석 ${totalParticipants}명 ${voteResultMessage}`}</div>
     </InactiveContainer>
   );
 };
