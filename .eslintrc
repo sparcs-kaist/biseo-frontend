@@ -12,7 +12,12 @@
   "rules": {
     "prettier/prettier": 2,
     "better-styled-components/sort-declarations-alphabetically": 2,
-    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
