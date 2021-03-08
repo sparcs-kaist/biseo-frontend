@@ -1,7 +1,7 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier", "better-styled-components"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -11,7 +11,6 @@
   ],
   "rules": {
     "prettier/prettier": 2,
-    "better-styled-components/sort-declarations-alphabetically": 2,
     "no-empty": [
       "error",
       {
