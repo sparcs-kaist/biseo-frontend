@@ -26,7 +26,8 @@
         "vars": "all",
         "varsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {

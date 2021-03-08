@@ -22,11 +22,11 @@ export interface MessageType {
   date?: string;
 }
 
-const Message: React.FC<{ message: MessageType }> = ({
-  message,
-}: {
+interface MessageProps {
   message: MessageType;
-}) => {
+}
+
+const Message: React.FC<MessageProps> = ({ message }) => {
   const parseDate = (date: string) => {
     const splitted = date.split('T');
     const day = splitted[0];
@@ -78,11 +78,11 @@ const Message: React.FC<{ message: MessageType }> = ({
   );
 };
 
-const ChatBoxContent: React.FC<{ chatlog: MessageType[] }> = ({
-  chatlog,
-}: {
+interface ChatBoxContentProps {
   chatlog: MessageType[];
-}) => {
+}
+
+const ChatBoxContent: React.FC<ChatBoxContentProps> = ({ chatlog }) => {
   return (
     <ChatBoxContainer>
       <ChatBoxScrollable>

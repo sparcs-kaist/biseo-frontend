@@ -9,7 +9,7 @@ import {
   TitleInput,
 } from './styled';
 
-interface AdminContentProps {
+interface Props {
   choices: string[];
   extendable: boolean;
   onVoteCreate: (
@@ -26,11 +26,11 @@ interface FormInputs {
   subtitle: string;
 }
 
-const AdminContent: React.FC<AdminContentProps> = ({
+const AdminContent: React.FC<Props> = ({
   choices,
   extendable,
   onVoteCreate,
-}: AdminContentProps) => {
+}) => {
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>();
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {
     if (choices.length < 1) return;

@@ -5,11 +5,11 @@ import ChatBoxContent, {
 } from '@/components/ChatBoxContent';
 import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
 
-interface ChatBoxProps {
+interface Props {
   socket: SocketIOClient.Socket;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
+const ChatBox: React.FC<Props> = ({ socket }) => {
   const [name, setName] = useState<string>('');
   const [chatlog, setChatlog] = useState<MessageType[]>([]); // elements of chatlog have two required fields: type, payload
   const [_members, setMembers] = useState<string[]>([]);

@@ -1,14 +1,8 @@
-import React, { ReactChild, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
 import axios from '@/utils/axios';
 
-const AuthedRoute: React.FC<RouteProps> = ({
-  children,
-  ...rest
-}: {
-  children: ReactChild;
-  rest: RouteProps;
-}) => {
+const AuthedRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const [authed, setAuthed] = useState(null);
 
   useEffect(() => {

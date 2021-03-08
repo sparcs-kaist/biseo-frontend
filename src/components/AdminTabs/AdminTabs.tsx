@@ -1,17 +1,13 @@
 import React from 'react';
 import { AdminTab } from './styled';
 
-interface AdminTabsProps {
+interface Props {
   selected: number;
   handleTabClick: React.Dispatch<React.SetStateAction<number>>;
   children?: string[];
 }
 
-const AdminTabs: React.FunctionComponent<AdminTabsProps> = ({
-  selected,
-  handleTabClick,
-  children,
-}) => {
+const AdminTabs: React.FC<Props> = ({ selected, handleTabClick, children }) => {
   return (
     <div style={{ display: 'flex' }}>
       {children.map((title, index) => (

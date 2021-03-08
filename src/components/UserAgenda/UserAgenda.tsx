@@ -25,7 +25,7 @@ const UserAgenda: React.FC<Props> = ({
   votesCountMap,
   userChoice,
   socket,
-}: Props) => {
+}) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the currently selected index.
    * here we use an array just for potential use of mult-choice options.
