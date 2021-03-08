@@ -53,7 +53,7 @@ const Main: React.FC = () => {
   const [agendas, setAgendas] = useState<Agenda[]>([]);
   const socket = useMemo(
     () =>
-      io(process.env.SOCKET_URL, {
+      io(process.env.SERVER_URL, {
         transports: ['websocket'],
         upgrade: false,
         query: `token=${getToken()}`,
