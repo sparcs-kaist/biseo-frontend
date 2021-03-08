@@ -18,7 +18,7 @@ interface VoteCreateResponse {
 
 const AdminBoard: React.FC<AdminBoardProps> = ({
   socket,
-  tabs
+  tabs,
 }: AdminBoardProps) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
   const selectedTab = tabs[selectedTabIndex];

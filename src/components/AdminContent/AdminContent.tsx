@@ -6,7 +6,7 @@ import {
   ButtonGroup,
   ContentTextArea,
   SubtitleInput,
-  TitleInput
+  TitleInput,
 } from './styled';
 
 interface AdminContentProps {
@@ -29,7 +29,7 @@ interface FormInputs {
 const AdminContent: React.FC<AdminContentProps> = ({
   choices,
   extendable,
-  onVoteCreate
+  onVoteCreate,
 }: AdminContentProps) => {
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>();
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {

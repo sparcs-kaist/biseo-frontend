@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ChatBoxContent, {
   MessageType,
-  MessageEnum
+  MessageEnum,
 } from '@/components/ChatBoxContent';
 import socketio from 'socket.io-client';
 import { getToken } from '@/utils/auth';
@@ -27,7 +27,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
     socket.on('chat:enter', (username: string) => {
       setChatlog(chatlog => [
         { type: MessageEnum.NEW, payload: username },
-        ...chatlog
+        ...chatlog,
       ]);
       setMembers(members => [...members, username]);
     });
@@ -37,7 +37,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
     socket.on('chat:out', (username: string) => {
       setChatlog(chatlog => [
         { type: MessageEnum.OUT, payload: username },
-        ...chatlog
+        ...chatlog,
       ]);
       setMembers(members => members.filter(member => member !== username));
     });
@@ -64,9 +64,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
             type: MessageEnum.MESSAGE,
             payload: msg.message,
             date: msg.date,
-            ...(user !== name && { issuer: user }) // if user === name, then should be displayed as 'Me'
+            ...(user !== name && { issuer: user }), // if user === name, then should be displayed as 'Me'
           },
-          ...chatlog
+          ...chatlog,
         ]);
       }
     );
@@ -93,9 +93,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
       {
         type: MessageEnum.MESSAGE,
         payload: msgObject.message,
-        date: msgObject.date
+        date: msgObject.date,
       },
-      ...chatlog
+      ...chatlog,
     ]);
   };
 

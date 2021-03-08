@@ -10,7 +10,7 @@ interface AdminTabsProps {
 const AdminTabs: React.FunctionComponent<AdminTabsProps> = ({
   selected,
   handleTabClick,
-  children
+  children,
 }) => {
   return (
     <div style={{ display: 'flex' }}>

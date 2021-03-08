@@ -5,7 +5,7 @@ const AdminPage: React.FC = () => {
     <>
       <div>
         <h3>Hello, Admin</h3>
-      </div>   
+      </div>
     </>
   );
 };

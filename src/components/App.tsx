@@ -7,7 +7,7 @@ import {
   LoginCallback,
   Dashboard,
   Main,
-  AdminPage
+  AdminPage,
 } from '@/pages';
 import BiseoToastContainer from '@/components/BiseoToastContainer';
 

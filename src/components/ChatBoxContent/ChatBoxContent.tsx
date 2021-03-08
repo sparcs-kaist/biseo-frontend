@@ -5,14 +5,14 @@ import {
   MessageContent,
   MessageDate,
   ChatBoxContainer,
-  ChatBoxScrollable
+  ChatBoxScrollable,
 } from './styled';
 
 export enum MessageEnum {
   NEW = 'new',
   MEMBERS = 'members',
   MESSAGE = 'message',
-  OUT = 'out'
+  OUT = 'out',
 }
 
 export interface MessageType {
@@ -23,7 +23,7 @@ export interface MessageType {
 }
 
 const Message: React.FC<{ message: MessageType }> = ({
-  message
+  message,
 }: {
   message: MessageType;
 }) => {
@@ -79,7 +79,7 @@ const Message: React.FC<{ message: MessageType }> = ({
 };
 
 const ChatBoxContent: React.FC<{ chatlog: MessageType[] }> = ({
-  chatlog
+  chatlog,
 }: {
   chatlog: MessageType[];
 }) => {

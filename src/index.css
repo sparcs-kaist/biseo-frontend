@@ -1,15 +1,15 @@
 @font-face {
-    font-family: 'NanumGothic';
-    src: url('./fonts/NanumGothic.ttf') format('truetype');
+  font-family: 'NanumGothic';
+  src: url('./fonts/NanumGothic.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'NanumGothic';
-    src: url('./fonts/NanumGothicBold.ttf') format('truetype');
-    font-weight: bold;
+  font-family: 'NanumGothic';
+  src: url('./fonts/NanumGothicBold.ttf') format('truetype');
+  font-weight: bold;
 }
 
 body {
-    font-family: NanumGothic;
-    background-color: rgb(247, 246, 243);
+  font-family: NanumGothic;
+  background-color: rgb(247, 246, 243);
 }

@@ -17,7 +17,7 @@ interface CommonMainProps {
 
 const UserMain: React.FC<CommonMainProps> = ({
   socket,
-  agendas
+  agendas,
 }: CommonMainProps) => {
   return (
     <UserMainContainer>
@@ -35,7 +35,7 @@ const UserMain: React.FC<CommonMainProps> = ({
 
 const AdminMain: React.FC<CommonMainProps> = ({
   socket,
-  agendas
+  agendas,
 }: CommonMainProps) => {
   return (
     <AdminMainContainer>
@@ -62,7 +62,7 @@ const Main: React.FC = () => {
       io(process.env.SOCKET_URL, {
         transports: ['websocket'],
         upgrade: false,
-        query: `token=${getToken()}`
+        query: `token=${getToken()}`,
       }),
     []
   );
@@ -81,7 +81,7 @@ const Main: React.FC = () => {
     socket.on('agenda:created', (payload: Agenda) => {
       const newAgenda = {
         ...payload,
-        userChoice: null
+        userChoice: null,
       };
       setAgendas(prevState => [newAgenda, ...prevState]);
     });
