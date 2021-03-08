@@ -1,5 +1,3 @@
-import { UserVoteItemProps } from '@/components/UserVoteItem';
-
 export const mockTabs = [
   {
     title: '찬반 투표',

@@ -1,37 +1,29 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import io from 'socket.io-client';
+import { Agenda } from '@/common/types';
 import AdminBoard from '@/components/AdminBoard';
-import AdminVoteItem from '@/components/AdminVoteItem';
+import AdminAgenda from '@/components/AdminAgenda';
 import ChatBox from '@/components/ChatBox';
-import UserVoteItem, { UserVoteItemProps } from '@/components/UserVoteItem';
+import UserAgenda from '@/components/UserAgenda';
 import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { mockTabs } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
 
-interface VoteCreatedPayload {
-  _id: string;
-  choices: string[];
-  content: string;
-  subtitle: string;
-  title: string;
-  expires: string; // Date ISO String
-}
-
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
-  voteItems: UserVoteItemProps[];
+  agendas: Agenda[];
 }
 
 const UserMain: React.FC<CommonMainProps> = ({
   socket,
-  voteItems
+  agendas
 }: CommonMainProps) => {
   return (
     <UserMainContainer>
-      <div className="vote-items">
-        {voteItems.map(item => (
-          <UserVoteItem key={item._id} {...item} />
+      <div className="agendas">
+        {agendas.map(item => (
+          <UserAgenda key={item._id} socket={socket} {...item} />
         ))}
       </div>
       <div className="chat">
@@ -43,13 +35,13 @@ const UserMain: React.FC<CommonMainProps> = ({
 
 const AdminMain: React.FC<CommonMainProps> = ({
   socket,
-  voteItems
+  agendas
 }: CommonMainProps) => {
   return (
     <AdminMainContainer>
-      <div className="vote-items">
-        {voteItems.map(item => (
-          <AdminVoteItem key={item._id} {...item} />
+      <div className="agendas">
+        {agendas.map(item => (
+          <AdminAgenda key={item._id} {...item} />
         ))}
       </div>
       <div className="chat">
@@ -64,7 +56,7 @@ const AdminMain: React.FC<CommonMainProps> = ({
 
 const Main: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [voteItems, setVoteItems] = useState<UserVoteItemProps[]>([]);
+  const [agendas, setAgendas] = useState<Agenda[]>([]);
   const socket = useMemo(
     () =>
       io(process.env.SOCKET_URL, {
@@ -78,20 +70,20 @@ const Main: React.FC = () => {
   useEffect(() => {
     async function getAgendas() {
       const { data } = await axios.get('/agendas');
-      const agendas: UserVoteItemProps[] = data.agendas ?? [];
-      setVoteItems(agendas);
+      const agendas: Agenda[] = data.agendas ?? [];
+      setAgendas(agendas);
     }
 
     getAgendas();
   }, []);
 
   useEffect(() => {
-    socket.on('agenda:created', (payload: VoteCreatedPayload) => {
-      const newVoteItem = {
+    socket.on('agenda:created', (payload: Agenda) => {
+      const newAgenda = {
         ...payload,
         userChoice: null
       };
-      setVoteItems(prevState => [newVoteItem, ...prevState]);
+      setAgendas(prevState => [newAgenda, ...prevState]);
     });
   }, []);
 
@@ -101,7 +93,7 @@ const Main: React.FC = () => {
       <button onClick={() => setIsAdmin(prevState => !prevState)}>
         {isAdmin ? 'To User' : 'To Admin'}
       </button>
-      <MainComponent socket={socket} voteItems={voteItems} />
+      <MainComponent socket={socket} agendas={agendas} />
     </div>
   );
 };

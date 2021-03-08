@@ -1,12 +1,9 @@
 import React from 'react';
+import { Agenda } from '@/common/types';
 import BiseoButton from '@/components/BiseoButton';
-import { UserVoteItemProps } from '@/components/UserVoteItem';
-import { VoteItemContainer, VoteItemContent } from './styled';
+import { AgendaContainer, AgendaContent } from './styled';
 
-const AdminVoteItem: React.FC<UserVoteItemProps> = ({
-  title,
-  expires
-}: UserVoteItemProps) => {
+const AdminAgenda: React.FC<Agenda> = ({ title, expires }: Agenda) => {
   const active = Date.now() < Date.parse(expires);
   const buttonProps = active
     ? { background: '#f2a024', foreground: '#ffffff' }
@@ -14,13 +11,13 @@ const AdminVoteItem: React.FC<UserVoteItemProps> = ({
   const buttonText = active ? '진행 중' : '시작하기';
 
   return (
-    <VoteItemContainer>
-      <VoteItemContent>
+    <AgendaContainer>
+      <AgendaContent>
         {title}
         <BiseoButton {...buttonProps}>{buttonText}</BiseoButton>
-      </VoteItemContent>
-    </VoteItemContainer>
+      </AgendaContent>
+    </AgendaContainer>
   );
 };
 
-export default AdminVoteItem;
+export default AdminAgenda;

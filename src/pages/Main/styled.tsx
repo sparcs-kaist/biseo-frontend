@@ -2,17 +2,17 @@ import styled from 'styled-components';
 import { device, size } from '@/utils/device';
 
 export const UserMainContainer = styled.div`
+  column-gap: 30px;
   display: grid;
   grid-template-areas:
     'chat'
-    'vote-items';
+    'agendas';
   grid-template-rows: 60vh auto;
-  column-gap: 30px;
-  row-gap: 30px;
   margin: 0 8vh;
+  row-gap: 30px;
 
-  & > .vote-items {
-    grid-area: vote-items;
+  & > .agendas {
+    grid-area: agendas;
     display: flex;
     flex-direction: column;
     gap: 10px 0;
@@ -30,7 +30,7 @@ export const UserMainContainer = styled.div`
   @media ${device.laptop} {
     grid-template-columns: 3fr 4fr;
     grid-template-rows: 90vh;
-    grid-template-areas: 'vote-items chat';
+    grid-template-areas: 'agendas chat';
   }
 
   @media ${device.laptopL} {
@@ -44,14 +44,14 @@ export const AdminMainContainer = styled.div`
   grid-template-areas:
     'chat'
     'admin'
-    'vote-items';
+    'agendas';
   grid-template-rows: 60vh auto auto;
   column-gap: 30px;
   row-gap: 30px;
   margin: 0 8vh;
 
-  & > .vote-items {
-    grid-area: vote-items;
+  & > .agendas {
+    grid-area: agendas;
     display: flex;
     flex-direction: column;
     gap: 10px 0;
@@ -71,7 +71,7 @@ export const AdminMainContainer = styled.div`
     grid-template-rows: auto;
     grid-template-areas:
       'admin      chat'
-      'vote-items chat';
+      'agendas chat';
   }
 
   @media ${device.laptopL} {
@@ -79,7 +79,7 @@ export const AdminMainContainer = styled.div`
     grid-template-rows: auto;
     grid-template-areas:
       'admin      chat'
-      'vote-items chat';
+      'agendas chat';
 
     max-width: ${size.laptopL};
     margin: 0 auto;

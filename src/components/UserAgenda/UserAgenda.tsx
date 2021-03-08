@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import BiseoButton from '@/components/BiseoButton';
+import { Agenda } from '@/common/types';
 import {
   ActiveContainer,
   ActiveContainerTitle,
@@ -9,35 +10,22 @@ import {
   ButtonGroup,
   InactiveContainer
 } from './styled';
-import axios from '@/utils/axios';
 
-interface PutVoteResponse {
-  success: boolean;
+interface Props extends Agenda {
+  socket: SocketIOClient.Socket;
 }
 
-export interface UserVoteItemProps {
-  _id: string;
-  title: string;
-  subtitle: string;
-  content: string;
-  choices: string[];
-  expires: string; // ISO Date String
-
-  // contains a string if user has already voted to this item. null otherwise
-  userChoice: string | null;
-  submissions?: Record<string, number>;
-}
-
-const UserVoteItem: React.FC<UserVoteItemProps> = ({
+const UserAgenda: React.FC<Props> = ({
   _id,
   title,
   subtitle,
   content,
   choices,
   expires,
+  votesCountMap,
   userChoice,
-  submissions
-}: UserVoteItemProps) => {
+  socket
+}: Props) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the currently selected index.
    * here we use an array just for potential use of mult-choice options.
@@ -66,15 +54,14 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
       return;
     }
 
-    const { data }: { data: PutVoteResponse } = await axios.put(
-      `/votes/${_id}`,
-      {
-        choice: choices[selectedIndex]
+    socket.emit(
+      'agenda:vote',
+      { agendaId: _id, choice: choices[selectedIndex] },
+      (res: { success: boolean }) => {
+        if (res.success) toast.success('🎉 Vote Successful!');
+        else toast.error('Vote Failed');
       }
     );
-
-    if (data.success) toast.success('🎉 Vote Successful!');
-    else toast.error('Vote Failed');
 
     setAlreadySubmitted(true);
   };
@@ -89,14 +76,14 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     []
   );
 
-  const totalParticipants = submissions
-    ? Object.values(submissions).reduce((sum, count) => sum + count, 0)
+  const totalParticipants = votesCountMap
+    ? Object.values(votesCountMap).reduce((sum, count) => sum + count, 0)
     : 0;
 
   const voteResultMessage =
-    submissions && Object.keys(submissions).length > 0
+    votesCountMap && Object.keys(votesCountMap).length > 0
       ? '중 ' +
-        Object.entries(submissions)
+        Object.entries(votesCountMap)
           .sort()
           .map(([choice, count]) => `${choice} ${count}명`)
           .join(', ')
@@ -138,4 +125,4 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
   );
 };
 
-export default UserVoteItem;
+export default UserAgenda;

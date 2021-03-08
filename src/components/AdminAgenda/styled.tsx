@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const VoteItemContainer = styled.div`
+export const AgendaContainer = styled.div`
   align-items: center;
   background: #ffffff;
   border-bottom-left-radius: 10px;
@@ -23,7 +23,7 @@ export const VoteItemContainer = styled.div`
   }
 `;
 
-export const VoteItemContent = styled.div`
+export const AgendaContent = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
