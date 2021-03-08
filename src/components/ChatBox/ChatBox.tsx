@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ChatBoxContent, {
-  MessageType,
-  MessageEnum,
-} from '@/components/ChatBoxContent';
+import { MessageEnum } from '@/common/enums';
+import { MessageType } from '@/common/types';
+import ChatBoxContent from '@/components/ChatBoxContent';
 import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
 
 interface Props {

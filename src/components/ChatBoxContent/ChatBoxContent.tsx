@@ -1,4 +1,6 @@
 import React from 'react';
+import { MessageEnum } from '@/common/enums';
+import { MessageType } from '@/common/types';
 import {
   MessageContainer,
   MessageUsername,
@@ -7,20 +9,6 @@ import {
   ChatBoxContainer,
   ChatBoxScrollable,
 } from './styled';
-
-export enum MessageEnum {
-  NEW = 'new',
-  MEMBERS = 'members',
-  MESSAGE = 'message',
-  OUT = 'out',
-}
-
-export interface MessageType {
-  type: MessageEnum;
-  payload: string;
-  issuer?: string;
-  date?: string;
-}
 
 interface MessageProps {
   message: MessageType;
