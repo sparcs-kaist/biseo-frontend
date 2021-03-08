@@ -14,7 +14,7 @@ const LoginCallback: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(`/login/callback?code=${code}&state=${state}`)
+      .get(`/auth/login/callback?code=${code}&state=${state}`)
       .then(({ data }) => {
         if (data.token) {
           saveToken(data.token);

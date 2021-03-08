@@ -3,7 +3,7 @@ import axios from '@/utils/axios';
 
 const LoginRedirect: React.FC = () => {
   useEffect(() => {
-    axios.post('/login').then(({ data: { url } }) => {
+    axios.post('/auth/login').then(({ data: { url } }) => {
       window.location.href = url;
     });
   }, []);
