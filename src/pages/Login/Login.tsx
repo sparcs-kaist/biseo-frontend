@@ -6,7 +6,7 @@ import {
   HeaderGroup,
   MainHeader,
   SubHeader,
-  RedirectAnchor
+  RedirectAnchor,
 } from './styled';
 
 const Login: React.FC = () => {

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: process.env.API_URL,
-  withCredentials: true
+  withCredentials: true,
 });
 
 instance.interceptors.request.use(config => {
@@ -10,7 +10,7 @@ instance.interceptors.request.use(config => {
 
   if (token)
     config.headers = {
-      'X-Access-Token': `Bearer ${token}`
+      'X-Access-Token': `Bearer ${token}`,
     };
 
   return config;

@@ -10,24 +10,24 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: 'babel-loader',
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)|\.(png|jpg|gif)($|\?)/,
@@ -35,25 +35,25 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              esModule: false
-            }
-          }
-        ]
-      }
-    ]
+              esModule: false,
+            },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: './src/index.html',
     }),
     new CleanWebpackPlugin(),
-    new Dotenv()
+    new Dotenv(),
   ],
   devServer: {
     port: 8000,
     host: '0.0.0.0',
     public: env.parsed.PUBLIC_URL,
-    historyApiFallback: true
-  }
+    historyApiFallback: true,
+  },
 };

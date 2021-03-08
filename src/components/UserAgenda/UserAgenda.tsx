@@ -8,7 +8,7 @@ import {
   ActiveContainerContent,
   ActiveContainerSubtitle,
   ButtonGroup,
-  InactiveContainer
+  InactiveContainer,
 } from './styled';
 
 interface Props extends Agenda {
@@ -24,8 +24,8 @@ const UserAgenda: React.FC<Props> = ({
   expires,
   votesCountMap,
   userChoice,
-  socket
-}: Props) => {
+  socket,
+}) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the currently selected index.
    * here we use an array just for potential use of mult-choice options.

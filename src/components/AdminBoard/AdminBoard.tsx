@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import AdminTabs from '@/components/AdminTabs';
 import AdminContent from '@/components/AdminContent';
 
-interface AdminBoardProps {
+interface Props {
   socket: SocketIOClient.Socket;
   tabs: {
     title: string;
@@ -16,10 +16,7 @@ interface VoteCreateResponse {
   success: boolean;
 }
 
-const AdminBoard: React.FC<AdminBoardProps> = ({
-  socket,
-  tabs
-}: AdminBoardProps) => {
+const AdminBoard: React.FC<Props> = ({ socket, tabs }) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
   const selectedTab = tabs[selectedTabIndex];
 
