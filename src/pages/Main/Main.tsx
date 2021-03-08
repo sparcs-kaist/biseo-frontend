@@ -76,17 +76,17 @@ const Main: React.FC = () => {
   );
 
   useEffect(() => {
-    async function getVotes() {
-      const { data } = await axios.get('/votes');
-      const votes: UserVoteItemProps[] = data.votes || [];
-      setVoteItems(votes);
+    async function getAgendas() {
+      const { data } = await axios.get('/agendas');
+      const agendas: UserVoteItemProps[] = data.agendas ?? [];
+      setVoteItems(agendas);
     }
 
-    getVotes();
+    getAgendas();
   }, []);
 
   useEffect(() => {
-    socket.on('vote:created', (payload: VoteCreatedPayload) => {
+    socket.on('agenda:created', (payload: VoteCreatedPayload) => {
       const newVoteItem = {
         ...payload,
         userChoice: null
