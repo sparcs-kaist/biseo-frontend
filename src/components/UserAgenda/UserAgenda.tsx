@@ -1,44 +1,31 @@
 import React, { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import BiseoButton from '@/components/BiseoButton';
+import { Agenda } from '@/common/types';
 import {
   ActiveContainer,
   ActiveContainerTitle,
   ActiveContainerContent,
   ActiveContainerSubtitle,
   ButtonGroup,
-  InactiveContainer,
-  VoteItemContent
+  InactiveContainer
 } from './styled';
-import axios from '@/utils/axios';
 
-interface PutVoteResponse {
-  success: boolean;
+interface Props extends Agenda {
+  socket: SocketIOClient.Socket;
 }
 
-export interface UserVoteItemProps {
-  _id: string;
-  title: string;
-  subtitle: string;
-  content: string;
-  choices: string[];
-  expires: string; // ISO Date String
-  hasAlreadyVoted: boolean;
-
-  // contains a string if user has already voted to this item. null otherwise
-  userChoice: string | null;
-}
-
-const UserVoteItem: React.FC<UserVoteItemProps> = ({
+const UserAgenda: React.FC<Props> = ({
   _id,
   title,
   subtitle,
   content,
   choices,
   expires,
-  hasAlreadyVoted,
-  userChoice
-}: UserVoteItemProps) => {
+  votesCountMap,
+  userChoice,
+  socket
+}: Props) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
    * keep an entire array, but just the currently selected index.
    * here we use an array just for potential use of mult-choice options.
@@ -47,7 +34,7 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     choices.map(choice => choice === userChoice)
   );
   const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(
-    hasAlreadyVoted
+    userChoice !== null
   );
 
   const active = Date.now() < Date.parse(expires);
@@ -67,15 +54,14 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
       return;
     }
 
-    const { data }: { data: PutVoteResponse } = await axios.put(
-      `/votes/${_id}`,
-      {
-        choice: choices[selectedIndex]
+    socket.emit(
+      'agenda:vote',
+      { agendaId: _id, choice: choices[selectedIndex] },
+      (res: { success: boolean }) => {
+        if (res.success) toast.success('🎉 Vote Successful!');
+        else toast.error('Vote Failed');
       }
     );
-
-    if (data.success) toast.success('🎉 Vote Successful!');
-    else toast.error('Vote Failed');
 
     setAlreadySubmitted(true);
   };
@@ -89,6 +75,19 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     () => ({ foreground: '#000000', background: '#ffffff' }),
     []
   );
+
+  const totalParticipants = votesCountMap
+    ? Object.values(votesCountMap).reduce((sum, count) => sum + count, 0)
+    : 0;
+
+  const voteResultMessage =
+    votesCountMap && Object.keys(votesCountMap).length > 0
+      ? '중 ' +
+        Object.entries(votesCountMap)
+          .sort()
+          .map(([choice, count]) => `${choice} ${count}명`)
+          .join(', ')
+      : '';
 
   return active ? (
     <ActiveContainer>
@@ -120,9 +119,10 @@ const UserVoteItem: React.FC<UserVoteItemProps> = ({
     </ActiveContainer>
   ) : (
     <InactiveContainer>
-      <VoteItemContent>{title}</VoteItemContent>
+      <div className="title">{title}</div>
+      <div className="result-info">{`재석 ${totalParticipants}명 ${voteResultMessage}`}</div>
     </InactiveContainer>
   );
 };
 
-export default UserVoteItem;
+export default UserAgenda;
