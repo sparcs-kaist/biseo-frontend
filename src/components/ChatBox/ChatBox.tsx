@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatBoxContent, {
   MessageType,
   MessageEnum,
 } from '@/components/ChatBoxContent';
-import socketio from 'socket.io-client';
-import { getToken } from '@/utils/auth';
 import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
 
 interface ChatBoxProps {
@@ -14,7 +12,7 @@ interface ChatBoxProps {
 const ChatBox: React.FC<ChatBoxProps> = ({ socket }: ChatBoxProps) => {
   const [name, setName] = useState<string>('');
   const [chatlog, setChatlog] = useState<MessageType[]>([]); // elements of chatlog have two required fields: type, payload
-  const [members, setMembers] = useState<string[]>([]);
+  const [_members, setMembers] = useState<string[]>([]);
   const [message, setMessage] = useState('');
 
   /* Initialize socket events for 'name', 'enter', 'members', 'out'.
