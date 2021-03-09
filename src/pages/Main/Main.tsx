@@ -63,7 +63,7 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     async function getAgendas() {
-      const { data } = await axios.get('/agendas');
+      const { data } = await axios.get('/agendas').catch(() => ({ data: [] }));
       const agendas: Agenda[] = data.agendas ?? [];
       setAgendas(agendas);
     }
