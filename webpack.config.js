@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const env = require('dotenv').config();
 
 module.exports = {
   entry: './src/index.tsx',
@@ -53,7 +52,7 @@ module.exports = {
   devServer: {
     port: 8000,
     host: '0.0.0.0',
-    public: env.parsed.PUBLIC_URL,
     historyApiFallback: true,
+    allowedHosts: ['.sparcs.org', 'localhost'],
   },
 };
