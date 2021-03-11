@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import axios from '@/utils/axios';
+import { requestRedirectURL } from '@/utils/auth';
 
 const LoginRedirect: React.FC = () => {
   useEffect(() => {
-    axios.post('/auth/login').then(({ data: { url } }) => {
+    requestRedirectURL().then(url => {
       window.location.href = url;
     });
   }, []);

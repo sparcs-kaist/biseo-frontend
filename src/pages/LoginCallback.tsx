@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import querystring from 'querystring';
-import axios from '@/utils/axios';
-import { saveToken } from '@/utils/auth';
+import { requestToken, saveToken } from '@/utils/auth';
 
 const LoginCallback: React.FC = () => {
   const location = useLocation();
@@ -13,16 +12,14 @@ const LoginCallback: React.FC = () => {
   const [valid, setValid] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`/auth/login/callback?code=${code}&state=${state}`)
-      .then(({ data }) => {
-        if (data.token) {
-          saveToken(data.token);
-          setValid(true);
-        } else {
-          setValid(false);
-        }
-      });
+    requestToken(code as string, state as string).then(token => {
+      if (token) {
+        saveToken(token);
+        setValid(true);
+      } else {
+        setValid(false);
+      }
+    });
   }, []);
 
   if (valid === null) return <div>Loading...</div>;

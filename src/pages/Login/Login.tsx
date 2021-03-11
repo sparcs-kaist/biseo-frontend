@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from '@/utils/axios';
+import { checkLoginStatus } from '@/utils/auth';
 import {
   Container,
   HeaderGroup,
@@ -13,11 +13,8 @@ const Login: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
-    axios
-      .get('/auth/check')
-      .then(({ data }) => {
-        setLoggedIn(data.success);
-      })
+    checkLoginStatus()
+      .then(isLoggedIn => setLoggedIn(isLoggedIn))
       .catch(() => setLoggedIn(false));
   }, []);
 

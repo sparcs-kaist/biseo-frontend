@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import axios from '@/utils/axios';
+import { checkLoginStatus } from '@/utils/auth';
 
 const AuthedRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const [authed, setAuthed] = useState(null);
 
   useEffect(() => {
-    axios
-      .get('/auth/check')
-      .then(({ data }) => {
-        setAuthed(data.success);
-      })
+    checkLoginStatus()
+      .then(isLoggedIn => setAuthed(isLoggedIn))
       .catch(() => setAuthed(false));
   }, []);
 
