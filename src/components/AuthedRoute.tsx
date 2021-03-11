@@ -6,9 +6,12 @@ const AuthedRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const [authed, setAuthed] = useState(null);
 
   useEffect(() => {
-    axios.get('/auth/check').then(({ data }) => {
-      setAuthed(data.success);
-    });
+    axios
+      .get('/auth/check')
+      .then(({ data }) => {
+        setAuthed(data.success);
+      })
+      .catch(() => setAuthed(false));
   }, []);
 
   if (authed === null) return <div>Loading...</div>;

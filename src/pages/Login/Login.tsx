@@ -13,9 +13,12 @@ const Login: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
-    axios.get('/auth/check').then(({ data }) => {
-      setLoggedIn(data.success);
-    });
+    axios
+      .get('/auth/check')
+      .then(({ data }) => {
+        setLoggedIn(data.success);
+      })
+      .catch(() => setLoggedIn(false));
   }, []);
 
   if (loggedIn) return <Redirect to="/dashboard" />;
