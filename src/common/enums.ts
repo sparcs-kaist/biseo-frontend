@@ -4,3 +4,9 @@ export enum MessageEnum {
   MESSAGE = 'message',
   OUT = 'out',
 }
+
+export enum AgendaStatus {
+  PREPARE = 'prepare',
+  PROGRESS = 'prpgress',
+  END = 'end',
+}

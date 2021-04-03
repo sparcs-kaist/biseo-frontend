@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import io from 'socket.io-client';
 import { Agenda } from '@/common/types';
+import { AgendaStatus } from '@/common/enums';
 import AdminBoard from '@/components/AdminBoard';
 import AdminAgenda from '@/components/AdminAgenda';
 import ChatBox from '@/components/ChatBox';
@@ -81,13 +82,29 @@ const Main: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.on('agenda:started', (payload: Agenda) => {
+      const newAgenda = {
+        ...payload,
+        userChoice: null,
+      };
+      const idx: number = agendas.findIndex(
+        agenda => agenda._id == payload._id
+      );
+      setAgendas(prevState => prevState.splice(idx, 1, newAgenda));
+    });
+  }, []);
+
   const MainComponent = isAdmin ? AdminMain : UserMain;
+  const filteredAgendas = isAdmin
+    ? agendas
+    : agendas.filter(agenda => agenda.status != AgendaStatus.PREPARE);
   return (
     <div>
       <button onClick={() => setIsAdmin(prevState => !prevState)}>
         {isAdmin ? 'To User' : 'To Admin'}
       </button>
-      <MainComponent socket={socket} agendas={agendas} />
+      <MainComponent socket={socket} agendas={filteredAgendas} />
     </div>
   );
 };

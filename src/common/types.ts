@@ -1,4 +1,4 @@
-import { MessageEnum } from './enums';
+import { MessageEnum, AgendaStatus } from './enums';
 
 export interface Agenda {
   _id: string;
@@ -9,6 +9,7 @@ export interface Agenda {
   votesCountMap: Record<string, number>;
   userChoice: string | null;
   expires: string; // ISO Date String
+  status: AgendaStatus;
 }
 
 export interface MessageType {
