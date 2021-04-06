@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { checkLoginStatus } from '@/utils/auth';
+import { LoginStatus } from '@/common/enums';
+import { useAuth } from '@/hooks';
 import {
   Container,
   HeaderGroup,
@@ -10,15 +11,9 @@ import {
 } from './styled';
 
 const Login: React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const loginStatus = useAuth();
 
-  useEffect(() => {
-    checkLoginStatus()
-      .then(isLoggedIn => setLoggedIn(isLoggedIn))
-      .catch(() => setLoggedIn(false));
-  }, []);
-
-  if (loggedIn) return <Redirect to="/dashboard" />;
+  if (loginStatus === LoginStatus.LoggedIn) return <Redirect to="/dashboard" />;
 
   return (
     <Container>

@@ -4,3 +4,9 @@ export enum MessageEnum {
   MESSAGE = 'message',
   OUT = 'out',
 }
+
+export enum LoginStatus {
+  LoggedIn,
+  NotLoggedIn,
+  Pending,
+}
