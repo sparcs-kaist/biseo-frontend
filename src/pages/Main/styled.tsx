@@ -5,83 +5,94 @@ export const UserMainContainer = styled.div`
   column-gap: 30px;
   display: grid;
   grid-template-areas:
-    'chat'
-    'agendas';
-  grid-template-rows: 60vh auto;
-  margin: 0 8vh;
+    'right'
+    'left';
   row-gap: 30px;
+  width: 100%;
+  height: 100%;
 
-  & > .agendas {
-    grid-area: agendas;
+  & > .left {
     display: flex;
     flex-direction: column;
+    grid-area: left;
+    gap: 20px 0;
+
+    /* the agenda component needs this limit to stay scrollable */
+    max-height: 80%;
+  }
+
+  & > .right {
+    grid-area: right;
+    height: 70vh;
+  }
+
+  & .agendas {
+    display: flex;
+    flex-direction: column;
+    grid-area: agendas;
     gap: 10px 0;
-    align-self: start;
-  }
-
-  & > .chat {
-    grid-area: chat;
-  }
-
-  & > .admin {
-    grid-area: admin;
+    overflow: auto;
   }
 
   @media ${device.laptop} {
+    & > .right {
+      /* height limit when screen is horizontally large */
+      max-height: 80%;
+    }
+
     grid-template-columns: 3fr 4fr;
-    grid-template-rows: 90vh;
-    grid-template-areas: 'agendas chat';
+    grid-template-areas: 'left right';
   }
 
   @media ${device.laptopL} {
     max-width: ${size.laptopL};
-    margin: 0 auto;
   }
 `;
 
 export const AdminMainContainer = styled.div`
   display: grid;
   grid-template-areas:
-    'chat'
-    'admin'
-    'agendas';
-  grid-template-rows: 60vh auto auto;
+    'right'
+    'left';
   column-gap: 30px;
   row-gap: 30px;
-  margin: 0 8vh;
+  width: 100%;
+  height: 100%;
 
-  & > .agendas {
-    grid-area: agendas;
+  & > .left {
+    display: flex;
+    flex-direction: column;
+    grid-area: left;
+    gap: 20px 0;
+
+    /* the agenda component needs this limit to stay scrollable */
+    max-height: 80%;
+  }
+
+  & > .right {
+    grid-area: right;
+    height: 70vh;
+  }
+
+  & .agendas {
     display: flex;
     flex-direction: column;
     gap: 10px 0;
-    align-self: start;
-  }
-
-  & > .chat {
-    grid-area: chat;
-  }
-
-  & > .admin {
-    grid-area: admin;
+    flex: 1;
+    overflow: auto;
   }
 
   @media ${device.laptop} {
+    & > .right {
+      /* height limit when screen is horizontally large */
+      max-height: 80%;
+    }
+
     grid-template-columns: 3fr 4fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-      'admin      chat'
-      'agendas chat';
+    grid-template-areas: 'left right';
   }
 
   @media ${device.laptopL} {
-    grid-template-columns: 3fr 4fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-      'admin      chat'
-      'agendas chat';
-
     max-width: ${size.laptopL};
-    margin: 0 auto;
   }
 `;

@@ -18,12 +18,14 @@ interface CommonMainProps {
 const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   return (
     <UserMainContainer>
-      <div className="agendas">
-        {agendas.map(item => (
-          <UserAgenda key={item._id} socket={socket} {...item} />
-        ))}
+      <div className="left">
+        <div className="agendas">
+          {agendas.map(item => (
+            <UserAgenda key={item._id} socket={socket} {...item} />
+          ))}
+        </div>
       </div>
-      <div className="chat">
+      <div className="right">
         <ChatBox socket={socket} />
       </div>
     </UserMainContainer>
@@ -33,16 +35,18 @@ const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
 const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   return (
     <AdminMainContainer>
-      <div className="agendas">
-        {agendas.map(item => (
-          <AdminAgenda key={item._id} {...item} />
-        ))}
+      <div className="left">
+        <div className="admin">
+          <AdminBoard socket={socket} tabs={mockTabs} />
+        </div>
+        <div className="agendas">
+          {agendas.map(item => (
+            <AdminAgenda key={item._id} {...item} />
+          ))}
+        </div>
       </div>
-      <div className="chat">
+      <div className="right">
         <ChatBox socket={socket} />
-      </div>
-      <div className="admin">
-        <AdminBoard socket={socket} tabs={mockTabs} />
       </div>
     </AdminMainContainer>
   );
@@ -83,11 +87,16 @@ const Main: React.FC = () => {
 
   const MainComponent = isAdmin ? AdminMain : UserMain;
   return (
-    <div>
-      <button onClick={() => setIsAdmin(prevState => !prevState)}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <button
+        onClick={() => setIsAdmin(prevState => !prevState)}
+        style={{ alignSelf: 'flex-start' }}
+      >
         {isAdmin ? 'To User' : 'To Admin'}
       </button>
-      <MainComponent socket={socket} agendas={agendas} />
+      <div style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
+        <MainComponent socket={socket} agendas={agendas} />
+      </div>
     </div>
   );
 };

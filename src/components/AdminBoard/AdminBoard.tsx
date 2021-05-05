@@ -35,7 +35,7 @@ const AdminBoard: React.FC<Props> = ({ socket, tabs }) => {
   );
 
   return (
-    <>
+    <div>
       <AdminTabs
         selected={selectedTabIndex}
         handleTabClick={setSelectedTabIndex}
@@ -47,7 +47,7 @@ const AdminBoard: React.FC<Props> = ({ socket, tabs }) => {
         extendable={selectedTab.extendableChoices}
         onVoteCreate={onVoteCreate}
       />
-    </>
+    </div>
   );
 };
 

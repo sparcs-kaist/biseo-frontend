@@ -13,3 +13,11 @@ body {
   font-family: NanumGothic;
   background-color: rgb(247, 246, 243);
 }
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100vh;
+  min-height: 100vh;
+}
