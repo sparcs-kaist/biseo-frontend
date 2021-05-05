@@ -7,6 +7,6 @@ export enum MessageEnum {
 
 export enum AgendaStatus {
   PREPARE = 'prepare',
-  PROGRESS = 'prpgress',
+  PROGRESS = 'progress',
   END = 'end',
 }

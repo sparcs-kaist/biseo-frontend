@@ -36,7 +36,7 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
     <AdminMainContainer>
       <div className="agendas">
         {agendas.map(item => (
-          <AdminAgenda key={item._id} {...item} />
+          <AdminAgenda key={item._id} socket={socket} {...item} />
         ))}
       </div>
       <div className="chat">
@@ -78,6 +78,7 @@ const Main: React.FC = () => {
         ...payload,
         userChoice: null,
       };
+      console.log(agendas);
       setAgendas(prevState => [newAgenda, ...prevState]);
     });
   }, []);
@@ -94,6 +95,16 @@ const Main: React.FC = () => {
       setAgendas(prevState => prevState.splice(idx, 1, newAgenda));
     });
   }, []);
+
+  useEffect(() => {
+    socket.on('agenda:expired', (payload: Agenda) => {
+      const newAgendas = agendas.map((agenda, ids, number) => {
+        if (agenda._id == payload._id) return payload;
+        else return agenda;
+      });
+      setAgendas(newAgendas);
+    });
+  }, [agendas]);
 
   const MainComponent = isAdmin ? AdminMain : UserMain;
   const filteredAgendas = isAdmin
