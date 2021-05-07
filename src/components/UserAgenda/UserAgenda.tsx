@@ -39,8 +39,7 @@ const UserAgenda: React.FC<Props> = ({
     userChoice !== null
   );
 
-  // const active = Date.now() < Date.parse(expires);
-  const active = status == AgendaStatus.PROGRESS;
+  const active = Date.now() < Date.parse(expires);
 
   const handleChoiceClick = (index: number) => {
     setSelectedState(state =>

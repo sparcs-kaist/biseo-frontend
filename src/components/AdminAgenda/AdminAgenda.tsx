@@ -25,22 +25,25 @@ const AdminAgenda: React.FC<Props> = ({
   status,
   socket,
 }) => {
-  // const active = Date.now() < Date.parse(expires);
-  const active = status == AgendaStatus.PROGRESS;
+  const active = Date.now() < Date.parse(expires);
   const buttonProps = () => {
-    switch (status) {
-      case AgendaStatus.PREPARE:
-        return {};
-      case AgendaStatus.PROGRESS:
+    if (active) {
+      if (status == AgendaStatus.PREPARE)
         return { background: '#f2a024', foreground: '#ffffff' };
-      case AgendaStatus.END:
-        return { disabled: true };
-      default:
-        return {};
+      else if (status == AgendaStatus.PROGRESS) return {};
+    } else {
+      return { disabled: true };
     }
   };
 
-  const buttonText = status || AgendaStatus.PROGRESS;
+  const buttonText = () => {
+    if (active) {
+      if (status == AgendaStatus.PREPARE) return '시작하기';
+      else if (status == AgendaStatus.PROGRESS) return '종료하기';
+    } else {
+      return '종료됨';
+    }
+  };
 
   const onClickPrepareAgenda = useCallback(() => {
     console.log('next');
@@ -71,7 +74,7 @@ const AdminAgenda: React.FC<Props> = ({
       <AgendaContent>
         {title}
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
-          {buttonText}
+          {buttonText()}
         </BiseoButton>
       </AgendaContent>
     </AgendaContainer>
