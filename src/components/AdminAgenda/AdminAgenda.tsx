@@ -13,6 +13,10 @@ interface AgendaExpireResponse {
   success: boolean;
 }
 
+interface AgendaStartResponse {
+  success: boolean;
+}
+
 const AdminAgenda: React.FC<Props> = ({
   _id,
   title,
@@ -45,9 +49,16 @@ const AdminAgenda: React.FC<Props> = ({
     }
   };
 
-  const onClickPrepareAgenda = useCallback(() => {
-    console.log('next');
-  }, []);
+  const onClickPrepareAgenda = useCallback(
+    (_id: String) => {
+      console.log('click prepare');
+      socket.emit('admin:start', { _id }, (res: AgendaStartResponse) => {
+        if (res.success) toast.success('🦄 Agenda Start Successfully!');
+        else toast.error('Agenda Start Error!');
+      });
+    },
+    [socket]
+  );
 
   const onClickProgressAgenda = useCallback(
     (_id: String) => {
@@ -61,7 +72,7 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickAdminAgenda = () => {
     if (status == AgendaStatus.PREPARE) {
-      return onClickPrepareAgenda;
+      return onClickPrepareAgenda(_id);
     } else if (status == AgendaStatus.PROGRESS) {
       return onClickProgressAgenda(_id);
     } else {

@@ -85,16 +85,13 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     socket.on('agenda:started', (payload: Agenda) => {
-      const newAgenda = {
-        ...payload,
-        userChoice: null,
-      };
-      const idx: number = agendas.findIndex(
-        agenda => agenda._id == payload._id
-      );
-      setAgendas(prevState => prevState.splice(idx, 1, newAgenda));
+      const newAgendas = agendas.map((agenda, ids, number) => {
+        if (agenda._id == payload._id) return payload;
+        else return agenda;
+      });
+      setAgendas(newAgendas);
     });
-  }, []);
+  }, [agendas]);
 
   useEffect(() => {
     socket.on('agenda:expired', (payload: Agenda) => {
