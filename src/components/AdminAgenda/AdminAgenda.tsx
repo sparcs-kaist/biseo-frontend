@@ -51,7 +51,6 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickPrepareAgenda = useCallback(
     (_id: String) => {
-      console.log('click prepare');
       socket.emit('admin:start', { _id }, (res: AgendaStartResponse) => {
         if (res.success) toast.success('🦄 Agenda Start Successfully!');
         else toast.error('Agenda Start Error!');

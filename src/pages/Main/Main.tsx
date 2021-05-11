@@ -78,7 +78,6 @@ const Main: React.FC = () => {
         ...payload,
         userChoice: null,
       };
-      console.log(agendas);
       setAgendas(prevState => [newAgenda, ...prevState]);
     });
   }, []);
