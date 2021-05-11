@@ -90,9 +90,7 @@ const Main: React.FC = () => {
       });
       setAgendas(newAgendas);
     });
-  }, [agendas]);
 
-  useEffect(() => {
     socket.on('agenda:expired', (payload: Agenda) => {
       const newAgendas = agendas.map((agenda, ids, number) => {
         if (agenda._id == payload._id) return payload;

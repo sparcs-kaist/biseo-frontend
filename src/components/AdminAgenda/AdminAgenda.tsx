@@ -71,9 +71,9 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickAdminAgenda = () => {
     if (status == AgendaStatus.PREPARE) {
-      return onClickPrepareAgenda(_id);
+      onClickPrepareAgenda(_id);
     } else if (status == AgendaStatus.PROGRESS) {
-      return onClickProgressAgenda(_id);
+      onClickProgressAgenda(_id);
     } else {
       return;
     }
