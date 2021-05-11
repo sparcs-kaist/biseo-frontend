@@ -86,7 +86,7 @@ const Main: React.FC = () => {
   useEffect(() => {
     socket.on('agenda:started', (payload: Agenda) => {
       const newAgendas = agendas.map((agenda, ids, number) => {
-        if (agenda._id == payload._id) return payload;
+        if (agenda._id == payload._id) return { ...payload, userChoice: null };
         else return agenda;
       });
       setAgendas(newAgendas);
