@@ -9,7 +9,7 @@ interface Props extends Agenda {
   socket: SocketIOClient.Socket;
 }
 
-interface AgendaExpireResponse {
+interface AgendaTerminateResponse {
   success: boolean;
 }
 
@@ -50,7 +50,7 @@ const AdminAgenda: React.FC<Props> = ({
   };
 
   const onClickPrepareAgenda = useCallback(
-    (_id: String) => {
+    (_id: string) => {
       socket.emit('admin:start', { _id }, (res: AgendaStartResponse) => {
         if (res.success) toast.success('🦄 Agenda Start Successfully!');
         else toast.error('Agenda Start Error!');
@@ -60,11 +60,15 @@ const AdminAgenda: React.FC<Props> = ({
   );
 
   const onClickProgressAgenda = useCallback(
-    (_id: String) => {
-      socket.emit('admin:expires', { _id }, (res: AgendaExpireResponse) => {
-        if (res.success) toast.success('🦄 Agenda Expired Successfully!');
-        else toast.error('Agenda expire Error!');
-      });
+    (_id: string) => {
+      socket.emit(
+        'admin:terminates',
+        { _id },
+        (res: AgendaTerminateResponse) => {
+          if (res.success) toast.success('🦄 Agenda terminated Successfully!');
+          else toast.error('Error while terminating agenda!');
+        }
+      );
     },
     [socket]
   );

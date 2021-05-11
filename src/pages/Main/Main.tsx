@@ -91,7 +91,7 @@ const Main: React.FC = () => {
       setAgendas(newAgendas);
     });
 
-    socket.on('agenda:expired', (payload: Agenda) => {
+    socket.on('agenda:terminated', (payload: Agenda) => {
       const newAgendas = agendas.map((agenda, ids, number) => {
         if (agenda._id == payload._id) return payload;
         else return agenda;
