@@ -8,4 +8,9 @@ export enum MessageEnum {
 export enum AgendaStatus {
   PREPARE = 'prepare',
   PROGRESS = 'progress',
+
+export enum LoginStatus {
+  LoggedIn,
+  NotLoggedIn,
+  Pending,
 }
