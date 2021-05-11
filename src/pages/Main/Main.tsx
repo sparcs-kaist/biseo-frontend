@@ -9,6 +9,7 @@ import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { mockTabs } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
+import Navbar from '@/components/NavBar/NavBar';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -18,6 +19,9 @@ interface CommonMainProps {
 const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   return (
     <UserMainContainer>
+      <div className="Navbar">
+        <Navbar username="hyuk" />
+      </div>
       <div className="agendas">
         {agendas.map(item => (
           <UserAgenda key={item._id} socket={socket} {...item} />
@@ -33,6 +37,9 @@ const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
 const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   return (
     <AdminMainContainer>
+      <div className="Navbar">
+        <Navbar username="hyuk" />
+      </div>
       <div className="agendas">
         {agendas.map(item => (
           <AdminAgenda key={item._id} {...item} />
