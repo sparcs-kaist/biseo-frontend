@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import io from 'socket.io-client';
 import { Agenda } from '@/common/types';
+import { AgendaStatus } from '@/common/enums';
 import AdminBoard from '@/components/AdminBoard';
 import AdminAgenda from '@/components/AdminAgenda';
 import ChatBox from '@/components/ChatBox';
@@ -35,7 +36,7 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
     <AdminMainContainer>
       <div className="agendas">
         {agendas.map(item => (
-          <AdminAgenda key={item._id} {...item} />
+          <AdminAgenda key={item._id} socket={socket} {...item} />
         ))}
       </div>
       <div className="chat">
@@ -81,13 +82,34 @@ const Main: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.on('agenda:started', (payload: Agenda) => {
+      const newAgendas = agendas.map(agenda => {
+        if (agenda._id == payload._id) return { ...payload, userChoice: null };
+        else return agenda;
+      });
+      setAgendas(newAgendas);
+    });
+
+    socket.on('agenda:terminated', (payload: Agenda) => {
+      const newAgendas = agendas.map(agenda => {
+        if (agenda._id == payload._id) return payload;
+        else return agenda;
+      });
+      setAgendas(newAgendas);
+    });
+  }, [agendas]);
+
   const MainComponent = isAdmin ? AdminMain : UserMain;
+  const filteredAgendas = isAdmin
+    ? agendas
+    : agendas.filter(agenda => agenda.status != AgendaStatus.PREPARE);
   return (
     <div>
       <button onClick={() => setIsAdmin(prevState => !prevState)}>
         {isAdmin ? 'To User' : 'To Admin'}
       </button>
-      <MainComponent socket={socket} agendas={agendas} />
+      <MainComponent socket={socket} agendas={filteredAgendas} />
     </div>
   );
 };
