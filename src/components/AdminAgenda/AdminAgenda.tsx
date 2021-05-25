@@ -20,12 +20,7 @@ interface AgendaStartResponse {
 const AdminAgenda: React.FC<Props> = ({
   _id,
   title,
-  subtitle,
-  content,
-  choices,
   expires,
-  votesCountMap,
-  userChoice,
   status,
   socket,
 }) => {

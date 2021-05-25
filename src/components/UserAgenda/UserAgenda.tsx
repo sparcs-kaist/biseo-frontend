@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import BiseoButton from '@/components/BiseoButton';
 import { Agenda } from '@/common/types';
-import { AgendaStatus } from '@/common/enums';
 import {
   ActiveContainer,
   ActiveContainerTitle,
@@ -25,7 +24,6 @@ const UserAgenda: React.FC<Props> = ({
   expires,
   votesCountMap,
   userChoice,
-  status,
   socket,
 }) => {
   /* if we're dealing with only single-choice options, we wouldn't have to
