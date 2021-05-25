@@ -69,7 +69,9 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     );
 
     // remove the event listener on dependency modification
-    return () => socket.off('chat:message');
+    return () => {
+      socket.off('chat:message');
+    };
   }, [name]);
 
   const currentTime = () => {
