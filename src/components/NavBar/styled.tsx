@@ -1,22 +1,26 @@
 import styled from 'styled-components';
 
-export const NavbarContainer = styled.div`
+export const NavBarContainer = styled.div`
   background: white;
   display: grid;
   border-top: 6px solid #ef9730;
-  width: 100%;
   height: 50px;
-  grid-template-areas: 'Left Logo SPARCS Right';
+  grid-template-areas: 'left logo sparcs right';
   grid-template-columns: 5vw 50px 10vw auto;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
 
-  & > .Left {
-    grid-area: Left;
+  & l .Left {
+    grid-area: left;
   }
-  & > .Logo {
-    grid-area: Logo;
+  & > .logo {
+    grid-area: logo;
   }
-  & > .SPARCS {
-    grid-area: SPARCS;
+  & > .sparcs {
+    grid-area: sparcs;
     margin-bottom: 15px;
     margin-top: 15px;
     font-weight: 800;
@@ -24,15 +28,15 @@ export const NavbarContainer = styled.div`
     font-family: Raleway;
     vertical-align: middle;
   }
-  & > .Right {
-    grid-area: Right;
+  & > .right {
+    grid-area: right;
   }
-  & > .SPARCS span {
+  & > .sparcs span {
     background: linear-gradient(to right, #e79832, #ea772d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  & > .Logo img {
+  & > .logo img {
     display: block;
     margin: 5px auto;
     height: 40px;
