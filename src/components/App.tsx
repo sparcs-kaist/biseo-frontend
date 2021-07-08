@@ -10,10 +10,12 @@ import {
   AdminPage,
 } from '@/pages';
 import BiseoToastContainer from '@/components/BiseoToastContainer';
+import NavBar from '@/components/NavBar';
 
 const App: React.FC = () => {
   return (
     <Router>
+      <NavBar />
       <Switch>
         <Route exact path="/admin">
           <AdminPage />
