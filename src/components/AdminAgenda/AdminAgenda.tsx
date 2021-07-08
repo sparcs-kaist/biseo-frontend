@@ -20,22 +20,27 @@ const AdminAgenda: React.FC<Agenda> = ({
   const buttonProps = active
     ? { background: '#f2a024', foreground: '#ffffff' }
     : {};
+  const [showDetails, setShowDetails] = React.useState(false);
   const buttonText = active ? '진행 중' : '시작하기';
+  const onClick = () => setShowDetails(!showDetails);
 
-  // return (
-  //   <AgendaContainer>
-  //     <AgendaContent>
-  //       {title}
-  //       <BiseoButton {...buttonProps}>{buttonText}</BiseoButton>
-  //     </AgendaContent>
-  //   </AgendaContainer>
-  // );
   return (
-    <DetailContainer>
-      <DetailContainerTitle>{title}</DetailContainerTitle>
-      <DetailContainerContent>{content}</DetailContainerContent>
-      <DetailContainerSubtitle>{subtitle}</DetailContainerSubtitle>
-    </DetailContainer>
+    <div onClick={onClick}>
+      {showDetails ? (
+        <DetailContainer>
+          <DetailContainerTitle>{title}</DetailContainerTitle>
+          <DetailContainerContent>{content}</DetailContainerContent>
+          <DetailContainerSubtitle>{subtitle}</DetailContainerSubtitle>
+        </DetailContainer>
+      ) : (
+        <AgendaContainer>
+          <AgendaContent>
+            {title}
+            <BiseoButton {...buttonProps}>{buttonText}</BiseoButton>
+          </AgendaContent>
+        </AgendaContainer>
+      )}
+    </div>
   );
 };
 
