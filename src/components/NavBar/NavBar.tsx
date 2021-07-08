@@ -1,23 +1,21 @@
 import React from 'react';
-import { NavbarContainer } from './styled';
+import { NavBarContainer } from './styled';
 
-interface Props {
-  username: string;
-}
-const Navbar: React.FC<Props> = ({ username }) => {
+const NavBar: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const logo = require('./Symbol.svg') as string;
   return (
-    <NavbarContainer>
-      <div className="Left"></div>
-      <div className="Logo">
+    <NavBarContainer>
+      <div className="left"></div>
+      <div className="logo">
         <img src={logo} />
       </div>
-      <div className="SPARCS">
+      <div className="sparcs">
         <span>SPARCS</span>
       </div>
-      <div className="Right"></div>
-    </NavbarContainer>
+      <div className="right"></div>
+    </NavBarContainer>
   );
 };
 
-export default Navbar;
+export default NavBar;
