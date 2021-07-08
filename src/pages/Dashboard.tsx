@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <h1>Hello, Dashboard</h1>
+      <h1 style={{ paddingTop: 60 }}>Hello, Dashboard</h1>
       <button onClick={handleLogout}>Logout</button>
       <button
         onClick={() => {
