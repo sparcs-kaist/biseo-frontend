@@ -3,12 +3,12 @@ import { device, size } from '@/utils/device';
 
 export const UserMainContainer = styled.div`
   column-gap: 30px;
+  padding-top: 60px;
   display: grid;
   grid-template-areas:
-    'Navbar'
     'chat'
     'agendas';
-  grid-template-rows: 30px 60vh auto;
+  grid-template-rows: 60vh auto;
   margin: 0 8vh;
   row-gap: 30px;
 
@@ -24,21 +24,11 @@ export const UserMainContainer = styled.div`
     grid-area: chat;
   }
 
-  & > .Navbar {
-    grid-area: Navbar;
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
-
   @media ${device.laptop} {
+    padding-top: 60px;
     grid-template-columns: 3fr 4fr;
-    grid-template-rows: 30px auto;
-    grid-template-areas:
-      'Navbar Navbar'
-      'agendas chat';
+    grid-template-rows: auto;
+    grid-template-areas: 'agendas chat';
     height: 80vh;
   }
 
@@ -50,12 +40,12 @@ export const UserMainContainer = styled.div`
 
 export const AdminMainContainer = styled.div`
   display: grid;
+  padding-top: 60px;
   grid-template-areas:
-    'Navbar'
     'chat'
     'admin'
     'agendas';
-  grid-template-rows: 30px 60vh auto auto;
+  grid-template-rows: 60vh auto auto;
   column-gap: 30px;
   row-gap: 30px;
   margin: 0 8vh;
@@ -86,20 +76,20 @@ export const AdminMainContainer = styled.div`
   }
 
   @media ${device.laptop} {
+    padding-top: 60px;
     grid-template-columns: 3fr 4fr;
-    grid-template-rows: 30px 40vh auto;
+    grid-template-rows: 40vh auto;
     grid-template-areas:
-      'Navbar Navbar'
       'admin      chat'
       'agendas chat';
     height: 80vh;
   }
 
   @media ${device.laptopL} {
+    padding-top: 60px;
     grid-template-columns: 3fr 4fr;
-    grid-template-rows: 30px 40vh auto;
+    grid-template-rows: 40vh auto;
     grid-template-areas:
-      'Navbar Navbar'
       'admin      chat'
       'agendas chat';
     height: 80vh;
