@@ -8,7 +8,6 @@ export const UserMainContainer = styled.div`
     'chat'
     'agendas';
   grid-template-rows: 60vh auto;
-  margin: 0 8vh;
   row-gap: 30px;
 
   & > .agendas {
@@ -48,7 +47,6 @@ export const AdminMainContainer = styled.div`
   grid-template-rows: 60vh auto auto;
   column-gap: 30px;
   row-gap: 30px;
-  margin: 0 8vh;
 
   & > .agendas {
     grid-area: agendas;

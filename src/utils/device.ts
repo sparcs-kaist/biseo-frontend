@@ -1,8 +1,15 @@
 export const size = {
-  mobile: '375px',
+  mobile: '640px',
   tablet: '768px',
   laptop: '1024px',
   laptopL: '1440px',
+};
+
+export const maxWidth = {
+  mobile: '640px',
+  tablet: '760px',
+  laptop: '960px',
+  laptopL: '1300px',
 };
 
 export const device = {
