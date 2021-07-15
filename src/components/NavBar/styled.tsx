@@ -4,9 +4,9 @@ export const NavBarContainer = styled.div`
   background: white;
   display: grid;
   border-top: 6px solid #ef9730;
-  height: 50px;
+  height: 46px;
   grid-template-areas: 'left logo sparcs right';
-  grid-template-columns: 5vw 50px 10vw auto;
+  grid-template-columns: 5vw 40px 10vw auto;
   width: 100vw;
   position: fixed;
   top: 0;
@@ -21,24 +21,25 @@ export const NavBarContainer = styled.div`
   }
   & > .sparcs {
     grid-area: sparcs;
-    margin-bottom: 15px;
-    margin-top: 15px;
+    // margin-bottom: 15px;
+    margin-top: 7px;
+    margin-bottom: 5px;
     font-weight: 800;
-    font-size: 20px;
-    font-family: Raleway;
+    font-size: 30px;
+    font-family: raleway;
     vertical-align: middle;
   }
   & > .right {
     grid-area: right;
   }
   & > .sparcs span {
-    background: linear-gradient(to right, #e79832, #ea772d);
+    background: linear-gradient(to right, #eba12a, #ea772d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   & > .logo img {
     display: block;
     margin: 5px auto;
-    height: 40px;
+    height: 35px;
   }
 `;
