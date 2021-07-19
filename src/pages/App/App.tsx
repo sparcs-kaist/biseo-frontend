@@ -11,12 +11,14 @@ import {
   AdminPage,
 } from '@/pages';
 import BiseoToastContainer from '@/components/BiseoToastContainer';
+import Header from '@/components/Header';
 import { AppContainer } from './styled';
 
 const App: React.FC = () => {
   return (
     <Router>
       <GlobalStyle />
+      <Header />
       <AppContainer>
         <Switch>
           <Route exact path="/admin">

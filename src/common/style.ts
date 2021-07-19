@@ -1,7 +1,16 @@
 import { createGlobalStyle } from 'styled-components';
 import { device, maxWidth } from '@/utils/device';
 
+export const COLOR = {
+  primary: '#f2a024',
+};
+
 export const GlobalStyle = createGlobalStyle`
+  :root {
+    --header-height: 50px;
+    --biseo-primary: ${COLOR.primary};
+  }
+
   @media screen and ${device.mobile} {
     :root {
       --screen-max-width: ${maxWidth.mobile};
