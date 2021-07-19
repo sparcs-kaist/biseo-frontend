@@ -17,9 +17,16 @@ interface AgendaStartResponse {
   success: boolean;
 }
 
+interface AgendaEditResponse {
+  success: boolean;
+}
+
 const AdminAgenda: React.FC<Props> = ({
   _id,
   title,
+  content,
+  subtitle,
+  choices,
   expires,
   status,
   socket,
@@ -78,10 +85,32 @@ const AdminAgenda: React.FC<Props> = ({
     }
   };
 
+  const onClickAdminEdit = useCallback(
+    (_id, title, content, subtitle, choices): void => {
+      socket.emit(
+        'admin:edit',
+        _id,
+        { title, content, subtitle, choices },
+        (res: AgendaEditResponse) => {
+          if (res.success) toast.success('🦄 Agenda edited Successfully!');
+          else toast.error('Agenda Edition Error!');
+        }
+      );
+    },
+    [socket]
+  );
+
   return (
     <AgendaContainer>
       <AgendaContent>
         {title}
+        <BiseoButton
+          onClick={() =>
+            onClickAdminEdit(_id, title, content, subtitle, choices)
+          }
+        >
+          수정
+        </BiseoButton>
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
           {buttonText()}
         </BiseoButton>
