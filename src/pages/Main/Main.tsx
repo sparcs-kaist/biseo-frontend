@@ -36,18 +36,13 @@ const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
 const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   return (
     <AdminMainContainer>
-      <div className="left">
-        <div className="admin">
-          <AdminBoard socket={socket} tabs={mockTabs} />
-        </div>
-        <div className="agendas">
-          {agendas.map(item => (
-            <AdminAgenda key={item._id} socket={socket} {...item} />
-          ))}
-        </div>
+      <div className="admin">
+        <AdminBoard socket={socket} tabs={mockTabs} />
       </div>
-      <div className="right">
-        <ChatBox socket={socket} />
+      <div className="agendas">
+        {agendas.map(item => (
+          <AdminAgenda key={item._id} socket={socket} {...item} />
+        ))}
       </div>
     </AdminMainContainer>
   );

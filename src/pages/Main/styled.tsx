@@ -43,26 +43,19 @@ export const UserMainContainer = styled.div`
 export const AdminMainContainer = styled.div`
   display: grid;
   grid-template-areas:
-    'right'
-    'left';
+    'admin'
+    'agendas';
   column-gap: 30px;
   row-gap: 30px;
   width: 100%;
   height: 100%;
 
-  & > .left {
-    display: flex;
-    flex-direction: column;
-
-    grid-area: left;
-    gap: 20px 0;
+  & > .admin {
+    grid-area: admin;
   }
 
-  & > .right {
-    grid-area: right;
-  }
-
-  & .agendas {
+  & > .agendas {
+    grid-area: agendas;
     display: flex;
     flex-direction: column;
     gap: 10px 0;
@@ -71,9 +64,9 @@ export const AdminMainContainer = styled.div`
   }
 
   @media ${device.laptop} {
-    grid-template-columns: 3fr 4fr;
+    grid-template-columns: 5fr 4fr;
     grid-template-rows: auto;
-    grid-template-areas: 'left right';
+    grid-template-areas: 'admin agendas';
   }
 
   @media ${device.laptopL} {
