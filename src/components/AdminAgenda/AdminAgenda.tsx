@@ -3,7 +3,12 @@ import { toast } from 'react-toastify';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
 import BiseoButton from '@/components/BiseoButton';
-import { AgendaContainer, AgendaContent } from './styled';
+import { AgendaContainer, AgendaContent, AgendaContent2 } from './styled';
+import {
+  ActiveContainerTitle,
+  ActiveContainerContent,
+  ActiveContainerSubtitle,
+} from '../UserAgenda/styled';
 
 interface Props extends Agenda {
   socket: SocketIOClient.Socket;
@@ -20,6 +25,8 @@ interface AgendaStartResponse {
 const AdminAgenda: React.FC<Props> = ({
   _id,
   title,
+  content,
+  subtitle,
   expires,
   status,
   socket,
@@ -42,6 +49,11 @@ const AdminAgenda: React.FC<Props> = ({
     } else {
       return '종료됨';
     }
+  };
+
+  const [showDetails, setShowDetails] = React.useState(false);
+  const onClick = () => {
+    setShowDetails(!showDetails);
   };
 
   const onClickPrepareAgenda = useCallback(
@@ -68,7 +80,8 @@ const AdminAgenda: React.FC<Props> = ({
     [socket]
   );
 
-  const onClickAdminAgenda = () => {
+  const onClickAdminAgenda = e => {
+    e.stopPropagation();
     if (status == AgendaStatus.PREPARE) {
       onClickPrepareAgenda(_id);
     } else if (status == AgendaStatus.PROGRESS) {
@@ -78,8 +91,17 @@ const AdminAgenda: React.FC<Props> = ({
     }
   };
 
-  return (
-    <AgendaContainer>
+  return showDetails ? (
+    <AgendaContainer onClick={onClick}>
+      <ActiveContainerTitle>{title}</ActiveContainerTitle>
+      <ActiveContainerContent>{content}</ActiveContainerContent>
+      <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
+      <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
+        {buttonText()}
+      </BiseoButton>
+    </AgendaContainer>
+  ) : (
+    <AgendaContainer onClick={onClick}>
       <AgendaContent>
         {title}
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
