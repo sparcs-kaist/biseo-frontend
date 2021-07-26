@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
 import BiseoButton from '@/components/BiseoButton';
-import { AgendaContainer, AgendaContent, AgendaContent2 } from './styled';
+import { AgendaContainer, AgendaContent } from './styled';
 import {
   ActiveContainerTitle,
   ActiveContainerContent,
