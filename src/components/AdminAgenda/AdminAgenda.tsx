@@ -100,6 +100,16 @@ const AdminAgenda: React.FC<Props> = ({
     [socket]
   );
 
+  const onClickAdminDelete = useCallback(
+    (_id): void => {
+      socket.emit('admin:delete', _id, (res: AgendaEditResponse) => {
+        if (res.success) toast.success('🦄 Agenda deleted Successfully!');
+        else toast.error('Agenda Deletion Error!');
+      });
+    },
+    [socket]
+  );
+
   return (
     <AgendaContainer>
       <AgendaContent>
@@ -111,6 +121,7 @@ const AdminAgenda: React.FC<Props> = ({
         >
           수정
         </BiseoButton>
+        <BiseoButton onClick={() => onClickAdminDelete(_id)}>삭제</BiseoButton>
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
           {buttonText()}
         </BiseoButton>
