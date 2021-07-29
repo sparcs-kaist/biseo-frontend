@@ -6,7 +6,7 @@ import { COLOR } from '@/common/style';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
 
 const HeaderContainer = styled.div`
-  height: calc(var(--header-height) + 12px);
+  height: calc(var(--header-height) + 24px);
   background: white;
   display: flex;
   align-items: center;

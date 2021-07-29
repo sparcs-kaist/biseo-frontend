@@ -7,8 +7,15 @@ export const COLOR = {
 
 export const GlobalStyle = createGlobalStyle`
   :root {
-    --header-height: 50px;
+    // --header-height: 50px;
+    --header-height: 36px;
     --biseo-primary: ${COLOR.primary};
+  }
+
+  @media screen and (max-width:640px) {
+    :root {
+      --screen-max-width: 90%;
+    }
   }
 
   @media screen and ${device.mobile} {
