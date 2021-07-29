@@ -34,9 +34,9 @@ const AdminAgenda: React.FC<Props> = ({
   const active = Date.now() < Date.parse(expires);
   const buttonProps = () => {
     if (active) {
-      if (status == AgendaStatus.PREPARE)
+      if (status === AgendaStatus.PREPARE)
         return { background: '#f2a024', foreground: '#ffffff' };
-      else if (status == AgendaStatus.PROGRESS) return {};
+      else if (status === AgendaStatus.PROGRESS) return {};
     } else {
       return { disabled: true };
     }
@@ -44,8 +44,8 @@ const AdminAgenda: React.FC<Props> = ({
 
   const buttonText = () => {
     if (active) {
-      if (status == AgendaStatus.PREPARE) return '시작하기';
-      else if (status == AgendaStatus.PROGRESS) return '종료하기';
+      if (status === AgendaStatus.PREPARE) return '시작하기';
+      else if (status === AgendaStatus.PROGRESS) return '종료하기';
     } else {
       return '종료됨';
     }
