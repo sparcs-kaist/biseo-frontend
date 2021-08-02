@@ -9,6 +9,9 @@ export const GlobalStyle = createGlobalStyle`
   :root {
     // --header-height: 50px;
     --header-height: 36px;
+    --header-border: 6px;
+    --header-margin: 24px;
+    --header-size: calc(var(--header-height) + var(--header-margin) + var(--header-border));
     --biseo-primary: ${COLOR.primary};
   }
 

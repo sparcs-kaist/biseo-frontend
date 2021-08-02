@@ -10,6 +10,7 @@ import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { mockTabs } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
+// import { COLOR } from '@/common/style';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -104,8 +105,11 @@ const Main: React.FC = () => {
     ? agendas
     : agendas.filter(agenda => agenda.status != AgendaStatus.PREPARE);
   return (
-    <div style={{ height: '100%' }}>
-      <button onClick={() => setIsAdmin(prevState => !prevState)}>
+    <div style={{ height: 'calc(100% - 80px)' }}>
+      <button
+        onClick={() => setIsAdmin(prevState => !prevState)}
+        style={{ position: 'fixed', top: '0', left: '0' }}
+      >
         {isAdmin ? 'To User' : 'To Admin'}
       </button>
       <MainComponent socket={socket} agendas={filteredAgendas} />

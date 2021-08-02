@@ -6,12 +6,12 @@ import { COLOR } from '@/common/style';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
 
 const HeaderContainer = styled.div`
-  height: calc(var(--header-height) + 24px);
+  height: calc(var(--header-height) + var(--header-margin));
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-top: 6px solid var(--biseo-primary);
+  border-top: var(--header-border) solid var(--biseo-primary);
 `;
 
 const HeaderContent = styled.div`
