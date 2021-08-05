@@ -3,26 +3,19 @@ import { toast } from 'react-toastify';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
 import BiseoButton from '@/components/BiseoButton';
-import { AgendaContainer, AgendaContent } from './styled';
+import { AgendaContainer, AgendaContent, AgendaButton } from './styled';
 import {
   ActiveContainerTitle,
   ActiveContainerContent,
   ActiveContainerSubtitle,
 } from '../UserAgenda/styled';
+import EditIcon from './Edit.svg';
 
 interface Props extends Agenda {
   socket: SocketIOClient.Socket;
 }
 
-interface AgendaTerminateResponse {
-  success: boolean;
-}
-
-interface AgendaStartResponse {
-  success: boolean;
-}
-
-interface AgendaEditResponse {
+interface AgendaResponse {
   success: boolean;
 }
 
@@ -63,7 +56,7 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickPrepareAgenda = useCallback(
     (_id: string) => {
-      socket.emit('admin:start', { _id }, (res: AgendaStartResponse) => {
+      socket.emit('admin:start', { _id }, (res: AgendaResponse) => {
         if (res.success) toast.success('🦄 Agenda Start Successfully!');
         else toast.error('Agenda Start Error!');
       });
@@ -73,14 +66,10 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickProgressAgenda = useCallback(
     (_id: string) => {
-      socket.emit(
-        'admin:terminates',
-        { _id },
-        (res: AgendaTerminateResponse) => {
-          if (res.success) toast.success('🦄 Agenda terminated Successfully!');
-          else toast.error('Error while terminating agenda!');
-        }
-      );
+      socket.emit('admin:terminates', { _id }, (res: AgendaResponse) => {
+        if (res.success) toast.success('🦄 Agenda terminated Successfully!');
+        else toast.error('Error while terminating agenda!');
+      });
     },
     [socket]
   );
@@ -102,7 +91,7 @@ const AdminAgenda: React.FC<Props> = ({
         'admin:edit',
         _id,
         { title, content, subtitle, choices },
-        (res: AgendaEditResponse) => {
+        (res: AgendaResponse) => {
           if (res.success) toast.success('🦄 Agenda edited Successfully!');
           else toast.error('Agenda Edition Error!');
         }
@@ -113,7 +102,7 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickAdminDelete = useCallback(
     (_id): void => {
-      socket.emit('admin:delete', _id, (res: AgendaEditResponse) => {
+      socket.emit('admin:delete', _id, (res: AgendaResponse) => {
         if (res.success) toast.success('🦄 Agenda deleted Successfully!');
         else toast.error('Agenda Deletion Error!');
       });
@@ -134,17 +123,20 @@ const AdminAgenda: React.FC<Props> = ({
     <AgendaContainer onClick={onClick}>
       <AgendaContent>
         {title}
-        <BiseoButton
+        {/* <BiseoButton
           onClick={() =>
             onClickAdminEdit(_id, title, content, subtitle, choices)
           }
         >
           수정
         </BiseoButton>
-        <BiseoButton onClick={() => onClickAdminDelete(_id)}>삭제</BiseoButton>
-        <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
-          {buttonText()}
-        </BiseoButton>
+        <BiseoButton onClick={() => onClickAdminDelete(_id)}>삭제</BiseoButton> */}
+        <AgendaButton>
+          <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
+            {buttonText()}
+          </BiseoButton>
+          <EditIcon onClick={() => console.log('클릭')} />
+        </AgendaButton>
       </AgendaContent>
     </AgendaContainer>
   );
