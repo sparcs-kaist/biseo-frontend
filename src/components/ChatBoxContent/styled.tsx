@@ -15,6 +15,7 @@ export const MessageContainer = styled.div`
   ${(props: JustificationProps) =>
     props.justification === 'around' && `font-weight: bold`};
   position: relative;
+  max-width: 100%;
 `;
 
 export const MessageUsername = styled.span`
@@ -29,7 +30,7 @@ export const MessageContent = styled.div`
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 18px;
-  max-width: 500px;
+  max-width: 90%;
   padding: 10px 15px;
   position: relative;
   word-break: break-word;

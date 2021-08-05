@@ -21,6 +21,10 @@ export const UserMainContainer = styled.div`
 
   & > .right {
     grid-area: right;
+    overflow: auto;
+    -moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
 
   & .agendas {
@@ -33,6 +37,7 @@ export const UserMainContainer = styled.div`
 
   @media ${device.laptop} {
     grid-template-areas: 'left right';
+    grid-template-columns: 4fr 6fr;
   }
 
   @media ${device.laptopL} {
@@ -52,6 +57,7 @@ export const AdminMainContainer = styled.div`
 
   & > .admin {
     grid-area: admin;
+    overflow: auto;
   }
 
   & > .agendas {
