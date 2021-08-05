@@ -80,30 +80,32 @@ const Main: React.FC = () => {
       };
       setAgendas(prevState => [newAgenda, ...prevState]);
     });
-  }, []);
 
-  useEffect(() => {
     socket.on('agenda:started', (payload: Agenda) => {
-      const newAgendas = agendas.map(agenda => {
-        if (agenda._id == payload._id) return { ...payload, userChoice: null };
-        else return agenda;
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id)
+            return { ...payload, userChoice: null };
+          else return agenda;
+        });
       });
-      setAgendas(newAgendas);
     });
 
     socket.on('agenda:terminated', (payload: Agenda) => {
-      const newAgendas = agendas.map(agenda => {
-        if (agenda._id == payload._id) return payload;
-        else return agenda;
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id) return payload;
+          else return agenda;
+        });
       });
-      setAgendas(newAgendas);
     });
-  }, [agendas]);
+  }, []);
 
   const MainComponent = isAdmin ? AdminMain : UserMain;
   const filteredAgendas = isAdmin
     ? agendas
-    : agendas.filter(agenda => agenda.status != AgendaStatus.PREPARE);
+    : agendas.filter(agenda => agenda.status !== AgendaStatus.PREPARE);
+
   return (
     <div>
       <button onClick={() => setIsAdmin(prevState => !prevState)}>
