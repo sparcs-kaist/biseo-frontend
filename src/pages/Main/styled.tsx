@@ -57,7 +57,6 @@ export const AdminMainContainer = styled.div`
 
   & > .admin {
     grid-area: admin;
-    overflow: auto;
   }
 
   & > .agendas {
