@@ -2,86 +2,81 @@ import styled from 'styled-components';
 import { device, size } from '@/utils/device';
 
 export const UserMainContainer = styled.div`
-  column-gap: 30px;
   display: grid;
   grid-template-areas:
-    'chat'
-    'agendas';
-  grid-template-rows: 60vh auto;
-  margin: 0 8vh;
+    'right'
+    'left';
+  column-gap: 30px;
   row-gap: 30px;
+  width: 100%;
+  height: 100%;
 
-  & > .agendas {
+  & > .left {
     grid-area: agendas;
     display: flex;
     flex-direction: column;
+    grid-area: left;
+    gap: 20px 0;
+  }
+
+  & > .right {
+    grid-area: right;
+    overflow: auto;
+    -moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  & .agendas {
+    display: flex;
+    flex-direction: column;
     gap: 10px 0;
-    align-self: start;
-  }
-
-  & > .chat {
-    grid-area: chat;
-  }
-
-  & > .admin {
-    grid-area: admin;
+    flex: 1 0 1px;
+    padding: 5px;
+    overflow: auto;
   }
 
   @media ${device.laptop} {
-    grid-template-columns: 3fr 4fr;
-    grid-template-rows: 90vh;
-    grid-template-areas: 'agendas chat';
+    grid-template-areas: 'left right';
+    grid-template-columns: 1.35fr 1fr;
   }
 
   @media ${device.laptopL} {
     max-width: ${size.laptopL};
-    margin: 0 auto;
   }
 `;
 
 export const AdminMainContainer = styled.div`
   display: grid;
   grid-template-areas:
-    'chat'
     'admin'
     'agendas';
-  grid-template-rows: 60vh auto auto;
   column-gap: 30px;
   row-gap: 30px;
-  margin: 0 8vh;
+  width: 100%;
+  height: 100%;
+
+  & > .admin {
+    grid-area: admin;
+  }
 
   & > .agendas {
     grid-area: agendas;
     display: flex;
     flex-direction: column;
     gap: 10px 0;
-    align-self: start;
-  }
-
-  & > .chat {
-    grid-area: chat;
-  }
-
-  & > .admin {
-    grid-area: admin;
+    flex: 1 0 1px;
+    padding: 5px;
+    overflow: auto;
   }
 
   @media ${device.laptop} {
-    grid-template-columns: 3fr 4fr;
+    grid-template-columns: 5fr 4fr;
     grid-template-rows: auto;
-    grid-template-areas:
-      'admin      chat'
-      'agendas chat';
+    grid-template-areas: 'admin agendas';
   }
 
   @media ${device.laptopL} {
-    grid-template-columns: 3fr 4fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-      'admin      chat'
-      'agendas chat';
-
     max-width: ${size.laptopL};
-    margin: 0 auto;
   }
 `;

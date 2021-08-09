@@ -12,4 +12,9 @@
 body {
   font-family: NanumGothic;
   background-color: rgb(247, 246, 243);
+  margin: 0;
+}
+
+#app {
+  height: 100vh;
 }

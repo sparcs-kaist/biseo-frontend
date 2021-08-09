@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const ActiveContainer = styled.div`
   background: #fdfbee;
   border-radius: 10px;
-  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.25);
   padding: 30px;
 `;
 
@@ -31,7 +31,7 @@ export const InactiveContainer = styled.div`
   background: #ffffff;
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
-  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.25);
   padding: 15px 30px;
   position: relative;
 
