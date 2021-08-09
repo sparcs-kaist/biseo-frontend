@@ -10,7 +10,6 @@ import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { mockTabs } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
-// import { COLOR } from '@/common/style';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;

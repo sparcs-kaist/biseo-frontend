@@ -14,7 +14,6 @@ export const UserMainContainer = styled.div`
   & > .left {
     grid-area: agendas;
     display: flex;
-    // padding: 5px;
     flex-direction: column;
     grid-area: left;
     gap: 20px 0;

@@ -7,7 +7,6 @@ export const COLOR = {
 
 export const GlobalStyle = createGlobalStyle`
   :root {
-    // --header-height: 50px;
     --header-height: 36px;
     --header-border: 6px;
     --header-margin: 24px;
