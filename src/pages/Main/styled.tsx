@@ -14,6 +14,7 @@ export const UserMainContainer = styled.div`
   & > .left {
     grid-area: agendas;
     display: flex;
+    // padding: 5px;
     flex-direction: column;
     grid-area: left;
     gap: 20px 0;
@@ -32,12 +33,13 @@ export const UserMainContainer = styled.div`
     flex-direction: column;
     gap: 10px 0;
     flex: 1 0 1px;
+    padding: 5px;
     overflow: auto;
   }
 
   @media ${device.laptop} {
     grid-template-areas: 'left right';
-    grid-template-columns: 4fr 6fr;
+    grid-template-columns: 1.35fr 1fr;
   }
 
   @media ${device.laptopL} {
@@ -65,6 +67,7 @@ export const AdminMainContainer = styled.div`
     flex-direction: column;
     gap: 10px 0;
     flex: 1 0 1px;
+    padding: 5px;
     overflow: auto;
   }
 
