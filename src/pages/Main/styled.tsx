@@ -6,7 +6,7 @@ export const UserMainContainer = styled.div`
   grid-template-areas:
     'right'
     'left';
-  column-gap: 30px;
+  column-gap: 37px;
   row-gap: 30px;
   width: 100%;
   height: 100%;

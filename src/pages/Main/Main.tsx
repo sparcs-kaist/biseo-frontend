@@ -104,7 +104,7 @@ const Main: React.FC = () => {
     ? agendas
     : agendas.filter(agenda => agenda.status != AgendaStatus.PREPARE);
   return (
-    <div style={{ height: 'calc(100% - 80px)' }}>
+    <div style={{ height: '100%' }}>
       <button
         onClick={() => setIsAdmin(prevState => !prevState)}
         style={{ position: 'fixed', top: '0', left: '0' }}
