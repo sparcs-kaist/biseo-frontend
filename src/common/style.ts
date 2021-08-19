@@ -7,10 +7,12 @@ export const COLOR = {
 
 export const GlobalStyle = createGlobalStyle`
   :root {
-    --header-height: 36px;
-    --header-border: 6px;
-    --header-margin: 24px;
+    --header-height: 27px;
+    --header-border: 5px;
+    --header-margin: 23px;
     --header-size: calc(var(--header-height) + var(--header-margin) + var(--header-border));
+    --main-margin-top: 33px;
+    --main-margin-bottom: 32px;
     --biseo-primary: ${COLOR.primary};
   }
 
