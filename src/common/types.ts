@@ -25,3 +25,7 @@ export interface User {
   sparcsID: string;
 }
 
+export interface RootState {
+  user: User;
+  loggedIn: boolean;
+}
