@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import querystring from 'querystring';
-import { requestToken, saveToken } from '@/utils/auth';
+import { requestUserInfo, saveToken } from '@/utils/auth';
 
 const LoginCallback: React.FC = () => {
   const location = useLocation();
@@ -12,7 +12,7 @@ const LoginCallback: React.FC = () => {
   const [valid, setValid] = useState(null);
 
   useEffect(() => {
-    requestToken(code as string, state as string).then(token => {
+    requestUserInfo(code as string, state as string).then(({ token, user }) => {
       if (token) {
         saveToken(token);
         setValid(true);

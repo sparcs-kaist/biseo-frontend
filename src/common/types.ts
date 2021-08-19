@@ -18,3 +18,10 @@ export interface MessageType {
   issuer?: string;
   date?: string;
 }
+
+// user type used for redux state
+export interface User {
+  ssoUID: string;
+  sparcsID: string;
+}
+
