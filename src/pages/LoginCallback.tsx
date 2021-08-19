@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import querystring from 'querystring';
 import { requestUserInfo, saveToken } from '@/utils/auth';
+import { useTypedDispatch } from '@/hooks';
+import { login } from '@/store/slices/login';
+import { setUser } from '@/store/slices/user';
 
 const LoginCallback: React.FC = () => {
   const location = useLocation();
@@ -10,12 +13,15 @@ const LoginCallback: React.FC = () => {
     query[0] === '?' ? query.slice(1) : query
   );
   const [valid, setValid] = useState(null);
+  const dispatch = useTypedDispatch();
 
   useEffect(() => {
     requestUserInfo(code as string, state as string).then(({ token, user }) => {
       if (token) {
         saveToken(token);
         setValid(true);
+        dispatch(login());
+        dispatch(setUser(user));
       } else {
         setValid(false);
       }

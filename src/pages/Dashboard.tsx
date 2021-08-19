@@ -1,12 +1,18 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { logout } from '@/utils/auth';
+import { useTypedDispatch } from '@/hooks';
+import { logout as logoutAction } from '@/store/slices/login';
+import { setUser } from '@/store/slices/user';
 
 const Dashboard: React.FC = () => {
   const history = useHistory();
+  const dispatch = useTypedDispatch();
 
   const handleLogout = () => {
     logout();
+    dispatch(logoutAction());
+    dispatch(setUser(null));
     history.replace('/login');
   };
 
