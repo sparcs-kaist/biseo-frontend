@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { User } from '@/common/types';
 
 const AUTH_URL = process.env.AUTH_URL ?? process.env.SERVER_URL;
 if (typeof AUTH_URL !== 'string') throw new Error('AUTH_URL not set!');
@@ -29,11 +30,11 @@ export const logout = (): void => {
   localStorage.removeItem('biseo-jwt');
 };
 
-export const requestToken = async (
+export const requestUserInfo = async (
   code: string,
   state: string
-): Promise<string> => {
-  type TokenResponse = { data: { token: string } };
+): Promise<{ token: string; user: User }> => {
+  type TokenResponse = { data: { token: string; user: User } };
 
   const response: TokenResponse = await auth
     .get(`${AUTH_URL}/api/auth/login/callback?code=${code}&state=${state}`)
@@ -41,7 +42,7 @@ export const requestToken = async (
       throw new Error('Login callback error!');
     });
 
-  return response.data.token;
+  return response.data;
 };
 
 export const requestRedirectURL = async (): Promise<string> => {
