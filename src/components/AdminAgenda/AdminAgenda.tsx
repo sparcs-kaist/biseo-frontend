@@ -123,19 +123,11 @@ const AdminAgenda: React.FC<Props> = ({
     <AgendaContainer onClick={onClick}>
       <AgendaContent>
         {title}
-        {/* <BiseoButton
-          onClick={() =>
-            onClickAdminEdit(_id, title, content, subtitle, choices)
-          }
-        >
-          수정
-        </BiseoButton>
-        <BiseoButton onClick={() => onClickAdminDelete(_id)}>삭제</BiseoButton> */}
         <AgendaButton>
           <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
             {buttonText()}
           </BiseoButton>
-          <EditIcon onClick={() => console.log('클릭')} />
+          <EditIcon />
         </AgendaButton>
       </AgendaContent>
     </AgendaContainer>
