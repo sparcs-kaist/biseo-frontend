@@ -15,3 +15,9 @@ export enum LoginStatus {
   NotLoggedIn,
   Pending,
 }
+
+export enum AwayStatus {
+  Entered,
+  Vacant,
+  Staying,
+}
