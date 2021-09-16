@@ -100,6 +100,21 @@ const Main: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.on('agenda:edited', (payload: Agenda) => {
+      const newAgendas = agendas.map(agenda => {
+        if (agenda._id === payload._id) return { ...payload, userChoice: null };
+        else return agenda;
+      });
+      setAgendas(newAgendas);
+    });
+
+    socket.on('agenda:deleted', (payload: string) => {
+      const newAgendas = agendas.filter(agenda => agenda._id !== payload);
+      setAgendas(newAgendas);
+    });
+  }, [agendas]);
+
   const MainComponent = isAdmin ? AdminMain : UserMain;
   const filteredAgendas = isAdmin
     ? agendas

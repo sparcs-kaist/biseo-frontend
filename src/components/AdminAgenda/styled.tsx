@@ -28,3 +28,8 @@ export const AgendaContent = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const AgendaButton = styled.div`
+  align-items: center;
+  display: flex;
+`;
