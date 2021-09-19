@@ -23,6 +23,7 @@ const Header: React.FC = () => {
   const [awayState, setAwayState] = useState<AwayStatus>(AwayStatus.Entered);
   const [buttonString, setButtonString] = useState<string>('enter');
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
+
   const changeAwayState = () => {
     switch (awayState) {
       case AwayStatus.Entered:
@@ -39,8 +40,6 @@ const Header: React.FC = () => {
         setButtonColor(COLOR.primary);
         break;
     }
-
-    console.log(awayState);
   };
 
   const loginClick = () => {
