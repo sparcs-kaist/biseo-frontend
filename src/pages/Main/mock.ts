@@ -10,8 +10,8 @@ export const mockTabs = [
     extendableChoices: true,
   },
   {
-    title: 'Baz',
-    choices: ['D', 'E'],
-    extendableChoices: false,
+    title: '새 탬플릿',
+    choices: [],
+    extendableChoices: true,
   },
 ];
