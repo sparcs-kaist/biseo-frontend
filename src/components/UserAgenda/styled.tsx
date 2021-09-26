@@ -12,6 +12,12 @@ export const ActiveContainerTitle = styled.div`
   font-weight: 700;
 `;
 
+export const ActiveContainerProgress = styled.div`
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: 20px;
+`;
+
 export const ActiveContainerContent = styled.div`
   border: none;
   border-bottom: 1px solid #f2a024;
