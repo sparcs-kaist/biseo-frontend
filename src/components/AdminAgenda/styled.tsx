@@ -1,7 +1,14 @@
 import styled from 'styled-components';
 
+interface AgendaContainerProps {
+  detailed: boolean;
+}
+
 export const AgendaContainer = styled.div`
   align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   background: #ffffff;
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
@@ -11,7 +18,8 @@ export const AgendaContainer = styled.div`
   position: relative;
 
   &::before {
-    background: #f2a024;
+    background: ${(props: AgendaContainerProps) =>
+      props.detailed ? '#f2a024' : '#8c8c8c'};
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     content: '';
@@ -27,9 +35,16 @@ export const AgendaContent = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+  width: 100%;
 `;
 
 export const AgendaButton = styled.div`
   align-items: center;
   display: flex;
+`;
+
+export const AgendaContentLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 66%;
 `;
