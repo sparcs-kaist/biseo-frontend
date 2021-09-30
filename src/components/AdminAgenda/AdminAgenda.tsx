@@ -124,7 +124,7 @@ const AdminAgenda: React.FC<Props> = ({
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
           {buttonText()}
         </BiseoButton>
-        <EditIcon onClick={onClickEditIcon} />
+        <EditIcon onClick={onClickEditIcon} style={{ cursor: 'pointer' }} />
       </AgendaButton>
     </AgendaContainer>
   ) : (
@@ -135,7 +135,7 @@ const AdminAgenda: React.FC<Props> = ({
           <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
             {buttonText()}
           </BiseoButton>
-          <EditIcon onClick={onClickEditIcon} />
+          <EditIcon onClick={onClickEditIcon} style={{ cursor: 'pointer' }} />
         </AgendaButton>
       </AgendaContent>
     </AgendaContainer>
