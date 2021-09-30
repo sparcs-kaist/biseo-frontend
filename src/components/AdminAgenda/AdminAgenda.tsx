@@ -3,11 +3,16 @@ import { toast } from 'react-toastify';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
 import BiseoButton from '@/components/BiseoButton';
-import { AgendaContainer, AgendaContent, AgendaButton } from './styled';
+import {
+  AgendaContainer,
+  AgendaContent,
+  AgendaButton,
+  AgendaContentLeft,
+} from './styled';
 import {
   ActiveContainerTitle,
+  ActiveContainerProgress,
   ActiveContainerContent,
-  ActiveContainerSubtitle,
 } from '../UserAgenda/styled';
 import EditIcon from './Edit.svg';
 
@@ -26,6 +31,7 @@ const AdminAgenda: React.FC<Props> = ({
   subtitle,
   choices,
   expires,
+  votesCountMap,
   status,
   socket,
 }) => {
@@ -110,17 +116,37 @@ const AdminAgenda: React.FC<Props> = ({
     [socket]
   );
 
+  const totalParticipants = votesCountMap
+    ? Object.values(votesCountMap).reduce((sum, count) => sum + count, 0)
+    : 0;
+
+  const voteResultMessage =
+    votesCountMap && Object.keys(votesCountMap).length > 0
+      ? '중 ' +
+        Object.entries(votesCountMap)
+          .sort()
+          .map(([choice, count]) => `${choice} ${count}명`)
+          .join(', ')
+      : '';
+
   return showDetails ? (
-    <AgendaContainer onClick={onClick}>
-      <ActiveContainerTitle>{title}</ActiveContainerTitle>
-      <ActiveContainerContent>{content}</ActiveContainerContent>
-      <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
-      <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
-        {buttonText()}
-      </BiseoButton>
+    <AgendaContainer onClick={onClick} detailed={showDetails}>
+      <AgendaContentLeft>
+        <ActiveContainerTitle>{title}</ActiveContainerTitle>
+        <ActiveContainerProgress>
+          {`재석 ${totalParticipants}명 ${voteResultMessage}`}
+        </ActiveContainerProgress>
+        <ActiveContainerContent>{content}</ActiveContainerContent>
+      </AgendaContentLeft>
+      <AgendaButton>
+        <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
+          {buttonText()}
+        </BiseoButton>
+        <EditIcon />
+      </AgendaButton>
     </AgendaContainer>
   ) : (
-    <AgendaContainer onClick={onClick}>
+    <AgendaContainer onClick={onClick} detailed={showDetails}>
       <AgendaContent>
         {title}
         <AgendaButton>
