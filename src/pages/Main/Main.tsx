@@ -39,8 +39,10 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   const [targetAgenda, setTargetAgenda] = useState<Agenda>();
 
   const onEdit = (_id: string) => {
-    setTargetAgenda(agendas.find(agenda => agenda._id == _id));
-    setIsEdit(true);
+    if (!isEdit) {
+      setTargetAgenda(agendas.find(agenda => agenda._id == _id));
+    }
+    setIsEdit(!isEdit);
     console.log(_id);
     console.log(isEdit);
   };
