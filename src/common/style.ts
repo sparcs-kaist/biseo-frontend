@@ -3,6 +3,7 @@ import { device, maxWidth } from '@/utils/device';
 
 export const COLOR = {
   primary: '#f2a024',
+  vacant: '#3C3C3C',
 };
 
 export const GlobalStyle = createGlobalStyle`
