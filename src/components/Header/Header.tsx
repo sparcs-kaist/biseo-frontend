@@ -53,8 +53,8 @@ const Header: React.FC = () => {
     awayState === AwayStatus.Entered
       ? ''
       : awayState === AwayStatus.Vacant
-      ? '자리비움 상태입니다'
-      : '현재 투표가 진행중입니다. 다음 투표부터 참여 할 수 있습니다';
+      ? '자리비움 상태입니다.'
+      : '현재 투표가 진행중입니다. 다음 투표부터 참여 할 수 있습니다.';
 
   return (
     <div>
