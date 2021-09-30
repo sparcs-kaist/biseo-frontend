@@ -29,6 +29,8 @@ interface CommonProps {
     subtitle: string,
     choices: string[]
   ) => void;
+  onVoteDelete?: (_id: string) => void;
+  exitEditMode?: (_id: string) => void;
 }
 
 interface FormInputs {
@@ -95,6 +97,8 @@ export const AdminContentEdit: React.FC<CommonProps> = ({
   choices,
   extendable,
   onVoteEdit,
+  onVoteDelete,
+  exitEditMode,
 }) => {
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>({
     defaultValues: {
@@ -140,7 +144,25 @@ export const AdminContentEdit: React.FC<CommonProps> = ({
       </ButtonGroup>
       <ButtonGroup alignRight={true}>
         <BiseoButton type="submit" background="#f2a024" foreground="#ffffff">
-          수정하기
+          수정
+        </BiseoButton>
+        <BiseoButton
+          type="button"
+          background="#f2a024"
+          foreground="#ffffff"
+          onClick={() => {
+            onVoteDelete(_id);
+          }}
+        >
+          삭제
+        </BiseoButton>
+        <BiseoButton
+          type="button"
+          onClick={() => {
+            exitEditMode(_id);
+          }}
+        >
+          취소
         </BiseoButton>
       </ButtonGroup>
     </AdminContentContainer>

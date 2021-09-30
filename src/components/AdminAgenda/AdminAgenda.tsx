@@ -93,16 +93,6 @@ const AdminAgenda: React.FC<Props> = ({
     }
   };
 
-  const onClickAdminDelete = useCallback(
-    (_id): void => {
-      socket.emit('admin:delete', _id, (res: AgendaResponse) => {
-        if (res.success) toast.success('🦄 Agenda deleted Successfully!');
-        else toast.error('Agenda Deletion Error!');
-      });
-    },
-    [socket]
-  );
-
   const onClickEditIcon = e => {
     e.stopPropagation();
     onEdit(_id);

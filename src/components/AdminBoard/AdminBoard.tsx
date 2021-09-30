@@ -67,6 +67,17 @@ const AdminBoard: React.FC<Props> = ({
     [socket]
   );
 
+  const onClickAdminDelete = useCallback(
+    (_id): void => {
+      socket.emit('admin:delete', _id, (res: AgendaResponse) => {
+        if (res.success) toast.success('🦄 Agenda deleted Successfully!');
+        else toast.error('Agenda Deletion Error!');
+      });
+      confirmEdit(_id);
+    },
+    [socket]
+  );
+
   return isEdit ? (
     <AdminContentEdit
       _id={targetAgenda._id}
@@ -76,6 +87,8 @@ const AdminBoard: React.FC<Props> = ({
       choices={targetAgenda.choices}
       extendable={false}
       onVoteEdit={onAgendaEdit}
+      onVoteDelete={onClickAdminDelete}
+      exitEditMode={confirmEdit}
     />
   ) : (
     <>
