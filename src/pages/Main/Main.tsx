@@ -10,6 +10,7 @@ import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { mockTabs } from './mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
+import { Redirect } from 'react-router-dom';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -51,6 +52,8 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
 const Main: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
   const [agendas, setAgendas] = useState<Agenda[]>([]);
+  const [valid, setValid] = useState(true);
+
   const socket = useMemo(
     () =>
       io(process.env.SERVER_URL, {
@@ -60,6 +63,10 @@ const Main: React.FC = () => {
       }),
     []
   );
+
+  socket.on('error', (err: Error) => {
+    setValid(false);
+  });
 
   useEffect(() => {
     async function getAgendas() {
@@ -98,6 +105,7 @@ const Main: React.FC = () => {
         });
       });
     });
+    // TODO cleanup (agendas)
   }, []);
 
   useEffect(() => {
@@ -119,6 +127,8 @@ const Main: React.FC = () => {
   const filteredAgendas = isAdmin
     ? agendas
     : agendas.filter(agenda => agenda.status !== AgendaStatus.PREPARE);
+
+  if (valid === false) return <Redirect to="/login" />;
 
   return (
     <div style={{ height: '100%' }}>
