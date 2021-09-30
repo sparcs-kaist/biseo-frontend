@@ -43,8 +43,6 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
       setTargetAgenda(agendas.find(agenda => agenda._id == _id));
     }
     setIsEdit(!isEdit);
-    console.log(_id);
-    console.log(isEdit);
   };
 
   const confirmEdit = (_id: string) => {
