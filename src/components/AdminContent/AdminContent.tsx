@@ -1,6 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import BiseoButton from '@/components/BiseoButton';
+import { Agenda } from '@/common/types';
+import { AgendaStatus } from '@/common/enums';
 import {
   AdminContentContainer,
   ButtonGroup,
@@ -9,19 +11,20 @@ import {
   TitleInput,
 } from './styled';
 
-interface CommonProps {
-  _id?: string;
-  title?: string;
-  content?: string;
-  subtitle?: string;
-  choices?: string[];
-  extendable?: boolean;
-  onVoteCreate?: (
+interface AdminContentCreateProps {
+  choices: string[];
+  extendable: boolean;
+  onVoteCreate: (
     title: string,
     content: string,
     subtitle: string,
     choices: string[]
   ) => void;
+}
+
+interface AdminContentEditProps {
+  agenda: Agenda;
+  extendable: boolean;
   onVoteEdit?: (
     _id: string,
     title: string,
@@ -39,7 +42,7 @@ interface FormInputs {
   subtitle: string;
 }
 
-export const AdminContentCreate: React.FC<CommonProps> = ({
+export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   choices,
   extendable,
   onVoteCreate,
@@ -89,17 +92,15 @@ export const AdminContentCreate: React.FC<CommonProps> = ({
   );
 };
 
-export const AdminContentEdit: React.FC<CommonProps> = ({
-  _id,
-  title,
-  content,
-  subtitle,
-  choices,
+export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
+  agenda,
   extendable,
   onVoteEdit,
   onVoteDelete,
   exitEditMode,
 }) => {
+  const { _id, title, content, subtitle, choices, expires, status } = agenda;
+
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>({
     defaultValues: {
       title: title,
@@ -107,11 +108,14 @@ export const AdminContentEdit: React.FC<CommonProps> = ({
       subtitle: subtitle,
     },
   });
+
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {
     if (choices.length < 1) return;
     onVoteEdit(_id, title, content, subtitle, choices);
     reset();
   };
+
+  const active = Date.now() < Date.parse(expires);
 
   return (
     <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
@@ -143,7 +147,12 @@ export const AdminContentEdit: React.FC<CommonProps> = ({
         {extendable && <BiseoButton>+</BiseoButton>}
       </ButtonGroup>
       <ButtonGroup alignRight={true}>
-        <BiseoButton type="submit" background="#f2a024" foreground="#ffffff">
+        <BiseoButton
+          type="submit"
+          background="#f2a024"
+          foreground="#ffffff"
+          disabled={!(active && status === AgendaStatus.PREPARE)}
+        >
           수정
         </BiseoButton>
         <BiseoButton
@@ -153,6 +162,7 @@ export const AdminContentEdit: React.FC<CommonProps> = ({
           onClick={() => {
             onVoteDelete(_id);
           }}
+          disabled={active && status === AgendaStatus.PROGRESS}
         >
           삭제
         </BiseoButton>

@@ -80,11 +80,7 @@ const AdminBoard: React.FC<Props> = ({
 
   return isEdit ? (
     <AdminContentEdit
-      _id={targetAgenda._id}
-      title={targetAgenda.title}
-      content={targetAgenda.content}
-      subtitle={targetAgenda.subtitle}
-      choices={targetAgenda.choices}
+      agenda={targetAgenda}
       extendable={false}
       onVoteEdit={onAgendaEdit}
       onVoteDelete={onClickAdminDelete}
