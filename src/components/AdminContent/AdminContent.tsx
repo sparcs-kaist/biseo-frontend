@@ -25,15 +25,15 @@ interface AdminContentCreateProps {
 interface AdminContentEditProps {
   agenda: Agenda;
   extendable: boolean;
-  onVoteEdit?: (
+  onVoteEdit: (
     _id: string,
     title: string,
     content: string,
     subtitle: string,
     choices: string[]
   ) => void;
-  onVoteDelete?: (_id: string) => void;
-  exitEditMode?: (_id: string) => void;
+  onVoteDelete: (_id: string) => void;
+  exitEditMode: (_id: string) => void;
 }
 
 interface FormInputs {
@@ -121,19 +121,16 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
     <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
       <TitleInput
         name="title"
-        placeholder="투표 제목을 입력하세요"
         className={errors.title && 'error'}
         ref={register({ required: true })}
       />
       <ContentTextArea
         name="content"
-        placeholder="투표 내용을 입력하세요"
         className={errors.content && 'error'}
         ref={register({ required: true })}
       />
       <SubtitleInput
         name="subtitle"
-        placeholder="의결문안을 입력하세요"
         className={errors.subtitle && 'error'}
         ref={register({ required: true })}
       />
