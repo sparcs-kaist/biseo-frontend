@@ -57,9 +57,9 @@ const UserAgenda: React.FC<Props> = ({
     socket.emit(
       'agenda:vote',
       { agendaId: _id, choice: choices[selectedIndex] },
-      (res: { success: boolean }) => {
+      (res: { success: boolean; message: string }) => {
         if (res.success) toast.success('🎉 Vote Successful!');
-        else toast.error('Vote Failed');
+        else toast.error(res.message || '알 수 없는 에러가 발생했습니다');
       }
     );
 
