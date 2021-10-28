@@ -35,14 +35,39 @@ const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
 };
 
 const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [targetAgenda, setTargetAgenda] = useState<Agenda>();
+
+  const onEdit = (_id: string) => {
+    if (!isEdit) {
+      setTargetAgenda(agendas.find(agenda => agenda._id == _id));
+    }
+    setIsEdit(!isEdit);
+  };
+
+  const confirmEdit = (_id: string) => {
+    setIsEdit(false);
+  };
+
   return (
     <AdminMainContainer>
       <div className="admin">
-        <AdminBoard socket={socket} tabs={mockTabs} />
+        <AdminBoard
+          socket={socket}
+          tabs={mockTabs}
+          isEdit={isEdit}
+          targetAgenda={targetAgenda}
+          confirmEdit={confirmEdit}
+        />
       </div>
       <div className="agendas">
         {agendas.map(item => (
-          <AdminAgenda key={item._id} socket={socket} {...item} />
+          <AdminAgenda
+            key={item._id}
+            socket={socket}
+            onEdit={onEdit}
+            {...item}
+          />
         ))}
       </div>
     </AdminMainContainer>

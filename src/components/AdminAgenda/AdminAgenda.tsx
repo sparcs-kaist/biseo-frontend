@@ -18,6 +18,7 @@ import EditIcon from './Edit.svg';
 
 interface Props extends Agenda {
   socket: SocketIOClient.Socket;
+  onEdit: (_id: string) => void;
 }
 
 interface AgendaResponse {
@@ -34,6 +35,7 @@ const AdminAgenda: React.FC<Props> = ({
   votesCountMap,
   status,
   socket,
+  onEdit,
 }) => {
   const active = Date.now() < Date.parse(expires);
   const buttonProps = () => {
@@ -91,30 +93,10 @@ const AdminAgenda: React.FC<Props> = ({
     }
   };
 
-  const onClickAdminEdit = useCallback(
-    (_id, title, content, subtitle, choices): void => {
-      socket.emit(
-        'admin:edit',
-        _id,
-        { title, content, subtitle, choices },
-        (res: AgendaResponse) => {
-          if (res.success) toast.success('🦄 Agenda edited Successfully!');
-          else toast.error('Agenda Edition Error!');
-        }
-      );
-    },
-    [socket]
-  );
-
-  const onClickAdminDelete = useCallback(
-    (_id): void => {
-      socket.emit('admin:delete', _id, (res: AgendaResponse) => {
-        if (res.success) toast.success('🦄 Agenda deleted Successfully!');
-        else toast.error('Agenda Deletion Error!');
-      });
-    },
-    [socket]
-  );
+  const onClickEditIcon = e => {
+    e.stopPropagation();
+    onEdit(_id);
+  };
 
   const totalParticipants = votesCountMap
     ? Object.values(votesCountMap).reduce((sum, count) => sum + count, 0)
@@ -142,7 +124,7 @@ const AdminAgenda: React.FC<Props> = ({
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
           {buttonText()}
         </BiseoButton>
-        <EditIcon />
+        <EditIcon onClick={onClickEditIcon} style={{ cursor: 'pointer' }} />
       </AgendaButton>
     </AgendaContainer>
   ) : (
@@ -153,7 +135,7 @@ const AdminAgenda: React.FC<Props> = ({
           <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
             {buttonText()}
           </BiseoButton>
-          <EditIcon />
+          <EditIcon onClick={onClickEditIcon} style={{ cursor: 'pointer' }} />
         </AgendaButton>
       </AgendaContent>
     </AgendaContainer>

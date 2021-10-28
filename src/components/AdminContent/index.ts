@@ -1,1 +1,1 @@
-export { default } from './AdminContent';
+export { AdminContentCreate, AdminContentEdit } from './AdminContent';
