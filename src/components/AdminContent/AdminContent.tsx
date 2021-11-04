@@ -76,6 +76,10 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
     setNewChoice('');
   };
 
+  const enterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') addNewChoice();
+  };
+
   return (
     <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
       <TitleInput
@@ -121,7 +125,10 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
         {extendable && (
           <>
             {expand ? (
-              <InputNewChoice onChange={handleNewChoice} />
+              <InputNewChoice
+                onChange={handleNewChoice}
+                onKeyPress={enterPress}
+              />
             ) : (
               <BiseoButton onClick={() => setExpand(true)}>+</BiseoButton>
             )}
