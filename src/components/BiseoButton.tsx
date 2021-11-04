@@ -8,7 +8,7 @@ const BiseoButton = styled.button<{
   align-items: center;
   background: ${props => (props.background ? props.background : '#ffffff')};
   border: 1px solid
-    ${props => (props.background ? props.background : '#ffffff')};
+    ${props => (props.background ? props.background : '#f2a024')};
   border-radius: 16px;
   box-shadow: 2px 3px 5px -1px rgba(0, 0, 0, 0.4);
   color: ${props => (props.foreground ? props.foreground : '#000000')};
