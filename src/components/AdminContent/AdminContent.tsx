@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import BiseoButton from '@/components/BiseoButton';
 import { Agenda } from '@/common/types';
@@ -9,6 +9,7 @@ import {
   ContentTextArea,
   SubtitleInput,
   TitleInput,
+  InputNewChoice,
 } from './styled';
 
 interface AdminContentCreateProps {
@@ -47,11 +48,32 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   extendable,
   onVoteCreate,
 }) => {
+  const [expand, setExpand] = useState<boolean>(false);
+  const [newChoice, setNewChoice] = useState<string>('');
+  const [newChoices, setNewChoices] = useState<string[]>([]);
+  const [submit, setSubmit] = useState<boolean>(false);
+
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>();
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {
-    if (choices.length < 1) return;
-    onVoteCreate(title, content, subtitle, choices);
+    if (!submit || choices.concat(newChoices).length < 1) return;
+    onVoteCreate(title, content, subtitle, choices.concat(newChoices));
     reset();
+    setNewChoices([]);
+    setSubmit(false);
+  };
+
+  const handleNewChoice = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setNewChoice(e.target.value);
+
+  const handleCancel = () => {
+    setExpand(false);
+    setNewChoice('');
+  };
+
+  const addNewChoice = () => {
+    setNewChoices([...newChoices, newChoice]);
+    setExpand(false);
+    setNewChoice('');
   };
 
   return (
@@ -81,12 +103,56 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
             {choice}
           </BiseoButton>
         ))}
-        {extendable && <BiseoButton>+</BiseoButton>}
+        {newChoices.map((choice, index) => (
+          // a button's default type is 'submit', but we don't want this button to submit
+          <BiseoButton
+            type="button"
+            key={choice}
+            onClick={() => {
+              setNewChoices([
+                ...newChoices.slice(0, index),
+                ...newChoices.slice(index + 1),
+              ]);
+            }}
+          >
+            {choice}
+          </BiseoButton>
+        ))}
+        {extendable && (
+          <>
+            {expand ? (
+              <InputNewChoice onChange={handleNewChoice} />
+            ) : (
+              <BiseoButton onClick={() => setExpand(true)}>+</BiseoButton>
+            )}
+          </>
+        )}
       </ButtonGroup>
       <ButtonGroup alignRight={true}>
-        <BiseoButton type="submit" background="#f2a024" foreground="#ffffff">
-          만들기
-        </BiseoButton>
+        {expand ? (
+          <>
+            <BiseoButton
+              type="button"
+              background="#f2a024"
+              foreground="#ffffff"
+              onClick={addNewChoice}
+            >
+              추가
+            </BiseoButton>
+            <BiseoButton type="button" onClick={handleCancel}>
+              취소
+            </BiseoButton>
+          </>
+        ) : (
+          <BiseoButton
+            type="submit"
+            background="#f2a024"
+            foreground="#ffffff"
+            onClick={() => setSubmit(true)}
+          >
+            만들기
+          </BiseoButton>
+        )}
       </ButtonGroup>
     </AdminContentContainer>
   );
