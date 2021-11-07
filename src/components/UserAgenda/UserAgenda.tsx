@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import BiseoButton from '@/components/BiseoButton';
 import { Agenda } from '@/common/types';
@@ -88,6 +88,36 @@ const UserAgenda: React.FC<Props> = ({
           .map(([choice, count]) => `${choice} ${count}명`)
           .join(', ')
       : '';
+
+  useEffect(() => {
+    socket.on('agenda:voted', ({ agendaId }) => {
+      if (agendaId !== _id) {
+        return;
+      }
+
+      socket.emit(
+        'agenda:status',
+        { agendaId: _id },
+        (res: { success: boolean; payload?: any; message?: string }) => {
+          if (res.success) console.log(res.payload);
+          else console.log(res.message);
+        }
+      );
+    });
+
+    socket.emit(
+      'agenda:status',
+      { agendaId: _id },
+      (res: { success: boolean; payload?: any; message?: string }) => {
+        if (res.success) console.log(res.payload);
+        else console.log(res.message);
+      }
+    );
+
+    return () => {
+      socket.off('agenda:voted');
+    };
+  }, []);
 
   return active ? (
     <ActiveContainer>
