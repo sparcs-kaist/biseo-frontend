@@ -65,3 +65,22 @@ export const ButtonGroup = styled.div<{ alignRight?: boolean }>`
   margin-top: 30px;
   ${({ alignRight }) => alignRight && 'justify-content: flex-end;'}
 `;
+
+export const InputNewChoice = styled.input`
+  width: 60px;
+  align-items: center;
+  background: '#ffffff';
+  border: 1px solid #f2a024;
+  border-radius: 16px;
+  box-shadow: 2px 3px 5px -1px rgba(0, 0, 0, 0.4);
+  color: '#000000';
+  display: inline-flex;
+  font-size: 0.8rem;
+  justify-content: center;
+  margin-right: 15px;
+  padding: 5px 9px;
+
+  &:focus {
+    outline: none;
+  }
+`;
