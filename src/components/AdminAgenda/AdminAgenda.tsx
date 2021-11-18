@@ -13,6 +13,7 @@ import {
   ActiveContainerTitle,
   ActiveContainerProgress,
   ActiveContainerContent,
+  ActiveContainerSubtitle,
 } from '../UserAgenda/styled';
 import EditIcon from './Edit.svg';
 
@@ -119,6 +120,7 @@ const AdminAgenda: React.FC<Props> = ({
           {`재석 ${totalParticipants}명 ${voteResultMessage}`}
         </ActiveContainerProgress>
         <ActiveContainerContent>{content}</ActiveContainerContent>
+        <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
       </AgendaContentLeft>
       <AgendaButton>
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
