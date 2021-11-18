@@ -15,6 +15,13 @@ interface Props extends Agenda {
   socket: SocketIOClient.Socket;
 }
 
+type payload = {
+  pplWhoDidNotVote: string[];
+  agendaId: string;
+  agendaTitle: string;
+  isExpired: boolean;
+};
+
 const UserAgenda: React.FC<Props> = ({
   _id,
   title,
@@ -89,30 +96,27 @@ const UserAgenda: React.FC<Props> = ({
           .join(', ')
       : '';
 
+  const emitAgendaStatus = () => {
+    socket.emit(
+      'agenda:status',
+      { agendaId: _id },
+      (res: { success: boolean; payload: payload | string }) => {
+        if (res.success) console.log(res.payload);
+        else console.log(res.payload);
+      }
+    );
+  };
+
   useEffect(() => {
     socket.on('agenda:voted', ({ agendaId }) => {
       if (agendaId !== _id) {
         return;
       }
 
-      socket.emit(
-        'agenda:status',
-        { agendaId: _id },
-        (res: { success: boolean; payload?: any; message?: string }) => {
-          if (res.success) console.log(res.payload);
-          else console.log(res.message);
-        }
-      );
+      emitAgendaStatus();
     });
 
-    socket.emit(
-      'agenda:status',
-      { agendaId: _id },
-      (res: { success: boolean; payload?: any; message?: string }) => {
-        if (res.success) console.log(res.payload);
-        else console.log(res.message);
-      }
-    );
+    emitAgendaStatus();
 
     return () => {
       socket.off('agenda:voted');
