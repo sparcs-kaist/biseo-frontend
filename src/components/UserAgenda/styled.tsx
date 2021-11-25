@@ -25,6 +25,8 @@ export const ActiveContainerContent = styled.div`
   margin: 20px 0px;
   padding: 15px 5px;
   white-space: pre-wrap;
+  font-size: 0.7rem;
+  font-weight: 400;
 `;
 
 export const ActiveContainerSubtitle = styled.div`
