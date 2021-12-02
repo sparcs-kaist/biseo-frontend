@@ -10,6 +10,7 @@ export interface Agenda {
   userChoice: string | null;
   expires: string; // ISO Date String
   status: AgendaStatus;
+  participants: string[];
 }
 
 export interface MessageType {
