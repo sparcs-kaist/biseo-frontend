@@ -95,6 +95,8 @@ const AdminBoard: React.FC<Props> = ({
         {tabs.map(tab => tab.title)}
       </AdminTabs>
       <AdminContentCreate
+        tabLength={tabs.length}
+        selected={selectedTabIndex}
         choices={selectedTab.choices}
         extendable={selectedTab.extendableChoices}
         onVoteCreate={onVoteCreate}
