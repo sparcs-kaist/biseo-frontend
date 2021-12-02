@@ -132,7 +132,12 @@ const AdminAgenda: React.FC<Props> = ({
   ) : (
     <AgendaContainer onClick={onClick} detailed={showDetails}>
       <AgendaContent>
-        {title}
+        <AgendaContentLeft>
+          <ActiveContainerTitle>{title}</ActiveContainerTitle>
+          <ActiveContainerProgress>
+            {`재석 ${totalParticipants}명 ${voteResultMessage}`}
+          </ActiveContainerProgress>
+        </AgendaContentLeft>
         <AgendaButton>
           <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
             {buttonText()}
