@@ -13,6 +13,8 @@ import {
 } from './styled';
 
 interface AdminContentCreateProps {
+  tabLength: number;
+  selected: number;
   choices: string[];
   extendable: boolean;
   onVoteCreate: (
@@ -43,22 +45,45 @@ interface FormInputs {
   subtitle: string;
 }
 
+interface FormInputsStore {
+  title: string;
+  content: string;
+  subtitle: string;
+  newChoices: string[];
+}
+
 export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
+  tabLength,
+  selected,
   choices,
   extendable,
   onVoteCreate,
 }) => {
   const [expand, setExpand] = useState<boolean>(false);
   const [newChoice, setNewChoice] = useState<string>('');
-  const [newChoices, setNewChoices] = useState<string[]>([]);
   const [submit, setSubmit] = useState<boolean>(false);
+
+  const basicList = [];
+  for (let i = 0; i < tabLength; i++) {
+    basicList.push({ title: '', content: '', subtitle: '', newChoices: [] });
+  }
+  const [data, setData] = useState<FormInputsStore[]>(basicList);
 
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>();
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {
-    if (!submit || choices.concat(newChoices).length < 1) return;
-    onVoteCreate(title, content, subtitle, choices.concat(newChoices));
+    if (!submit || choices.concat(data[selected].newChoices).length < 1) return;
+    onVoteCreate(
+      title,
+      content,
+      subtitle,
+      choices.concat(data[selected].newChoices)
+    );
     reset();
-    setNewChoices([]);
+    setData([
+      ...data.slice(0, selected),
+      { title: '', content: '', subtitle: '', newChoices: [] },
+      ...data.slice(selected + 1),
+    ]);
     setSubmit(false);
   };
 
@@ -71,13 +96,47 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   };
 
   const addNewChoice = () => {
-    setNewChoices([...newChoices, newChoice]);
+    setData([
+      ...data.slice(0, selected),
+      {
+        ...data[selected],
+        newChoices: [...data[selected].newChoices, newChoice],
+      },
+      ...data.slice(selected + 1),
+    ]);
     setExpand(false);
     setNewChoice('');
   };
 
+  const deleteNewChoice = (index: number) => {
+    setData([
+      ...data.slice(0, selected),
+      {
+        ...data[selected],
+        newChoices: [
+          ...data[selected].newChoices.slice(0, index),
+          ...data[selected].newChoices.slice(index + 1),
+        ],
+      },
+      ...data.slice(selected + 1),
+    ]);
+  };
+
   const enterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') addNewChoice();
+  };
+
+  const handleData = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setData([
+      ...data.slice(0, selected),
+      { ...data[selected], [name]: value },
+      ...data.slice(selected + 1),
+    ]);
   };
 
   return (
@@ -87,18 +146,24 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
         placeholder="투표 제목을 입력하세요"
         className={errors.title && 'error'}
         ref={register({ required: true })}
+        onChange={handleData}
+        value={data[selected].title}
       />
       <ContentTextArea
         name="content"
         placeholder="투표 내용을 입력하세요"
         className={errors.content && 'error'}
         ref={register({ required: true })}
+        onChange={handleData}
+        value={data[selected].content}
       />
       <SubtitleInput
         name="subtitle"
         placeholder="의결문안을 입력하세요"
         className={errors.subtitle && 'error'}
         ref={register({ required: true })}
+        onChange={handleData}
+        value={data[selected].subtitle}
       />
       <ButtonGroup>
         {choices.map(choice => (
@@ -107,17 +172,12 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
             {choice}
           </BiseoButton>
         ))}
-        {newChoices.map((choice, index) => (
+        {data[selected].newChoices.map((choice, index) => (
           // a button's default type is 'submit', but we don't want this button to submit
           <BiseoButton
             type="button"
             key={choice}
-            onClick={() => {
-              setNewChoices([
-                ...newChoices.slice(0, index),
-                ...newChoices.slice(index + 1),
-              ]);
-            }}
+            onClick={() => deleteNewChoice(index)}
           >
             {choice}
           </BiseoButton>
