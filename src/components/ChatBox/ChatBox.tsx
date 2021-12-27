@@ -3,6 +3,7 @@ import { MessageEnum } from '@/common/enums';
 import { MessageType } from '@/common/types';
 import ChatBoxContent from '@/components/ChatBoxContent';
 import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
+import axios from '@/utils/axios';
 
 interface Props {
   socket: SocketIOClient.Socket;
@@ -23,7 +24,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
 
     socket.on('chat:enter', (username: string) => {
       setChatlog(chatlog => [
-        { type: MessageEnum.NEW, payload: username },
+        { type: MessageEnum.NEW, username: username },
         ...chatlog,
       ]);
       setMembers(members => [...members, username]);
@@ -33,11 +34,19 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
 
     socket.on('chat:out', (username: string) => {
       setChatlog(chatlog => [
-        { type: MessageEnum.OUT, payload: username },
+        { type: MessageEnum.OUT, username: username },
         ...chatlog,
       ]);
       setMembers(members => members.filter(member => member !== username));
     });
+    async function getChats() {
+      const { data } = await axios.get('/chat').catch(() => ({ data: [] }));
+      const chatlogs: MessageType[] = data.chats ?? [];
+
+      setChatlog(chatlogs);
+    }
+
+    getChats();
 
     return () => {
       socket.off('chat:name');
@@ -59,9 +68,9 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         setChatlog(chatlog => [
           {
             type: MessageEnum.MESSAGE,
-            payload: msg.message,
+            message: msg.message,
             date: msg.date,
-            ...(user !== name && { issuer: user }), // if user === name, then should be displayed as 'Me'
+            username: user, // if user === name, then should be displayed as 'Me'
           },
           ...chatlog,
         ]);
@@ -91,7 +100,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     setChatlog([
       {
         type: MessageEnum.MESSAGE,
-        payload: msgObject.message,
+        message: msgObject.message,
         date: msgObject.date,
       },
       ...chatlog,

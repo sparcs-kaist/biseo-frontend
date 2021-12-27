@@ -15,8 +15,8 @@ export interface Agenda {
 
 export interface MessageType {
   type: MessageEnum;
-  payload: string;
-  issuer?: string;
+  message?: string;
+  username?: string;
   date?: string;
 }
 
