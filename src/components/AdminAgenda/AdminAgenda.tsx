@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
@@ -8,6 +8,8 @@ import {
   AgendaContent,
   AgendaButton,
   AgendaContentLeft,
+  AgendaNotVote,
+  AgendaNotVoteList,
 } from './styled';
 import {
   ActiveContainerTitle,
@@ -24,6 +26,18 @@ interface Props extends Agenda {
 
 interface AgendaResponse {
   success: boolean;
+}
+
+interface StatusResponse {
+  pplWhoDidNotVote: string[];
+  agendaId: string;
+  agendaTitle: string;
+  isExpired: boolean;
+}
+
+interface AgendaStatusResponse {
+  success: boolean;
+  payload: StatusResponse;
 }
 
 const AdminAgenda: React.FC<Props> = ({
@@ -58,9 +72,18 @@ const AdminAgenda: React.FC<Props> = ({
     }
   };
 
-  const [showDetails, setShowDetails] = React.useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+  const [notVoteList, setNotVote] = useState<string[]>([]);
+
   const onClick = () => {
     setShowDetails(!showDetails);
+    socket.emit(
+      'agenda:status',
+      { agendaId: _id },
+      (res: AgendaStatusResponse) => {
+        if (res.success) setNotVote(res.payload.pplWhoDidNotVote);
+      }
+    );
   };
 
   const onClickPrepareAgenda = useCallback(
@@ -121,6 +144,15 @@ const AdminAgenda: React.FC<Props> = ({
         </ActiveContainerProgress>
         <ActiveContainerContent>{content}</ActiveContainerContent>
         <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
+        <AgendaNotVote>
+          {`${notVoteList.length}명이 아직 투표하지 않음`}
+          <AgendaNotVoteList>
+            {notVoteList.map((ppl, index) => {
+              if (index == 0) return `${ppl}`;
+              else return `, ${ppl}`;
+            })}
+          </AgendaNotVoteList>
+        </AgendaNotVote>
       </AgendaContentLeft>
       <AgendaButton>
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>

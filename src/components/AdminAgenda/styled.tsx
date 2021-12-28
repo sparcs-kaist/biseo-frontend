@@ -48,3 +48,24 @@ export const AgendaContentLeft = styled.div`
   flex-direction: column;
   width: 66%;
 `;
+
+export const AgendaNotVoteList = styled.div`
+  width: auto;
+  max-width: 50%;
+  display: none;
+  background: #8c8c8c;
+  padding: 5px;
+  position: absolute;
+  word-wrap: break-word;
+  z-index: 1;
+`;
+
+export const AgendaNotVote = styled.div`
+  font-weight: 400;
+  margin-bottom: 15px;
+  word-wrap: break-word;
+
+  &:hover ${AgendaNotVoteList} {
+    display: block;
+  }
+`;
