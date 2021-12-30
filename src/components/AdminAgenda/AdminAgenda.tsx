@@ -115,8 +115,8 @@ const AdminAgenda: React.FC<Props> = ({
   return showDetails ? (
     <AgendaContainer onClick={onClick} detailed={showDetails}>
       <AgendaContentLeft>
-        <ActiveContainerTitle>{title}</ActiveContainerTitle>
-        <ActiveContainerProgress>
+        <ActiveContainerTitle detailed>{title}</ActiveContainerTitle>
+        <ActiveContainerProgress detailed>
           {`재석 ${totalParticipants}명 ${voteResultMessage}`}
         </ActiveContainerProgress>
         <ActiveContainerContent>{content}</ActiveContainerContent>

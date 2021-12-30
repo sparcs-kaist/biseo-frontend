@@ -7,15 +7,23 @@ export const ActiveContainer = styled.div`
   padding: 30px;
 `;
 
-export const ActiveContainerTitle = styled.div`
+export const ActiveContainerTitle = styled.div<{ detailed?: boolean }>`
   font-size: 1.3rem;
   font-weight: 700;
+  ${({ detailed }) =>
+    detailed
+      ? 'word-wrap: break-word'
+      : 'overflow: hidden; text-overflow: ellipsis;'}
 `;
 
-export const ActiveContainerProgress = styled.div`
+export const ActiveContainerProgress = styled.div<{ detailed?: boolean }>`
   font-size: 1rem;
   font-weight: 400;
   margin-top: 20px;
+  ${({ detailed }) =>
+    detailed
+      ? 'word-wrap: break-word'
+      : 'overflow: hidden; text-overflow: ellipsis;'}
 `;
 
 export const ActiveContainerContent = styled.div`
@@ -24,14 +32,15 @@ export const ActiveContainerContent = styled.div`
   border-top: 1px solid #f2a024;
   margin: 20px 0px;
   padding: 15px 5px;
-  white-space: pre-wrap;
   font-size: 0.7rem;
   font-weight: 400;
+  word-wrap: break-word;
 `;
 
 export const ActiveContainerSubtitle = styled.div`
   font-weight: 700;
   margin-bottom: 15px;
+  word-wrap: break-word;
 `;
 
 export const InactiveContainer = styled.div`
