@@ -25,18 +25,18 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   const content = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
-        return message.payload;
+        return message.message;
       case MessageEnum.NEW:
-        return `${message.payload} has entered`;
+        return `${message.username} has entered`;
       case MessageEnum.OUT:
-        return `${message.payload} has left`;
+        return `${message.username} has left`;
     }
   })();
 
   const justification = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
-        return 'issuer' in message ? 'start' : 'end';
+        return message.username ? 'start' : 'end';
       case MessageEnum.NEW:
       case MessageEnum.OUT:
         return 'around';
@@ -46,7 +46,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   })();
 
   const user =
-    message.type === MessageEnum.MESSAGE ? message.issuer || 'Me' : '';
+    message.type === MessageEnum.MESSAGE ? message.username || 'Me' : '';
   const date =
     message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
 
