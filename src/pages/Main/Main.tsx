@@ -8,7 +8,7 @@ import ChatBox from '@/components/ChatBox';
 import UserAgenda from '@/components/UserAgenda';
 import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
-import { mockTabs } from './mock';
+import { mockTabs } from '../AdminPage/mock';
 import { AdminMainContainer, UserMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
 
@@ -75,7 +75,6 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
 };
 
 const Main: React.FC = () => {
-  const [isAdmin, setIsAdmin] = useState<boolean>(true);
   const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [valid, setValid] = useState(true);
 
@@ -148,22 +147,15 @@ const Main: React.FC = () => {
     });
   }, [agendas]);
 
-  const MainComponent = isAdmin ? AdminMain : UserMain;
-  const filteredAgendas = isAdmin
-    ? agendas
-    : agendas.filter(agenda => agenda.status !== AgendaStatus.PREPARE);
+  const filteredAgendas = agendas.filter(
+    agenda => agenda.status !== AgendaStatus.PREPARE
+  );
 
   if (valid === false) return <Redirect to="/login" />;
 
   return (
     <div style={{ height: '100%' }}>
-      <button
-        onClick={() => setIsAdmin(prevState => !prevState)}
-        style={{ position: 'fixed', top: '0', left: '0' }}
-      >
-        {isAdmin ? 'To User' : 'To Admin'}
-      </button>
-      <MainComponent socket={socket} agendas={filteredAgendas} />
+      <UserMain socket={socket} agendas={filteredAgendas} />
     </div>
   );
 };

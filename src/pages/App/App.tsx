@@ -24,7 +24,7 @@ const App: React.FC = () => {
           <Route exact path="/admin">
             <AdminPage />
           </Route>
-          <Route exact path="/main">
+          <Route exact path="/">
             <Main />
           </Route>
           <Route exact path="/login/redirect">
@@ -36,9 +36,6 @@ const App: React.FC = () => {
           <Route path="/login">
             <Login />
           </Route>
-          <AuthedRoute path="/">
-            <Dashboard />
-          </AuthedRoute>
         </Switch>
       </AppContainer>
       <BiseoToastContainer />

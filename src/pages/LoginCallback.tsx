@@ -29,7 +29,7 @@ const LoginCallback: React.FC = () => {
   }, []);
 
   if (valid === null) return <div>Loading...</div>;
-  else if (valid) return <Redirect to="/dashboard" />;
+  else if (valid) return <Redirect to="/" />;
   else return <Redirect to="/login" />;
 };
 
