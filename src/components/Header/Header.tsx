@@ -39,7 +39,6 @@ const Header: React.FC = () => {
   };
 
   const changeAwayState = () => {
-    console.log(user);
     switch (awayState) {
       case AwayStatus.Entered:
         setAwayState(AwayStatus.Vacant);
