@@ -1,6 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
+import HomeIcon from './homeIcon.svg';
+import AdminIcon from './adminIcon.svg';
 import BiseoButton from '@/components/BiseoButton';
 import { useTypedSelector } from '@/hooks';
 import Logo from '@/public/sparcs.svg';
@@ -20,6 +22,7 @@ import { AwayStatus } from '@/common/enums';
 const Header: React.FC = () => {
   const history = useHistory();
   const isLoggedIn = useTypedSelector(state => state.loggedIn);
+  const user = useTypedSelector(state => state.user);
   const [awayState, setAwayState] = useState<AwayStatus>(AwayStatus.Entered);
   const [buttonString, setButtonString] = useState<string>('enter');
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
@@ -69,6 +72,12 @@ const Header: React.FC = () => {
             >
               {isLoggedIn ? buttonString : 'login'}
             </BiseoButton>
+            <OptionButton>
+              <HomeIcon style={{ height: 24, width: 24 }} />
+            </OptionButton>
+            <OptionButton display_none={!user.isUserAdmin}>
+              <AdminIcon style={{ height: 24, width: 24 }} />
+            </OptionButton>
             <OptionButton>
               <MdSettings size="24px" />
             </OptionButton>

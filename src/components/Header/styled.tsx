@@ -20,9 +20,11 @@ export const RHS = styled.div`
   align-items: center;
 `;
 
-export const OptionButton = styled.button`
+export const OptionButton = styled.button<{
+  display_none?: boolean;
+}>`
   border: none;
-  display: flex;
+  display: ${props => (props.display_none ? 'none' : 'flex')};
   align-items: center;
   background: inherit;
   margin-right: 15px;

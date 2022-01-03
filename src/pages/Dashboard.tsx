@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
   const handleLogout = () => {
     logout();
     dispatch(logoutAction());
-    dispatch(setUser(null));
+    dispatch(setUser({ sparcsID: null, ssoUID: null, isUserAdmin: false }));
     history.replace('/login');
   };
 
