@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
 import BiseoButton from '@/components/BiseoButton';
 import { useTypedSelector } from '@/hooks';
-import Logo from '@/public/sparcs.svg';
+import Logo from '@/public/biseoLogo.svg';
 import { COLOR } from '@/common/style';
 import {
   HeaderContainer,
