@@ -13,7 +13,7 @@ import {
 const Login: React.FC = () => {
   const loginStatus = useAuth();
 
-  if (loginStatus === LoginStatus.LoggedIn) return <Redirect to="/dashboard" />;
+  if (loginStatus === LoginStatus.LoggedIn) return <Redirect to="/" />;
 
   return (
     <Container>
