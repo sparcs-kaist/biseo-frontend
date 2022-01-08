@@ -5,7 +5,7 @@ import HomeIcon from './homeIcon.svg';
 import AdminIcon from './adminIcon.svg';
 import BiseoButton from '@/components/BiseoButton';
 import { useTypedSelector, useTypedDispatch } from '@/hooks';
-import Logo from '@/public/sparcs.svg';
+import Logo from '@/public/biseoLogo.svg';
 import { COLOR } from '@/common/style';
 import {
   HeaderContainer,
