@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
 import HomeIcon from './homeIcon.svg';
 import AdminIcon from './adminIcon.svg';
@@ -24,6 +24,7 @@ import { setUser } from '@/store/slices/user';
 
 const Header: React.FC = () => {
   const history = useHistory();
+  const location = useLocation();
   const dispatch = useTypedDispatch();
   const isLoggedIn = useTypedSelector(state => state.loggedIn);
   const user = useTypedSelector(state => state.user);
@@ -70,6 +71,12 @@ const Header: React.FC = () => {
       ? '자리비움 상태입니다.'
       : '현재 투표가 진행중입니다. 다음 투표부터 참여 할 수 있습니다.';
 
+  const userPagePath = '/';
+  const adminPagePath = '/admin';
+
+  const isUserPage = location.pathname == userPagePath;
+  const isAdminPage = location.pathname == adminPagePath;
+
   return (
     <div>
       <HeaderContainer>
@@ -83,10 +90,20 @@ const Header: React.FC = () => {
             >
               {isLoggedIn ? buttonString : 'login'}
             </BiseoButton>
-            <OptionButton>
+            <OptionButton
+              display_none={isUserPage}
+              onClick={() => {
+                history.push(userPagePath);
+              }}
+            >
               <HomeIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
-            <OptionButton display_none={!user.isUserAdmin}>
+            <OptionButton
+              display_none={!user.isUserAdmin || isAdminPage}
+              onClick={() => {
+                history.push(adminPagePath);
+              }}
+            >
               <AdminIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
             <OptionButton>

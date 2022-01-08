@@ -1,7 +1,7 @@
 import React from 'react';
 import { GlobalStyle } from '@/common/style';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import AuthedRoute from '@/components/AuthedRoute';
+import { AuthedRoute, AdminAuthedRoute } from '@/components/AuthedRoute';
 import {
   Login,
   LoginRedirect,
@@ -21,12 +21,6 @@ const App: React.FC = () => {
       <Header />
       <AppContainer>
         <Switch>
-          <Route exact path="/admin">
-            <AdminPage />
-          </Route>
-          <Route exact path="/main">
-            <Main />
-          </Route>
           <Route exact path="/login/redirect">
             <LoginRedirect />
           </Route>
@@ -36,8 +30,11 @@ const App: React.FC = () => {
           <Route path="/login">
             <Login />
           </Route>
+          <AdminAuthedRoute path="/admin">
+            <AdminPage />
+          </AdminAuthedRoute>
           <AuthedRoute path="/">
-            <Dashboard />
+            <Main />
           </AuthedRoute>
         </Switch>
       </AppContainer>
