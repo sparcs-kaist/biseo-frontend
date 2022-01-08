@@ -38,10 +38,10 @@ const AdminBoard: React.FC<Props> = ({
   const selectedTab = tabs[selectedTabIndex];
 
   const onVoteCreate = useCallback(
-    (title, content, subtitle, choices): void => {
+    (title, content, subtitle, choices, participants): void => {
       socket.emit(
         'admin:create',
-        { title, content, subtitle, choices },
+        { title, content, subtitle, choices, participants },
         (res: VoteCreateResponse) => {
           if (res.success) toast.success('🦄 Vote Created Successfully!');
           else toast.error('Vote Create Error!');
