@@ -24,6 +24,7 @@ export interface MessageType {
 export interface User {
   ssoUID: string;
   sparcsID: string;
+  isUserAdmin: boolean;
 }
 
 export interface RootState {

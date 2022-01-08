@@ -1,8 +1,10 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
+import HomeIcon from './homeIcon.svg';
+import AdminIcon from './adminIcon.svg';
 import BiseoButton from '@/components/BiseoButton';
-import { useTypedSelector } from '@/hooks';
+import { useTypedSelector, useTypedDispatch } from '@/hooks';
 import Logo from '@/public/biseoLogo.svg';
 import { COLOR } from '@/common/style';
 import {
@@ -16,13 +18,25 @@ import {
 } from './styled';
 import { useState } from 'react';
 import { AwayStatus } from '@/common/enums';
+import { logout } from '@/utils/auth';
+import { logout as logoutAction } from '@/store/slices/login';
+import { setUser } from '@/store/slices/user';
 
 const Header: React.FC = () => {
   const history = useHistory();
+  const dispatch = useTypedDispatch();
   const isLoggedIn = useTypedSelector(state => state.loggedIn);
+  const user = useTypedSelector(state => state.user);
   const [awayState, setAwayState] = useState<AwayStatus>(AwayStatus.Entered);
   const [buttonString, setButtonString] = useState<string>('enter');
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
+
+  const handleLogout = () => {
+    logout();
+    dispatch(logoutAction());
+    dispatch(setUser({ sparcsID: null, ssoUID: null, isUserAdmin: false }));
+    history.replace('/login');
+  };
 
   const changeAwayState = () => {
     switch (awayState) {
@@ -70,9 +84,15 @@ const Header: React.FC = () => {
               {isLoggedIn ? buttonString : 'login'}
             </BiseoButton>
             <OptionButton>
-              <MdSettings size="24px" />
+              <HomeIcon style={{ height: 24, width: 24 }} />
+            </OptionButton>
+            <OptionButton display_none={!user.isUserAdmin}>
+              <AdminIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
             <OptionButton>
+              <MdSettings size="24px" />
+            </OptionButton>
+            <OptionButton onClick={handleLogout}>
               <MdAccountCircle size="24px" />
             </OptionButton>
           </RHS>
