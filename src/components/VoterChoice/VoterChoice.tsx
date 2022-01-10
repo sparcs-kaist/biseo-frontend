@@ -47,7 +47,11 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
             <ActiveContainerTitle style={{ marginRight: '10px' }}>
               투표 대상 설정
             </ActiveContainerTitle>
-            <BiseoButton background="#f2a024" foreground="#ffffff">
+            <BiseoButton
+              background="#f2a024"
+              foreground="#ffffff"
+              onClick={() => select(users)}
+            >
               전체 선택
             </BiseoButton>
             <BiseoButton onClick={() => handlePreset(0)}>전체 목록</BiseoButton>
@@ -69,7 +73,6 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                         const idx = temp.findIndex(u => u.uid === user.uid);
                         temp.splice(idx, 1);
                         select(temp);
-                        console.log(temp);
                       }}
                     >
                       {user.sparcsId} &nbsp;
