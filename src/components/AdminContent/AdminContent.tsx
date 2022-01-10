@@ -89,8 +89,9 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
       const _users: User[] = data.users;
       setUsers(_users);
     }
-
     getUsers();
+    /* 5초마다 users 불러오기 */
+    setInterval(getUsers, 5000);
   }, []);
 
   const clickPreset = (n: number) => {
