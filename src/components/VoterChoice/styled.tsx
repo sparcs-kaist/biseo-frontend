@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const OverlayContainer = styled.div<{ view: boolean }>`
+export const OverlayContainer = styled.div`
   position: absolute;
   top: var(--header-size);
   left: 0;
@@ -47,4 +47,13 @@ export const VoterChoiceBottom = styled.div`
   display: flex;
   flex-direction: row-reverse;
   margin-top: auto;
+`;
+
+export const PresetChoiceContainer = styled.div`
+  position: fixed;
+  bottom: calc((40vh - var(--header-size)) / 2 + 35px);
+  padding: 8px;
+  padding-left: 23px;
+  background: #f2a024;
+  border-radius: 10px;
 `;

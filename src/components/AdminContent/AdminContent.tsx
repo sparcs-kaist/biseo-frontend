@@ -73,31 +73,51 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   const [newChoice, setNewChoice] = useState<string>('');
   const [submit, setSubmit] = useState<boolean>(false);
   const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
-  const [isAll, setIsAll] = useState<boolean>(true);
-  const [preset, setPreset] = useState<number>(1);
+  const [preset, setPreset] = useState<number>(0);
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [prevSelected, setPrevSelected] = useState<User[]>([]);
 
+  async function getUsers(_preset: number) {
+    const { data } = await axios
+      .get('/users', {
+        params: { preset: _preset },
+      })
+      .catch(() => ({ data: [] }));
+    const _users: User[] = data.users;
+    setUsers(_users);
+  }
+
   useEffect(() => {
-    async function getUsers() {
-      const { data } = await axios
-        .get('/users', {
-          params: { preset: preset },
-        })
-        .catch(() => ({ data: [] }));
-      const _users: User[] = data.users;
-      setUsers(_users);
-    }
-    getUsers();
+    getUsers(0);
   }, []);
 
+  async function updateUsers(_preset: number) {
+    const _users = users.map(user => {
+      if (selectedUsers.includes(user)) {
+        return {
+          uid: user.uid,
+          isVotable: true,
+        };
+      } else {
+        return {
+          uid: user.uid,
+          isVotable: false,
+        };
+      }
+    });
+    await axios.patch('/users', {
+      params: { preset: _preset },
+      body: {
+        users: _users,
+      },
+    });
+  }
+
   const clickPreset = (n: number) => {
-    if (n == 0) setIsAll(true);
-    else {
-      setIsAll(false);
-      setPreset(n);
-    }
+    getUsers(n);
+    if (preset == n) setPreset(0);
+    else setPreset(n);
   };
 
   const basicList = [];
@@ -283,15 +303,16 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
       <VoterChoice
         users={users}
         shown={isVoterChoice}
+        preset={preset}
         handlePreset={clickPreset}
         close={() => {
           setSelectedUsers(prevSelected);
           setIsVoterChoice(false);
         }}
         confirm={() => setIsVoterChoice(false)}
-        isAll={isAll}
         selectedUsers={selectedUsers}
         select={setSelectedUsers}
+        updateUsers={updateUsers}
       />
     </>
   );
