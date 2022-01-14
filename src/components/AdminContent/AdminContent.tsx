@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import BiseoButton from '@/components/BiseoButton';
+import VoterChoice from '@/components/VoterChoice';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
 import {
@@ -11,6 +12,7 @@ import {
   TitleInput,
   InputNewChoice,
 } from './styled';
+import axios from '@/utils/axios';
 
 interface AdminContentCreateProps {
   tabLength: number;
@@ -21,7 +23,8 @@ interface AdminContentCreateProps {
     title: string,
     content: string,
     subtitle: string,
-    choices: string[]
+    choices: string[],
+    participants: string[]
   ) => void;
 }
 
@@ -52,6 +55,13 @@ interface FormInputsStore {
   newChoices: string[];
 }
 
+interface User {
+  uid: string;
+  sparcsId: string;
+  isVotable: boolean;
+  isOnline: boolean;
+}
+
 export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   tabLength,
   selected,
@@ -62,6 +72,33 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   const [expand, setExpand] = useState<boolean>(false);
   const [newChoice, setNewChoice] = useState<string>('');
   const [submit, setSubmit] = useState<boolean>(false);
+  const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
+  const [isAll, setIsAll] = useState<boolean>(true);
+  const [preset, setPreset] = useState<number>(1);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const [prevSelected, setPrevSelected] = useState<User[]>([]);
+
+  useEffect(() => {
+    async function getUsers() {
+      const { data } = await axios
+        .get('/users', {
+          params: { preset: preset },
+        })
+        .catch(() => ({ data: [] }));
+      const _users: User[] = data.users;
+      setUsers(_users);
+    }
+    getUsers();
+  }, []);
+
+  const clickPreset = (n: number) => {
+    if (n == 0) setIsAll(true);
+    else {
+      setIsAll(false);
+      setPreset(n);
+    }
+  };
 
   const basicList = [];
   for (let i = 0; i < tabLength; i++) {
@@ -72,11 +109,13 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>();
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {
     if (!submit || choices.concat(data[selected].newChoices).length < 1) return;
+    const participants = [...selectedUsers].map(user => user.uid);
     onVoteCreate(
       title,
       content,
       subtitle,
-      choices.concat(data[selected].newChoices)
+      choices.concat(data[selected].newChoices),
+      participants
     );
     reset();
     setData([
@@ -140,88 +179,121 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   };
 
   return (
-    <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
-      <TitleInput
-        name="title"
-        placeholder="투표 제목을 입력하세요"
-        className={errors.title && 'error'}
-        ref={register({ required: true })}
-        onChange={handleData}
-        value={data[selected].title}
-      />
-      <ContentTextArea
-        name="content"
-        placeholder="투표 내용을 입력하세요"
-        className={errors.content && 'error'}
-        ref={register({ required: true })}
-        onChange={handleData}
-        value={data[selected].content}
-      />
-      <SubtitleInput
-        name="subtitle"
-        placeholder="의결문안을 입력하세요"
-        className={errors.subtitle && 'error'}
-        ref={register({ required: true })}
-        onChange={handleData}
-        value={data[selected].subtitle}
-      />
-      <ButtonGroup>
-        {choices.map(choice => (
-          // a button's default type is 'submit', but we don't want this button to submit
-          <BiseoButton type="button" nocursor key={choice}>
-            {choice}
-          </BiseoButton>
-        ))}
-        {data[selected].newChoices.map((choice, index) => (
-          // a button's default type is 'submit', but we don't want this button to submit
+    <>
+      <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <TitleInput
+            name="title"
+            placeholder="투표 제목을 입력하세요"
+            className={errors.title && 'error'}
+            ref={register({ required: true })}
+            onChange={handleData}
+            value={data[selected].title}
+            style={{ width: '100%', marginRight: '5px' }}
+          />
           <BiseoButton
             type="button"
-            key={choice}
-            onClick={() => deleteNewChoice(index)}
+            onClick={() => {
+              setPrevSelected(selectedUsers);
+              setIsVoterChoice(true);
+            }}
+            style={{ marginRight: '0' }}
           >
-            {choice}
+            대상 설정
           </BiseoButton>
-        ))}
-        {extendable && (
-          <>
-            {expand ? (
-              <InputNewChoice
-                onChange={handleNewChoice}
-                onKeyPress={enterPress}
-              />
-            ) : (
-              <BiseoButton onClick={() => setExpand(true)}>+</BiseoButton>
-            )}
-          </>
-        )}
-      </ButtonGroup>
-      <ButtonGroup alignRight={true}>
-        {expand ? (
-          <>
+        </div>
+        <ContentTextArea
+          name="content"
+          placeholder="투표 내용을 입력하세요"
+          className={errors.content && 'error'}
+          ref={register({ required: true })}
+          onChange={handleData}
+          value={data[selected].content}
+        />
+        <SubtitleInput
+          name="subtitle"
+          placeholder="의결문안을 입력하세요"
+          className={errors.subtitle && 'error'}
+          ref={register({ required: true })}
+          onChange={handleData}
+          value={data[selected].subtitle}
+        />
+        <ButtonGroup>
+          {choices.map(choice => (
+            // a button's default type is 'submit', but we don't want this button to submit
+            <BiseoButton type="button" nocursor key={choice}>
+              {choice}
+            </BiseoButton>
+          ))}
+          {data[selected].newChoices.map((choice, index) => (
+            // a button's default type is 'submit', but we don't want this button to submit
             <BiseoButton
               type="button"
+              key={choice}
+              onClick={() => deleteNewChoice(index)}
+            >
+              {choice}
+            </BiseoButton>
+          ))}
+          {extendable && (
+            <>
+              {expand ? (
+                <InputNewChoice
+                  onChange={handleNewChoice}
+                  onKeyPress={enterPress}
+                />
+              ) : (
+                <BiseoButton onClick={() => setExpand(true)}>+</BiseoButton>
+              )}
+            </>
+          )}
+        </ButtonGroup>
+        <ButtonGroup alignRight={true}>
+          {expand ? (
+            <>
+              <BiseoButton
+                type="button"
+                background="#f2a024"
+                foreground="#ffffff"
+                onClick={addNewChoice}
+              >
+                추가
+              </BiseoButton>
+              <BiseoButton type="button" onClick={handleCancel}>
+                취소
+              </BiseoButton>
+            </>
+          ) : (
+            <BiseoButton
+              type="submit"
               background="#f2a024"
               foreground="#ffffff"
-              onClick={addNewChoice}
+              onClick={() => setSubmit(true)}
             >
-              추가
+              만들기
             </BiseoButton>
-            <BiseoButton type="button" onClick={handleCancel}>
-              취소
-            </BiseoButton>
-          </>
-        ) : (
-          <BiseoButton
-            type="submit"
-            background="#f2a024"
-            foreground="#ffffff"
-            onClick={() => setSubmit(true)}
-          >
-            만들기
-          </BiseoButton>
-        )}
-      </ButtonGroup>
-    </AdminContentContainer>
+          )}
+        </ButtonGroup>
+      </AdminContentContainer>
+      <VoterChoice
+        users={users}
+        shown={isVoterChoice}
+        handlePreset={clickPreset}
+        close={() => {
+          setSelectedUsers(prevSelected);
+          setIsVoterChoice(false);
+        }}
+        confirm={() => setIsVoterChoice(false)}
+        isAll={isAll}
+        selectedUsers={selectedUsers}
+        select={setSelectedUsers}
+      />
+    </>
   );
 };
 

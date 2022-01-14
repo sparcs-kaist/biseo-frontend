@@ -18,6 +18,7 @@ const BiseoButton = styled.button<{
   margin-right: 15px;
   min-width: 80px;
   padding: 5px 20px;
+  white-space: nowrap;
 
   &:hover {
     cursor: ${props => (props.nocursor ? 'default' : 'pointer')};
