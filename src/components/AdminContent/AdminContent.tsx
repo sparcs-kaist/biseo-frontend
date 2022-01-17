@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import BiseoButton from '@/components/BiseoButton';
 import VoterChoice from '@/components/VoterChoice';
@@ -106,18 +106,27 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
         };
       }
     });
-    await axios.patch('/users', {
-      params: { preset: _preset },
-      body: {
-        users: _users,
-      },
+    await axios.patch(`/users?preset=${_preset}`, {
+      users: _users,
     });
   }
 
-  const clickPreset = (n: number) => {
-    getUsers(n);
-    if (preset == n) setPreset(0);
-    else setPreset(n);
+  const clickPreset = async (n: number) => {
+    const { data } = await axios
+      .get('/users', {
+        params: { preset: n },
+      })
+      .catch(() => ({ data: [] }));
+    const _users: User[] = data.users;
+    setUsers(_users);
+    if (preset === n) {
+      setSelectedUsers([]);
+      setPreset(0);
+    } else {
+      setPreset(n);
+      const _selectedUser = _users.filter(user => user.isVotable);
+      setSelectedUsers(_selectedUser);
+    }
   };
 
   const basicList = [];
@@ -146,15 +155,17 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
     setSubmit(false);
   };
 
-  const handleNewChoice = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setNewChoice(e.target.value);
+  const handleNewChoice = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setNewChoice(e.target.value),
+    [newChoice]
+  );
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setExpand(false);
     setNewChoice('');
-  };
+  }, [expand, newChoice]);
 
-  const addNewChoice = () => {
+  const addNewChoice = useCallback(() => {
     setData([
       ...data.slice(0, selected),
       {
@@ -165,38 +176,47 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
     ]);
     setExpand(false);
     setNewChoice('');
-  };
+  }, [data, expand, newChoice]);
 
-  const deleteNewChoice = (index: number) => {
-    setData([
-      ...data.slice(0, selected),
-      {
-        ...data[selected],
-        newChoices: [
-          ...data[selected].newChoices.slice(0, index),
-          ...data[selected].newChoices.slice(index + 1),
-        ],
-      },
-      ...data.slice(selected + 1),
-    ]);
-  };
+  const deleteNewChoice = useCallback(
+    (index: number) => {
+      setData([
+        ...data.slice(0, selected),
+        {
+          ...data[selected],
+          newChoices: [
+            ...data[selected].newChoices.slice(0, index),
+            ...data[selected].newChoices.slice(index + 1),
+          ],
+        },
+        ...data.slice(selected + 1),
+      ]);
+    },
+    [data]
+  );
 
-  const enterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') addNewChoice();
-  };
+  const enterPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') addNewChoice();
+    },
+    [newChoice]
+  );
 
-  const handleData = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setData([
-      ...data.slice(0, selected),
-      { ...data[selected], [name]: value },
-      ...data.slice(selected + 1),
-    ]);
-  };
+  const handleData = useCallback(
+    (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
+      const { name, value } = e.target;
+      setData([
+        ...data.slice(0, selected),
+        { ...data[selected], [name]: value },
+        ...data.slice(selected + 1),
+      ]);
+    },
+    [data]
+  );
 
   return (
     <>

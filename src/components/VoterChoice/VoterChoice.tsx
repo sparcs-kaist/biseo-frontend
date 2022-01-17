@@ -91,7 +91,6 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
             {users.map((user, index) => {
               if (preset !== 0) {
                 if (user.isVotable) {
-                  select([user, ...selectedUsers]);
                   return (
                     <BiseoButton
                       background="#f2a024"
