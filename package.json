@@ -54,7 +54,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.1",
     "@types/lodash": "^4.14.172",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "lodash": "^4.17.21",
     "path": "^0.12.7",
     "querystring": "^0.2.0",
