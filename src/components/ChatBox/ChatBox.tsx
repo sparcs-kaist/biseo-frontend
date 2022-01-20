@@ -1,19 +1,91 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MessageEnum } from '@/common/enums';
 import { MessageType } from '@/common/types';
-import ChatBoxContent from '@/components/ChatBoxContent';
-import { ChatBoxContainer, ChatBoxInputGroup } from './styled';
-import axios from '@/utils/axios';
+import {
+  ChatBoxScrollable,
+  MessageContainer,
+  MessageUsername,
+  MessageContent,
+  MessageDate,
+  ChatBoxInputGroup,
+  ChatBoxInternalContainer,
+  ChatBoxExternalContainer,
+} from './styled';
+import useFetch from '@/hooks/useFetch';
 
 interface Props {
   socket: SocketIOClient.Socket;
 }
 
+interface MessageProps {
+  message: MessageType;
+}
+
+const Message: React.FC<MessageProps> = ({ message }) => {
+  const parseDate = (date: string) => {
+    const splitted = date.split('T');
+    const day = splitted[0];
+    const time = splitted[1].split(':').slice(0, 2).join(':');
+    return { day, time };
+  };
+
+  const content = (() => {
+    switch (message.type) {
+      case MessageEnum.MESSAGE:
+        return message.message;
+      case MessageEnum.NEW:
+        return `${message.username} has entered`;
+      case MessageEnum.OUT:
+        return `${message.username} has left`;
+    }
+  })();
+
+  const justification = (() => {
+    switch (message.type) {
+      case MessageEnum.MESSAGE:
+        return message.username ? 'start' : 'end';
+      case MessageEnum.NEW:
+      case MessageEnum.OUT:
+        return 'around';
+      default:
+        return '';
+    }
+  })();
+
+  const user =
+    message.type === MessageEnum.MESSAGE ? message.username || 'Me' : '';
+  const date =
+    message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
+
+  return (
+    <MessageContainer justification={justification}>
+      {user && <MessageUsername>{user}</MessageUsername>}
+      <MessageContent>
+        {content}
+        {date && (
+          <MessageDate justification={justification}>
+            <span>{date.day}</span>
+            <span>{date.time}</span>
+          </MessageDate>
+        )}
+      </MessageContent>
+    </MessageContainer>
+  );
+};
+
+interface ChatBoxContentProps {
+  socket: SocketIOClient.Socket;
+}
+
 const ChatBox: React.FC<Props> = ({ socket }) => {
   const [name, setName] = useState<string>('');
-  const [chatlog, setChatlog] = useState<MessageType[]>([]); // elements of chatlog have two required fields: type, payload
   const [_members, setMembers] = useState<string[]>([]);
   const [message, setMessage] = useState('');
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(0);
+  const [chatlog, setChatlog] = useState<MessageType[]>([]);
+  const { loading, list, error } = useFetch(query, page);
+  const loader = useRef(null);
 
   /* Initialize socket events for 'name', 'enter', 'members', 'out'.
    * For detailed description on all socket events, please refer to
@@ -39,14 +111,6 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       ]);
       setMembers(members => members.filter(member => member !== username));
     });
-    async function getChats() {
-      const { data } = await axios.get('/chat').catch(() => ({ data: [] }));
-      const chatlogs: MessageType[] = data.chats ?? [];
-
-      setChatlog(chatlogs);
-    }
-
-    getChats();
 
     return () => {
       socket.off('chat:name');
@@ -111,9 +175,43 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     if (e.key === 'Enter') sendMessage();
   };
 
+  const handleObserver = useCallback(entries => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      setPage(prev => prev + 1);
+    }
+  }, []);
+
+  useEffect(() => {
+    setChatlog(list);
+    const lastChat: MessageType = list[list.length - 1];
+    if (lastChat !== undefined) {
+      setQuery(lastChat['_id']);
+    }
+  }, [list]);
+
+  useEffect(() => {
+    const option = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 0,
+    };
+    const observer = new IntersectionObserver(handleObserver, option);
+    if (loader.current) observer.observe(loader.current);
+  }, [handleObserver]);
+
   return (
-    <ChatBoxContainer>
-      <ChatBoxContent chatlog={chatlog} />
+    <ChatBoxExternalContainer>
+      <ChatBoxInternalContainer>
+        <ChatBoxScrollable>
+          {chatlog.map((chat, idx) => (
+            <Message key={idx} message={chat} />
+          ))}
+          {loading && <p>Loading...</p>}
+          {error && <p>Error...</p>}
+          <div ref={loader} />
+        </ChatBoxScrollable>
+      </ChatBoxInternalContainer>
       <ChatBoxInputGroup>
         <input
           type="text"
@@ -123,7 +221,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         />
         <button onClick={sendMessage}>SEND</button>
       </ChatBoxInputGroup>
-    </ChatBoxContainer>
+    </ChatBoxExternalContainer>
   );
 };
 
