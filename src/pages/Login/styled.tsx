@@ -1,4 +1,18 @@
 import styled from 'styled-components';
+import background from './background.png';
+
+export const Background = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  min-height: 500px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url(${background});
+  background-size: cover;
+`;
 
 export const Container = styled.div`
   -moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -9,12 +23,10 @@ export const Container = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  font-weight: bold;
   height: 345px;
   justify-content: space-evenly;
-  margin: 0 auto;
-  margin-top: 100px;
-  width: 440px;
+  margin: 25vh auto;
+  width: 383px;
 `;
 
 export const HeaderGroup = styled.div`
@@ -23,13 +35,9 @@ export const HeaderGroup = styled.div`
   flex-direction: column;
 `;
 
-export const MainHeader = styled.h1`
-  margin: 0 0 15px 0;
-`;
-
 export const SubHeader = styled.h4`
-  color: #f2a024;
-  margin: 0 0 15px 0;
+  margin: 0;
+  font-weight: normal;
 `;
 
 export const RedirectAnchor = styled.a`

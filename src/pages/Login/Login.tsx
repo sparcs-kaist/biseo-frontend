@@ -3,12 +3,13 @@ import { Redirect } from 'react-router-dom';
 import { LoginStatus } from '@/common/enums';
 import { useAuth } from '@/hooks';
 import {
+  Background,
   Container,
   HeaderGroup,
-  MainHeader,
   SubHeader,
   RedirectAnchor,
 } from './styled';
+import Logo from './Logo.svg';
 
 const Login: React.FC = () => {
   const loginStatus = useAuth();
@@ -16,13 +17,15 @@ const Login: React.FC = () => {
   if (loginStatus === LoginStatus.LoggedIn) return <Redirect to="/" />;
 
   return (
-    <Container>
-      <HeaderGroup>
-        <MainHeader>BISEO</MainHeader>
-        <SubHeader>Login To Enter</SubHeader>
-      </HeaderGroup>
-      <RedirectAnchor href="/login/redirect">LOGIN</RedirectAnchor>
-    </Container>
+    <Background>
+      <Container>
+        <HeaderGroup>
+          <Logo style={{ marginBottom: '15px' }} />
+          <SubHeader>스팍스의 총회 서비스, 스비서입니다</SubHeader>
+        </HeaderGroup>
+        <RedirectAnchor href="/login/redirect">LOGIN</RedirectAnchor>
+      </Container>
+    </Background>
   );
 };
 
