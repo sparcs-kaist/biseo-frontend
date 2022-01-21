@@ -42,9 +42,9 @@ export const SubHeader = styled.h4`
 
 export const RedirectAnchor = styled.a`
   background-color: #f2a024;
-  border-radius: 13px;
+  border-radius: 3px;
   color: white;
   display: inline-block;
-  padding: 10px 20px;
+  padding: 10px 60px;
   text-decoration: none !important;
 `;

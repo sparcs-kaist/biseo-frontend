@@ -23,7 +23,9 @@ const Login: React.FC = () => {
           <Logo style={{ marginBottom: '15px' }} />
           <SubHeader>스팍스의 총회 서비스, 스비서입니다</SubHeader>
         </HeaderGroup>
-        <RedirectAnchor href="/login/redirect">LOGIN</RedirectAnchor>
+        <RedirectAnchor href="/login/redirect">
+          SPARCS SSO 로그인
+        </RedirectAnchor>
       </Container>
     </Background>
   );
