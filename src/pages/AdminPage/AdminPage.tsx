@@ -18,10 +18,10 @@ import {
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
-  agendas: Agenda[];
 }
 
-const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
+const AdminMain: React.FC<CommonMainProps> = ({ socket }) => {
+  const agendas = useTypedSelector(state => state.agendas);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [targetAgenda, setTargetAgenda] = useState<Agenda>();
 
@@ -127,13 +127,11 @@ const AdminPage: React.FC = () => {
     });
   }, [agendas]);
 
-  const filteredAgendas = agendas;
-
   if (valid === false) return <Redirect to="/login" />;
 
   return (
     <div style={{ height: '100%' }}>
-      <AdminMain socket={socket} agendas={filteredAgendas} />
+      <AdminMain socket={socket} />
     </div>
   );
 };
