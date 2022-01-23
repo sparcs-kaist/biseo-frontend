@@ -9,7 +9,7 @@ import {
   SubHeader,
   RedirectAnchor,
 } from './styled';
-import Logo from './Logo.svg';
+import Logo from '@/public/biseoLogo.svg';
 
 const Login: React.FC = () => {
   const loginStatus = useAuth();
@@ -20,7 +20,7 @@ const Login: React.FC = () => {
     <Background>
       <Container>
         <HeaderGroup>
-          <Logo style={{ marginBottom: '15px' }} />
+          <Logo style={{ height: 60, marginBottom: '15px' }} />
           <SubHeader>스팍스의 총회 서비스, 스비서입니다</SubHeader>
         </HeaderGroup>
         <RedirectAnchor href="/login/redirect">
