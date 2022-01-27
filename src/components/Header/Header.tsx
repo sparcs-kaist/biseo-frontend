@@ -5,6 +5,7 @@ import HomeIcon from './homeIcon.svg';
 import AdminIcon from './adminIcon.svg';
 import BiseoButton from '@/components/BiseoButton';
 import { useTypedSelector, useTypedDispatch } from '@/hooks';
+import useTitle from '@/hooks/useTitle';
 import Logo from '@/public/biseoLogo.svg';
 import { COLOR } from '@/common/style';
 import {
@@ -23,6 +24,7 @@ import { logout as logoutAction } from '@/store/slices/login';
 import { setUser } from '@/store/slices/user';
 
 const Header: React.FC = () => {
+  const title = useTitle();
   const history = useHistory();
   const location = useLocation();
   const dispatch = useTypedDispatch();
@@ -94,6 +96,7 @@ const Header: React.FC = () => {
               display_none={isUserPage}
               onClick={() => {
                 history.push(userPagePath);
+                title('Biseo');
               }}
             >
               <HomeIcon style={{ height: 24, width: 24 }} />
@@ -102,6 +105,7 @@ const Header: React.FC = () => {
               display_none={!user.isUserAdmin || isAdminPage}
               onClick={() => {
                 history.push(adminPagePath);
+                title('Biseo - admin');
               }}
             >
               <AdminIcon style={{ height: 24, width: 24 }} />
