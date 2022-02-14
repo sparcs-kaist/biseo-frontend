@@ -2,27 +2,19 @@ import React, { useState, useEffect, useMemo } from 'react';
 import io from 'socket.io-client';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
-import { useTypedSelector, useTypedDispatch } from '@/hooks';
 import ChatBox from '@/components/ChatBox';
 import UserAgenda from '@/components/UserAgenda';
 import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { UserMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
-import {
-  setAgendas,
-  addAgendas,
-  updateAgenda,
-  deleteAgenda,
-} from '@/store/slices/agendas';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
+  agendas: Agenda[];
 }
 
-const UserMain: React.FC<CommonMainProps> = ({ socket }) => {
-  const agendas = useTypedSelector(state => state.agendas);
-
+const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   return (
     <UserMainContainer>
       <div className="left">
@@ -40,8 +32,7 @@ const UserMain: React.FC<CommonMainProps> = ({ socket }) => {
 };
 
 const Main: React.FC = () => {
-  const agendas = useTypedSelector(state => state.agendas);
-  const dispatch = useTypedDispatch();
+  const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [valid, setValid] = useState(true);
 
   const socket = useMemo(
@@ -62,7 +53,7 @@ const Main: React.FC = () => {
     async function getAgendas() {
       const { data } = await axios.get('/agendas').catch(() => ({ data: [] }));
       const agendas: Agenda[] = data.agendas ?? [];
-      dispatch(setAgendas(agendas));
+      setAgendas(agendas);
     }
 
     getAgendas();
@@ -74,34 +65,45 @@ const Main: React.FC = () => {
         ...payload,
         userChoice: null,
       };
-      dispatch(addAgendas(newAgenda));
+      setAgendas(prevState => [newAgenda, ...prevState]);
     });
 
     socket.on('agenda:started', (payload: Agenda) => {
-      const newAgenda = {
-        ...payload,
-        userChoice: null,
-      };
-      dispatch(updateAgenda(newAgenda));
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id)
+            return { ...payload, userChoice: null };
+          else return agenda;
+        });
+      });
     });
 
     socket.on('agenda:terminated', (payload: Agenda) => {
-      dispatch(updateAgenda(payload));
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id) return payload;
+          else return agenda;
+        });
+      });
     });
     // TODO cleanup (agendas)
   }, []);
 
   useEffect(() => {
     socket.on('agenda:edited', (payload: Agenda) => {
-      const newAgenda = {
-        ...payload,
-        userChoice: null,
-      };
-      dispatch(updateAgenda(newAgenda));
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id)
+            return { ...payload, userChoice: null };
+          else return agenda;
+        });
+      });
     });
 
     socket.on('agenda:deleted', (payload: string) => {
-      dispatch(deleteAgenda(payload));
+      setAgendas(agendas => {
+        return agendas.filter(agenda => agenda._id !== payload);
+      });
     });
   }, [agendas]);
 
@@ -109,7 +111,12 @@ const Main: React.FC = () => {
 
   return (
     <div style={{ height: '100%' }}>
-      <UserMain socket={socket} />
+      <UserMain
+        socket={socket}
+        agendas={agendas.filter(
+          agenda => agenda.status !== AgendaStatus.PREPARE
+        )}
+      />
     </div>
   );
 };

@@ -96,27 +96,12 @@ const UserAgenda: React.FC<Props> = ({
           .join(', ')
       : '';
 
-  const emitAgendaStatus = () => {
-    socket.emit(
-      'agenda:status',
-      { agendaId: _id },
-      (res: { success: boolean; payload: payload | string }) => {
-        if (res.success) console.log(res.payload);
-        else console.log(res.payload);
-      }
-    );
-  };
-
   useEffect(() => {
     socket.on('agenda:voted', ({ agendaId }) => {
       if (agendaId !== _id) {
         return;
       }
-
-      emitAgendaStatus();
     });
-
-    emitAgendaStatus();
 
     return () => {
       socket.off('agenda:voted');

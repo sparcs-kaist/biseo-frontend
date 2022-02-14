@@ -5,23 +5,16 @@ import AdminBoard from '@/components/AdminBoard';
 import AdminAgenda from '@/components/AdminAgenda';
 import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
-import { useTypedSelector, useTypedDispatch } from '@/hooks';
 import { mockTabs } from './mock';
 import { AdminMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
-import {
-  setAgendas,
-  addAgendas,
-  updateAgenda,
-  deleteAgenda,
-} from '@/store/slices/agendas';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
+  agendas: Agenda[];
 }
 
-const AdminMain: React.FC<CommonMainProps> = ({ socket }) => {
-  const agendas = useTypedSelector(state => state.agendas);
+const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [targetAgenda, setTargetAgenda] = useState<Agenda>();
 
@@ -62,8 +55,7 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket }) => {
 };
 
 const AdminPage: React.FC = () => {
-  const agendas = useTypedSelector(state => state.agendas);
-  const dispatch = useTypedDispatch();
+  const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [valid, setValid] = useState(true);
 
   const socket = useMemo(
@@ -84,7 +76,7 @@ const AdminPage: React.FC = () => {
     async function getAgendas() {
       const { data } = await axios.get('/agendas').catch(() => ({ data: [] }));
       const agendas: Agenda[] = data.agendas ?? [];
-      dispatch(setAgendas(agendas));
+      setAgendas(agendas);
     }
 
     getAgendas();
@@ -96,34 +88,45 @@ const AdminPage: React.FC = () => {
         ...payload,
         userChoice: null,
       };
-      dispatch(addAgendas(newAgenda));
+      setAgendas(prevState => [newAgenda, ...prevState]);
     });
 
     socket.on('agenda:started', (payload: Agenda) => {
-      const newAgenda = {
-        ...payload,
-        userChoice: null,
-      };
-      dispatch(updateAgenda(newAgenda));
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id)
+            return { ...payload, userChoice: null };
+          else return agenda;
+        });
+      });
     });
 
     socket.on('agenda:terminated', (payload: Agenda) => {
-      dispatch(updateAgenda(payload));
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id) return payload;
+          else return agenda;
+        });
+      });
     });
     // TODO cleanup (agendas)
   }, []);
 
   useEffect(() => {
     socket.on('agenda:edited', (payload: Agenda) => {
-      const newAgenda = {
-        ...payload,
-        userChoice: null,
-      };
-      dispatch(updateAgenda(newAgenda));
+      setAgendas(agendas => {
+        return agendas.map(agenda => {
+          if (agenda._id === payload._id)
+            return { ...payload, userChoice: null };
+          else return agenda;
+        });
+      });
     });
 
     socket.on('agenda:deleted', (payload: string) => {
-      dispatch(deleteAgenda(payload));
+      setAgendas(agendas => {
+        return agendas.filter(agenda => agenda._id !== payload);
+      });
     });
   }, [agendas]);
 
@@ -131,7 +134,7 @@ const AdminPage: React.FC = () => {
 
   return (
     <div style={{ height: '100%' }}>
-      <AdminMain socket={socket} />
+      <AdminMain socket={socket} agendas={agendas} />
     </div>
   );
 };
