@@ -60,22 +60,12 @@ const Main: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('agenda:created', (payload: Agenda) => {
+    socket.on('agenda:started', (payload: Agenda) => {
       const newAgenda = {
         ...payload,
         userChoice: null,
       };
       setAgendas(prevState => [newAgenda, ...prevState]);
-    });
-
-    socket.on('agenda:started', (payload: Agenda) => {
-      setAgendas(agendas => {
-        return agendas.map(agenda => {
-          if (agenda._id === payload._id)
-            return { ...payload, userChoice: null };
-          else return agenda;
-        });
-      });
     });
 
     socket.on('agenda:terminated', (payload: Agenda) => {
