@@ -95,6 +95,7 @@ const AdminBoard: React.FC<Props> = ({
         {tabs.map(tab => tab.title)}
       </AdminTabs>
       <AdminContentCreate
+        socket={socket}
         tabLength={tabs.length}
         selected={selectedTabIndex}
         choices={selectedTab.choices}

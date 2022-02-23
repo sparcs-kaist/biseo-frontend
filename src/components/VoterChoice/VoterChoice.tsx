@@ -19,8 +19,8 @@ interface VoterChoiceProps {
   handlePreset: (n: number) => void;
   close: () => void;
   confirm: () => void;
-  selectedUsers: User[];
-  select: (u: User[]) => void;
+  selectedUsers: string[];
+  select: (u: string[]) => void;
   updateUsers: (_preset: number) => void;
 }
 
@@ -63,7 +63,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
               <BiseoButton
                 background="#f2a024"
                 foreground="#ffffff"
-                onClick={() => select(users)}
+                onClick={() => select(users.map(user => user.uid))}
               >
                 전체 선택
               </BiseoButton>
@@ -102,7 +102,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                     </BiseoButton>
                   );
                 }
-              } else if (selectedUsers.includes(user)) {
+              } else if (selectedUsers.includes(user.uid)) {
                 return (
                   <BiseoButton
                     background="#f2a024"
@@ -110,7 +110,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                     key={index}
                     onClick={() => {
                       const temp = [...selectedUsers];
-                      const idx = temp.findIndex(u => u.uid === user.uid);
+                      const idx = temp.findIndex(uid => uid === user.uid);
                       temp.splice(idx, 1);
                       select(temp);
                     }}
@@ -123,7 +123,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                 return (
                   <BiseoButton
                     key={index}
-                    onClick={() => select([user, ...selectedUsers])}
+                    onClick={() => select([user.uid, ...selectedUsers])}
                   >
                     {user.sparcsId} &nbsp;
                     {user.isOnline ? <Green /> : <Red />}

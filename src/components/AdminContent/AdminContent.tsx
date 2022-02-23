@@ -15,6 +15,7 @@ import {
 import axios from '@/utils/axios';
 
 interface AdminContentCreateProps {
+  socket: SocketIOClient.Socket;
   tabLength: number;
   selected: number;
   choices: string[];
@@ -63,6 +64,7 @@ interface User {
 }
 
 export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
+  socket,
   tabLength,
   selected,
   choices,
@@ -75,8 +77,8 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
   const [preset, setPreset] = useState<number>(0);
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  const [prevSelected, setPrevSelected] = useState<User[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [prevSelected, setPrevSelected] = useState<string[]>([]);
 
   async function getUsers(_preset: number) {
     const { data } = await axios
@@ -92,9 +94,35 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
     getUsers(0);
   }, []);
 
+  useEffect(() => {
+    socket.on('chat:enter', (sparcsId: string) => {
+      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
+      const newStateUser: User = { ...users[index], isOnline: true };
+      setUsers(users => [
+        ...users.slice(0, index),
+        newStateUser,
+        ...users.slice(index + 1),
+      ]);
+    });
+
+    socket.on('chat:out', (sparcsId: string) => {
+      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
+      const newStateUser: User = { ...users[index], isOnline: false };
+      setUsers(users => [
+        ...users.slice(0, index),
+        newStateUser,
+        ...users.slice(index + 1),
+      ]);
+    });
+    return () => {
+      socket.off('chat:enter');
+      socket.off('chat:out');
+    };
+  }, [users]);
+
   async function updateUsers(_preset: number) {
     const _users = users.map(user => {
-      if (selectedUsers.includes(user)) {
+      if (selectedUsers.includes(user.uid)) {
         return {
           uid: user.uid,
           isVotable: true,
@@ -124,7 +152,9 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
       setPreset(0);
     } else {
       setPreset(n);
-      const _selectedUser = _users.filter(user => user.isVotable);
+      const _selectedUser = _users
+        .filter(user => user.isVotable)
+        .map(user => user.uid);
       setSelectedUsers(_selectedUser);
     }
   };
@@ -138,13 +168,12 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>();
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {
     if (!submit || choices.concat(data[selected].newChoices).length < 1) return;
-    const participants = [...selectedUsers].map(user => user.uid);
     onVoteCreate(
       title,
       content,
       subtitle,
       choices.concat(data[selected].newChoices),
-      participants
+      selectedUsers
     );
     reset();
     setData([
