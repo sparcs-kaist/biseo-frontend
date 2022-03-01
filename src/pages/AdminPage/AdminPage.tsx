@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import io from 'socket.io-client';
+import React, { useState, useEffect } from 'react';
 import { Agenda } from '@/common/types';
 import AdminBoard from '@/components/AdminBoard';
 import AdminAgenda from '@/components/AdminAgenda';
-import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { mockTabs } from './mock';
 import { AdminMainContainer } from './styled';
@@ -54,19 +52,13 @@ const AdminMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   );
 };
 
-const AdminPage: React.FC = () => {
+interface AdminPageProps {
+  socket: SocketIOClient.Socket;
+}
+
+const AdminPage: React.FC<AdminPageProps> = ({ socket }) => {
   const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [valid, setValid] = useState(true);
-
-  const socket = useMemo(
-    () =>
-      io(process.env.SERVER_URL, {
-        transports: ['websocket'],
-        upgrade: false,
-        query: `token=${getToken()}`,
-      }),
-    []
-  );
 
   socket.on('error', (err: Error) => {
     setValid(false);

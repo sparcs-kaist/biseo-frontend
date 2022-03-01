@@ -19,5 +19,10 @@ export enum LoginStatus {
 export enum AwayStatus {
   Entered,
   Vacant,
-  Staying,
+}
+
+export enum MemberState {
+  ONLINE = 'online',
+  OFFLINE = 'offline',
+  VACANT = 'vacant',
 }

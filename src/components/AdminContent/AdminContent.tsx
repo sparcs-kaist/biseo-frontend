@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import BiseoButton from '@/components/BiseoButton';
 import VoterChoice from '@/components/VoterChoice';
 import { Agenda } from '@/common/types';
-import { AgendaStatus } from '@/common/enums';
+import { AgendaStatus, MemberState } from '@/common/enums';
 import {
   AdminContentContainer,
   ButtonGroup,
@@ -60,7 +60,7 @@ interface User {
   uid: string;
   sparcsId: string;
   isVotable: boolean;
-  isOnline: boolean;
+  state: MemberState;
 }
 
 export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
@@ -97,7 +97,10 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   useEffect(() => {
     socket.on('chat:enter', (sparcsId: string) => {
       const index: number = users.findIndex(user => user.sparcsId === sparcsId);
-      const newStateUser: User = { ...users[index], isOnline: true };
+      const newStateUser: User = {
+        ...users[index],
+        state: MemberState.ONLINE,
+      };
       setUsers(users => [
         ...users.slice(0, index),
         newStateUser,
@@ -107,16 +110,48 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
 
     socket.on('chat:out', (sparcsId: string) => {
       const index: number = users.findIndex(user => user.sparcsId === sparcsId);
-      const newStateUser: User = { ...users[index], isOnline: false };
+      const newStateUser: User = {
+        ...users[index],
+        state: MemberState.OFFLINE,
+      };
       setUsers(users => [
         ...users.slice(0, index),
         newStateUser,
         ...users.slice(index + 1),
       ]);
     });
+
+    socket.on('vacant:on', (sparcsId: string) => {
+      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
+      const newStateUser: User = {
+        ...users[index],
+        state: MemberState.VACANT,
+      };
+      setUsers(users => [
+        ...users.slice(0, index),
+        newStateUser,
+        ...users.slice(index + 1),
+      ]);
+    });
+
+    socket.on('vacant:off', (sparcsId: string) => {
+      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
+      const newStateUser: User = {
+        ...users[index],
+        state: MemberState.ONLINE,
+      };
+      setUsers(users => [
+        ...users.slice(0, index),
+        newStateUser,
+        ...users.slice(index + 1),
+      ]);
+    });
+
     return () => {
       socket.off('chat:enter');
       socket.off('chat:out');
+      socket.off('vacant:on');
+      socket.off('vacant:off');
     };
   }, [users]);
 

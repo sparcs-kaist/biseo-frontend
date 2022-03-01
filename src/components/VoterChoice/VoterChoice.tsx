@@ -11,6 +11,8 @@ import { ActiveContainerTitle } from '../UserAgenda/styled';
 import BiseoButton from '../BiseoButton';
 import Green from './Green.svg';
 import Red from './Red.svg';
+import Orange from './Orange.svg';
+import { MemberState } from '@/common/enums';
 
 interface VoterChoiceProps {
   users: User[];
@@ -28,7 +30,7 @@ interface User {
   uid: string;
   sparcsId: string;
   isVotable: boolean;
-  isOnline: boolean;
+  state: MemberState;
 }
 
 const VoterChoice: React.FC<VoterChoiceProps> = ({
@@ -98,7 +100,13 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                       key={index}
                     >
                       {user.sparcsId} &nbsp;
-                      {user.isOnline ? <Green /> : <Red />}
+                      {user.state === MemberState.ONLINE ? (
+                        <Green />
+                      ) : user.state === MemberState.VACANT ? (
+                        <Orange />
+                      ) : (
+                        <Red />
+                      )}
                     </BiseoButton>
                   );
                 }
@@ -116,7 +124,13 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                     }}
                   >
                     {user.sparcsId} &nbsp;
-                    {user.isOnline ? <Green /> : <Red />}
+                    {user.state === MemberState.ONLINE ? (
+                      <Green />
+                    ) : user.state === MemberState.VACANT ? (
+                      <Orange />
+                    ) : (
+                      <Red />
+                    )}
                   </BiseoButton>
                 );
               } else {
@@ -126,7 +140,13 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                     onClick={() => select([user.uid, ...selectedUsers])}
                   >
                     {user.sparcsId} &nbsp;
-                    {user.isOnline ? <Green /> : <Red />}
+                    {user.state === MemberState.ONLINE ? (
+                      <Green />
+                    ) : user.state === MemberState.VACANT ? (
+                      <Orange />
+                    ) : (
+                      <Red />
+                    )}
                   </BiseoButton>
                 );
               }
