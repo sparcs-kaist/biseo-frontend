@@ -82,10 +82,10 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
   const [_members, setMembers] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
-  const [page, setPage] = useState(0);
   const [chatlog, setChatlog] = useState<MessageType[]>([]);
-  const { loading, list, error } = useFetch(query, page);
+  const { loading, list, error } = useFetch(query);
   const loader = useRef(null);
+  const scrollable = useRef(null);
 
   /* Initialize socket events for 'name', 'enter', 'members', 'out'.
    * For detailed description on all socket events, please refer to
@@ -175,19 +175,19 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     if (e.key === 'Enter') sendMessage();
   };
 
-  const handleObserver = useCallback(entries => {
-    const target = entries[0];
-    if (target.isIntersecting) {
-      setPage(prev => prev + 1);
-    }
-  }, []);
+  const handleObserver = useCallback(
+    entries => {
+      const target = entries[0];
+      if (target.isIntersecting) {
+        const lastChat: MessageType = chatlog[chatlog.length - 1];
+        if (lastChat !== undefined) setQuery(lastChat['_id']);
+      }
+    },
+    [chatlog]
+  );
 
   useEffect(() => {
     setChatlog(list);
-    const lastChat: MessageType = list[list.length - 1];
-    if (lastChat !== undefined) {
-      setQuery(lastChat['_id']);
-    }
   }, [list]);
 
   useEffect(() => {
@@ -198,6 +198,9 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     };
     const observer = new IntersectionObserver(handleObserver, option);
     if (loader.current) observer.observe(loader.current);
+    return () => {
+      observer.unobserve(loader.current);
+    };
   }, [handleObserver]);
 
   return (
