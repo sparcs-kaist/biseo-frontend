@@ -15,13 +15,6 @@ interface Props extends Agenda {
   socket: SocketIOClient.Socket;
 }
 
-type payload = {
-  pplWhoDidNotVote: string[];
-  agendaId: string;
-  agendaTitle: string;
-  isExpired: boolean;
-};
-
 const UserAgenda: React.FC<Props> = ({
   _id,
   title,
