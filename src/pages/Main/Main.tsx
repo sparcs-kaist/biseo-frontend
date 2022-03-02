@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import io from 'socket.io-client';
+import React, { useState, useEffect } from 'react';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
 import ChatBox from '@/components/ChatBox';
 import UserAgenda from '@/components/UserAgenda';
-import { getToken } from '@/utils/auth';
 import axios from '@/utils/axios';
 import { UserMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
@@ -31,19 +29,13 @@ const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
   );
 };
 
-const Main: React.FC = () => {
+interface MainProps {
+  socket: SocketIOClient.Socket;
+}
+
+const Main: React.FC<MainProps> = ({ socket }) => {
   const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [valid, setValid] = useState(true);
-
-  const socket = useMemo(
-    () =>
-      io(process.env.SERVER_URL, {
-        transports: ['websocket'],
-        upgrade: false,
-        query: `token=${getToken()}`,
-      }),
-    []
-  );
 
   socket.on('error', (err: Error) => {
     setValid(false);

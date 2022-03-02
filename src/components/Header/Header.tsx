@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
 import HomeIcon from './homeIcon.svg';
@@ -23,7 +23,11 @@ import { logout } from '@/utils/auth';
 import { logout as logoutAction } from '@/store/slices/login';
 import { setUser } from '@/store/slices/user';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  socket: SocketIOClient.Socket;
+}
+
+const Header: React.FC<HeaderProps> = ({ socket }) => {
   const title = useTitle();
   const history = useHistory();
   const location = useLocation();
@@ -33,7 +37,6 @@ const Header: React.FC = () => {
   const [awayState, setAwayState] = useState<AwayStatus>(AwayStatus.Entered);
   const [buttonString, setButtonString] = useState<string>('enter');
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
-
   const handleLogout = () => {
     logout();
     dispatch(logoutAction());
@@ -47,14 +50,13 @@ const Header: React.FC = () => {
         setAwayState(AwayStatus.Vacant);
         setButtonString('vacant');
         setButtonColor(COLOR.vacant);
+        socket.emit('vacant:on');
         break;
       case AwayStatus.Vacant:
-        setAwayState(AwayStatus.Staying);
-        break;
-      case AwayStatus.Staying:
         setAwayState(AwayStatus.Entered);
         setButtonString('enter');
         setButtonColor(COLOR.primary);
+        socket.emit('vacant:off');
         break;
     }
   };
@@ -67,11 +69,7 @@ const Header: React.FC = () => {
     awayState !== AwayStatus.Entered ? VacantContainer : EnteredContainer;
 
   const AwayStateMessage =
-    awayState === AwayStatus.Entered
-      ? ''
-      : awayState === AwayStatus.Vacant
-      ? '자리비움 상태입니다.'
-      : '현재 투표가 진행중입니다. 다음 투표부터 참여 할 수 있습니다.';
+    awayState === AwayStatus.Entered ? '' : '자리비움 상태입니다.';
 
   const userPagePath = '/';
   const adminPagePath = '/admin';
