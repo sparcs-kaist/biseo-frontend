@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   OverlayContainer,
   VoterChoiceContainer,
@@ -46,6 +46,9 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
 }) => {
   const [expand, setExpand] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (selectedUsers.length === 0) setExpand(false);
+  }, [selectedUsers]);
   const addPreset = (_preset: number) => {
     setExpand(false);
     updateUsers(_preset);
