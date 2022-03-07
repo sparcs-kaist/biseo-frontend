@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { MdSettings, MdAccountCircle } from 'react-icons/md';
 import HomeIcon from './homeIcon.svg';
@@ -108,9 +108,9 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
             >
               <AdminIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
-            <OptionButton>
+            {/* <OptionButton>
               <MdSettings size="24px" />
-            </OptionButton>
+            </OptionButton> */}
             <OptionButton onClick={handleLogout}>
               <MdAccountCircle size="24px" />
             </OptionButton>
