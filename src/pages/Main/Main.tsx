@@ -6,6 +6,7 @@ import UserAgenda from '@/components/UserAgenda';
 import axios from '@/utils/axios';
 import { UserMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
+import Empty from './empty.svg';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -17,9 +18,23 @@ const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
     <UserMainContainer>
       <div className="left">
         <div className="agendas">
-          {agendas.map(item => (
-            <UserAgenda key={item._id} socket={socket} {...item} />
-          ))}
+          {agendas.length === 0 ? (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                margin: 'auto',
+              }}
+            >
+              <Empty style={{ marginBottom: '10px' }} />
+              안건이 없습니다. 안건을 추가해 주세요!
+            </div>
+          ) : (
+            agendas.map(item => (
+              <UserAgenda key={item._id} socket={socket} {...item} />
+            ))
+          )}
         </div>
       </div>
       <div className="right">
