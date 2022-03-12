@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { MessageEnum } from '@/common/enums';
+import { MemberState, MessageEnum } from '@/common/enums';
 import { MessageType } from '@/common/types';
 import {
   ChatBoxScrollable,
@@ -10,8 +10,14 @@ import {
   ChatBoxInputGroup,
   ChatBoxInternalContainer,
   ChatBoxExternalContainer,
+  ChatBoxParticipants,
+  ChatBoxParticipantsBox,
+  Participant,
 } from './styled';
+import Green from '@/public/Green.svg';
+import Orange from '@/public/Orange.svg';
 import useFetch from '@/hooks/useFetch';
+import { useTypedSelector } from '@/hooks';
 
 interface Props {
   socket: SocketIOClient.Socket;
@@ -73,56 +79,73 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   );
 };
 
-interface ChatBoxContentProps {
-  socket: SocketIOClient.Socket;
+interface ChatMemberState {
+  sparcsId: string;
+  state: MemberState; // ONLINE or VACANT
 }
 
 const ChatBox: React.FC<Props> = ({ socket }) => {
-  const [name, setName] = useState<string>('');
-  const [_members, setMembers] = useState<string[]>([]);
+  const [_members, setMembers] = useState<ChatMemberState[]>([]);
   const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
   const [chatlog, setChatlog] = useState<MessageType[]>([]);
   const { loading, list, error } = useFetch(query);
   const loader = useRef(null);
-  const scrollable = useRef(null);
+  const ownSparcsId = useTypedSelector(state => state.user.sparcsID);
 
-  /* Initialize socket events for 'name', 'enter', 'members', 'out'.
-   * For detailed description on all socket events, please refer to
-   *    https://github.com/sparcs-kaist/biseo_backend/blob/master/socket.js
-   */
+  /* Initialize socket events for 'enter', 'members', 'out', 'vacant', 'message'. */
   useEffect(() => {
-    socket.on('chat:name', (username: string) => setName(username));
-
     socket.on('chat:enter', (username: string) => {
       setChatlog(chatlog => [
         { type: MessageEnum.NEW, username: username },
         ...chatlog,
       ]);
-      setMembers(members => [...members, username]);
+      setMembers(members => [
+        ...members,
+        { sparcsId: username, state: MemberState.ONLINE },
+      ]);
     });
 
-    socket.on('chat:members', (members: string[]) => setMembers(members));
+    /* Get members */
+    socket.on('chat:members', (members: ChatMemberState[]) =>
+      setMembers(members)
+    );
+    socket.emit('chat:members');
 
     socket.on('chat:out', (username: string) => {
       setChatlog(chatlog => [
         { type: MessageEnum.OUT, username: username },
         ...chatlog,
       ]);
-      setMembers(members => members.filter(member => member !== username));
+      setMembers(members =>
+        members.filter(member => member.sparcsId !== username)
+      );
     });
 
-    return () => {
-      socket.off('chat:name');
-      socket.off('chat:enter');
-      socket.off('chat:members');
-      socket.off('chat:out');
-    };
-  }, []);
+    socket.on('vacant:on', (sparcsId: string) => {
+      setMembers(members =>
+        members.map(member => {
+          if (member.sparcsId === sparcsId) {
+            const memberNewState: ChatMemberState = {
+              sparcsId: sparcsId,
+              state: MemberState.VACANT,
+            };
+            return memberNewState;
+          } else return member;
+        })
+      );
+    });
 
-  // this useEffect has a `name` dependency because it has to run once again
-  //   if the `name` state changes.
-  useEffect(() => {
+    socket.on('vacant:off', (sparcsId: string) => {
+      setMembers(members =>
+        members.map(member => {
+          if (member.sparcsId === sparcsId) {
+            return { sparcsId: sparcsId, state: MemberState.ONLINE };
+          } else return member;
+        })
+      );
+    });
+
     socket.on(
       'chat:message',
       (
@@ -141,11 +164,15 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       }
     );
 
-    // remove the event listener on dependency modification
     return () => {
+      socket.off('chat:enter');
+      socket.off('chat:members');
+      socket.off('chat:out');
+      socket.off('vacant:on');
+      socket.off('vacant:off');
       socket.off('chat:message');
     };
-  }, [name]);
+  }, []);
 
   const currentTime = () => {
     const offset = new Date().getTimezoneOffset() * 60000;
@@ -206,6 +233,37 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
   return (
     <ChatBoxExternalContainer>
       <ChatBoxInternalContainer>
+        <ChatBoxParticipants>
+          참여자: {_members.length}명
+          <ChatBoxParticipantsBox>
+            <Participant style={{ fontWeight: 'bold' }}>
+              {ownSparcsId} (You)
+              <Green />
+            </Participant>
+            {_members.map((member, index) => {
+              if (member.sparcsId === ownSparcsId) return;
+              if (member.state === MemberState.ONLINE)
+                return (
+                  <Participant key={index}>
+                    {member.sparcsId}
+                    <Green />
+                  </Participant>
+                );
+              else return;
+            })}
+            {_members.map((member, index) => {
+              if (member.sparcsId === ownSparcsId) return;
+              if (member.state === MemberState.VACANT)
+                return (
+                  <Participant key={index}>
+                    {member.sparcsId}
+                    <Orange />
+                  </Participant>
+                );
+              else return;
+            })}
+          </ChatBoxParticipantsBox>
+        </ChatBoxParticipants>
         <ChatBoxScrollable>
           {chatlog.map((chat, idx) => (
             <Message key={idx} message={chat} />

@@ -12,8 +12,45 @@ export const ChatBoxInternalContainer = styled.div`
   box-sizing: border-box;
   height: 100%;
   min-height: 200px;
-  padding-top: 20px;
   width: 100%;
+`;
+
+export const ChatBoxParticipantsBox = styled.div`
+  visibility: hidden;
+  position: absolute;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  border: 1px solid #f2a024;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  width: 180px;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  overflow: auto;
+
+  &:hover: {
+    visibility: visible;
+  }
+`;
+
+export const ChatBoxParticipants = styled.div`
+  display: flex;
+  font-size: 0.9rem;
+  padding: 10px 20px;
+
+  &:hover ${ChatBoxParticipantsBox} {
+    visibility: visible;
+  }
+`;
+
+export const Participant = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px 0px;
 `;
 
 export const ChatBoxInputGroup = styled.div`
@@ -117,7 +154,7 @@ export const ChatBoxScrollable = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column-reverse;
-  height: 100%;
+  height: calc(100% - 50px);
   overflow: auto;
-  padding: 20px 40px;
+  padding: 0px 40px;
 `;
