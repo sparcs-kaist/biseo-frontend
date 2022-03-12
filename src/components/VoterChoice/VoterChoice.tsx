@@ -9,9 +9,9 @@ import {
 } from './styled';
 import { ActiveContainerTitle } from '../UserAgenda/styled';
 import BiseoButton from '../BiseoButton';
-import Green from './Green.svg';
-import Red from './Red.svg';
-import Orange from './Orange.svg';
+import Green from '@/public/Green.svg';
+import Red from '@/public/Red.svg';
+import Orange from '@/public/Orange.svg';
 import { MemberState } from '@/common/enums';
 
 interface VoterChoiceProps {
