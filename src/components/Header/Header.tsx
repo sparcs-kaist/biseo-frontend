@@ -112,8 +112,6 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
             >
               <AdminIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
-            <OptionButton>
-              <MdSettings size="24px" />
             </OptionButton>
             <AccountDropdown>
               <AccountIcon size="24px" />
