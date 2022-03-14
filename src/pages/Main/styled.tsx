@@ -6,6 +6,7 @@ export const UserMainContainer = styled.div`
   grid-template-areas:
     'right'
     'left';
+  grid-template-rows: 1fr 1fr;
   column-gap: 37px;
   row-gap: 30px;
   width: 100%;
@@ -39,6 +40,7 @@ export const UserMainContainer = styled.div`
   @media ${device.laptop} {
     grid-template-areas: 'left right';
     grid-template-columns: 1.35fr 1fr;
+    grid-template-rows: none;
   }
 
   @media ${device.laptopL} {
