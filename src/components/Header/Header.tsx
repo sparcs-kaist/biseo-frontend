@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { MdSettings, MdAccountCircle } from 'react-icons/md';
+import { MdSettings } from 'react-icons/md';
 import HomeIcon from './homeIcon.svg';
 import AdminIcon from './adminIcon.svg';
 import BiseoButton from '@/components/BiseoButton';
@@ -16,6 +16,10 @@ import {
   VacantContainer,
   EnteredContainer,
   MessageContainer,
+  AccountDropdown,
+  AccountSubmenu,
+  AccountSubitem,
+  AccountIcon,
 } from './styled';
 import { useState } from 'react';
 import { AwayStatus } from '@/common/enums';
@@ -111,9 +115,21 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
             <OptionButton>
               <MdSettings size="24px" />
             </OptionButton>
-            <OptionButton onClick={handleLogout}>
-              <MdAccountCircle size="24px" />
-            </OptionButton>
+            <AccountDropdown>
+              <AccountIcon size="24px" />
+              <AccountSubmenu>
+                <AccountSubitem>panya</AccountSubitem>
+                <hr
+                  style={{ border: 'solid 1px #f2a024', margin: '0px 3px' }}
+                />
+                <AccountSubitem
+                  onClick={handleLogout}
+                  style={{ cursor: 'pointer' }}
+                >
+                  로그아웃
+                </AccountSubitem>
+              </AccountSubmenu>
+            </AccountDropdown>
           </RHS>
         </HeaderContent>
       </HeaderContainer>
