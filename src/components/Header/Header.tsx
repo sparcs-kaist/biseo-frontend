@@ -115,7 +115,7 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
             <AccountDropdown>
               <AccountIcon size="24px" />
               <AccountSubmenu>
-                <AccountSubitem>panya</AccountSubitem>
+                <AccountSubitem>{user.sparcsID}</AccountSubitem>
                 <hr
                   style={{ border: 'solid 1px #f2a024', margin: '0px 3px' }}
                 />

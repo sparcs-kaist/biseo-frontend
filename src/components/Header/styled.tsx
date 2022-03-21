@@ -112,6 +112,7 @@ export const AccountIcon = styled(MdAccountCircle)`
 export const AccountDropdown = styled.div`
   display: flex;
   align-items: center;
+  flex-direction: column;
 
   margin-right: 15px;
 `;
