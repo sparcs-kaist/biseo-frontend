@@ -22,9 +22,7 @@ export const RHS = styled.div`
   align-items: center;
 `;
 
-export const OptionButton = styled.button<{
-  display_none?: boolean;
-}>`
+export const OptionButton = styled.button<{ display_none?: boolean }>`
   border: none;
   display: ${props => (props.display_none ? 'none' : 'flex')};
   align-items: center;
@@ -70,8 +68,7 @@ export const AccountSubmenu = styled.div`
   align-items: center;
   text-align: center;
   position: absolute;
-  top: 45px;
-  /* right: 20px; */
+  top: 40px;
 
   background: #ffffff;
   border: 1px solid #eaeaea;
@@ -81,18 +78,18 @@ export const AccountSubmenu = styled.div`
 
   font-size: 14px;
   font-style: normal;
-  transition: all 0.3s;
 
+  opacity: 0;
+  transition: visibility 0.4s linear, opacity 0.3s linear;
   &:hover {
     visibility: visible;
-    transition-delay: 0s;
   }
 `;
 
 export const AccountSubitem = styled.div`
   z-index: 1;
   display: inline-block;
-  padding: 5px 15px;
+  padding: 10px 30px;
   line-height: inherit;
   cursor: default;
 
@@ -115,4 +112,10 @@ export const AccountDropdown = styled.div`
   flex-direction: column;
 
   margin-right: 15px;
+
+  &:hover ${AccountSubmenu} {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0.4s linear, opacity 0.3s linear;
+  }
 `;

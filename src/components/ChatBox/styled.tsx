@@ -30,7 +30,9 @@ export const ChatBoxParticipantsBox = styled.div`
   flex-direction: column;
   z-index: 1;
   overflow: auto;
+  opacity: 0;
 
+  transition: visibility 0.3s linear, opacity 0.2s linear;
   &:hover: {
     visibility: visible;
   }
@@ -43,6 +45,8 @@ export const ChatBoxParticipants = styled.div`
 
   &:hover ${ChatBoxParticipantsBox} {
     visibility: visible;
+    opacity: 1;
+    transition: visibility 0.3s linear, opacity 0.2s linear;
   }
 `;
 
@@ -107,6 +111,32 @@ export const MessageContainer = styled.div`
     props.justification === 'around' && `font-weight: bold`};
   position: relative;
   max-width: 100%;
+
+  -webkit-animation: bound 1s linear;
+
+  @keyframes bound {
+    0% {
+      bottom: 220px;
+    }
+    30% {
+      bottom: 0px;
+    }
+    45% {
+      bottom: 40px;
+    }
+    55% {
+      bottom: 70px;
+    }
+    70% {
+      bottom: 0px;
+    }
+    85% {
+      bottom: 20px;
+    }
+    100% {
+      bottom: 0px;
+    }
+  }
 `;
 
 export const MessageUsername = styled.span`
