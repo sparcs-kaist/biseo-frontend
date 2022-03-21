@@ -79,6 +79,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ socket }) => {
       const newAgenda = {
         ...payload,
         userChoice: null,
+        pplWhoDidNotVote: payload.participants,
       };
       setAgendas(prevState => [newAgenda, ...prevState]);
     });
@@ -109,7 +110,11 @@ const AdminPage: React.FC<AdminPageProps> = ({ socket }) => {
       setAgendas(agendas => {
         return agendas.map(agenda => {
           if (agenda._id === payload._id)
-            return { ...payload, userChoice: null };
+            return {
+              ...payload,
+              userChoice: null,
+              pplWhoDidNotVote: payload.participants,
+            };
           else return agenda;
         });
       });

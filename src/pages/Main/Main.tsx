@@ -87,16 +87,6 @@ const Main: React.FC<MainProps> = ({ socket }) => {
   }, []);
 
   useEffect(() => {
-    socket.on('agenda:edited', (payload: Agenda) => {
-      setAgendas(agendas => {
-        return agendas.map(agenda => {
-          if (agenda._id === payload._id)
-            return { ...payload, userChoice: null };
-          else return agenda;
-        });
-      });
-    });
-
     socket.on('agenda:deleted', (payload: string) => {
       setAgendas(agendas => {
         return agendas.filter(agenda => agenda._id !== payload);

@@ -52,11 +52,11 @@ const AdminBoard: React.FC<Props> = ({
   );
 
   const onAgendaEdit = useCallback(
-    (_id, title, content, subtitle, choices): void => {
+    (_id, title, content, subtitle, choices, participants): void => {
       socket.emit(
         'admin:edit',
         _id,
-        { title, content, subtitle, choices },
+        { title, content, subtitle, choices, participants },
         (res: AgendaResponse) => {
           if (res.success) toast.success('🦄 Agenda edited Successfully!');
           else toast.error('Agenda Edition Error!');
@@ -80,6 +80,7 @@ const AdminBoard: React.FC<Props> = ({
 
   return isEdit ? (
     <AdminContentEdit
+      socket={socket}
       agenda={targetAgenda}
       extendable={false}
       onVoteEdit={onAgendaEdit}
