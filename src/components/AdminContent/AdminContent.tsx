@@ -65,22 +65,15 @@ interface User {
   state: MemberState;
 }
 
-export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
-  socket,
-  tabLength,
-  selected,
-  choices,
-  extendable,
-  onVoteCreate,
-}) => {
-  const [expand, setExpand] = useState<boolean>(false);
-  const [newChoice, setNewChoice] = useState<string>('');
-  const [submit, setSubmit] = useState<boolean>(false);
-  const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
-  const [preset, setPreset] = useState<number>(0);
+function useUsers(
+  socket: SocketIOClient.Socket,
+  defaultSelectedUsers: string[]
+) {
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [prevSelected, setPrevSelected] = useState<string[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>(
+    defaultSelectedUsers
+  );
+  const [preset, setPreset] = useState<number>(0);
 
   async function getUsers(_preset: number) {
     const { data } = await axios
@@ -195,6 +188,39 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
       setSelectedUsers(_selectedUser);
     }
   };
+
+  return {
+    users,
+    selectedUsers,
+    setSelectedUsers,
+    preset,
+    updateUsers,
+    clickPreset,
+  };
+}
+
+export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
+  socket,
+  tabLength,
+  selected,
+  choices,
+  extendable,
+  onVoteCreate,
+}) => {
+  const [expand, setExpand] = useState<boolean>(false);
+  const [newChoice, setNewChoice] = useState<string>('');
+  const [submit, setSubmit] = useState<boolean>(false);
+  const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
+  const [prevSelected, setPrevSelected] = useState<string[]>([]);
+
+  const {
+    users,
+    selectedUsers,
+    setSelectedUsers,
+    preset,
+    updateUsers,
+    clickPreset,
+  } = useUsers(socket, []);
 
   const basicList = [];
   for (let i = 0; i < tabLength; i++) {
@@ -424,10 +450,16 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
   } = agenda;
 
   const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
-  const [preset, setPreset] = useState<number>(0);
-  const [users, setUsers] = useState<User[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>(participants);
   const [prevSelected, setPrevSelected] = useState<string[]>(participants);
+
+  const {
+    users,
+    selectedUsers,
+    setSelectedUsers,
+    preset,
+    updateUsers,
+    clickPreset,
+  } = useUsers(socket, participants);
 
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>({
     defaultValues: {
@@ -444,120 +476,6 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
   };
 
   const active = Date.now() < Date.parse(expires);
-
-  async function getUsers(_preset: number) {
-    const { data } = await axios
-      .get('/users', {
-        params: { preset: _preset },
-      })
-      .catch(() => ({ data: [] }));
-    const _users: User[] = data.users;
-    setUsers(_users);
-  }
-
-  useEffect(() => {
-    getUsers(0);
-  }, []);
-
-  useEffect(() => {
-    socket.on('chat:enter', (sparcsId: string) => {
-      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
-      const newStateUser: User = {
-        ...users[index],
-        state: MemberState.ONLINE,
-      };
-      setUsers(users => [
-        ...users.slice(0, index),
-        newStateUser,
-        ...users.slice(index + 1),
-      ]);
-    });
-
-    socket.on('chat:out', (sparcsId: string) => {
-      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
-      const newStateUser: User = {
-        ...users[index],
-        state: MemberState.OFFLINE,
-      };
-      setUsers(users => [
-        ...users.slice(0, index),
-        newStateUser,
-        ...users.slice(index + 1),
-      ]);
-    });
-
-    socket.on('vacant:on', (sparcsId: string) => {
-      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
-      const newStateUser: User = {
-        ...users[index],
-        state: MemberState.VACANT,
-      };
-      setUsers(users => [
-        ...users.slice(0, index),
-        newStateUser,
-        ...users.slice(index + 1),
-      ]);
-    });
-
-    socket.on('vacant:off', (sparcsId: string) => {
-      const index: number = users.findIndex(user => user.sparcsId === sparcsId);
-      const newStateUser: User = {
-        ...users[index],
-        state: MemberState.ONLINE,
-      };
-      setUsers(users => [
-        ...users.slice(0, index),
-        newStateUser,
-        ...users.slice(index + 1),
-      ]);
-    });
-
-    return () => {
-      socket.off('chat:enter');
-      socket.off('chat:out');
-      socket.off('vacant:on');
-      socket.off('vacant:off');
-    };
-  }, [users]);
-
-  async function updateUsers(_preset: number) {
-    const _users = users.map(user => {
-      if (selectedUsers.includes(user.uid)) {
-        return {
-          uid: user.uid,
-          isVotable: true,
-        };
-      } else {
-        return {
-          uid: user.uid,
-          isVotable: false,
-        };
-      }
-    });
-    await axios.patch(`/users?preset=${_preset}`, {
-      users: _users,
-    });
-  }
-
-  const clickPreset = async (n: number) => {
-    const { data } = await axios
-      .get('/users', {
-        params: { preset: n },
-      })
-      .catch(() => ({ data: [] }));
-    const _users: User[] = data.users;
-    setUsers(_users);
-    if (preset === n) {
-      setSelectedUsers([]);
-      setPreset(0);
-    } else {
-      setPreset(n);
-      const _selectedUser = _users
-        .filter(user => user.isVotable)
-        .map(user => user.uid);
-      setSelectedUsers(_selectedUser);
-    }
-  };
 
   return (
     <>
