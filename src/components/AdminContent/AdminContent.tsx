@@ -484,6 +484,7 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
           style={{
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <TitleInput
