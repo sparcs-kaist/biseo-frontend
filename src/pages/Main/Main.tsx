@@ -7,6 +7,7 @@ import axios from '@/utils/axios';
 import { UserMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
 import Empty from './empty.svg';
+import { useTypedSelector } from '@/hooks';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -51,6 +52,7 @@ interface MainProps {
 const Main: React.FC<MainProps> = ({ socket }) => {
   const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [valid, setValid] = useState(true);
+  const user = useTypedSelector(state => state.user);
 
   socket.on('error', (err: Error) => {
     setValid(false);
@@ -59,7 +61,10 @@ const Main: React.FC<MainProps> = ({ socket }) => {
   useEffect(() => {
     async function getAgendas() {
       const { data } = await axios.get('/agendas').catch(() => ({ data: [] }));
-      const agendas: Agenda[] = data.agendas ?? [];
+      const agendas: Agenda[] =
+        data.agendas.filter(agenda =>
+          agenda.participants.includes(user.ssoUID)
+        ) ?? [];
       setAgendas(agendas);
     }
 
