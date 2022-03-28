@@ -30,6 +30,7 @@ interface AdminContentCreateProps {
 }
 
 interface AdminContentEditProps {
+  socket: SocketIOClient.Socket;
   agenda: Agenda;
   extendable: boolean;
   onVoteEdit: (
@@ -37,7 +38,8 @@ interface AdminContentEditProps {
     title: string,
     content: string,
     subtitle: string,
-    choices: string[]
+    choices: string[],
+    participants: string[]
   ) => void;
   onVoteDelete: (_id: string) => void;
   exitEditMode: (_id: string) => void;
@@ -63,22 +65,15 @@ interface User {
   state: MemberState;
 }
 
-export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
-  socket,
-  tabLength,
-  selected,
-  choices,
-  extendable,
-  onVoteCreate,
-}) => {
-  const [expand, setExpand] = useState<boolean>(false);
-  const [newChoice, setNewChoice] = useState<string>('');
-  const [submit, setSubmit] = useState<boolean>(false);
-  const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
-  const [preset, setPreset] = useState<number>(0);
+function useUsers(
+  socket: SocketIOClient.Socket,
+  defaultSelectedUsers: string[]
+) {
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [prevSelected, setPrevSelected] = useState<string[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>(
+    defaultSelectedUsers
+  );
+  const [preset, setPreset] = useState<number>(0);
 
   async function getUsers(_preset: number) {
     const { data } = await axios
@@ -193,6 +188,39 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
       setSelectedUsers(_selectedUser);
     }
   };
+
+  return {
+    users,
+    selectedUsers,
+    setSelectedUsers,
+    preset,
+    updateUsers,
+    clickPreset,
+  };
+}
+
+export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
+  socket,
+  tabLength,
+  selected,
+  choices,
+  extendable,
+  onVoteCreate,
+}) => {
+  const [expand, setExpand] = useState<boolean>(false);
+  const [newChoice, setNewChoice] = useState<string>('');
+  const [submit, setSubmit] = useState<boolean>(false);
+  const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
+  const [prevSelected, setPrevSelected] = useState<string[]>([]);
+
+  const {
+    users,
+    selectedUsers,
+    setSelectedUsers,
+    preset,
+    updateUsers,
+    clickPreset,
+  } = useUsers(socket, []);
 
   const basicList = [];
   for (let i = 0; i < tabLength; i++) {
@@ -403,13 +431,35 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
 };
 
 export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
+  socket,
   agenda,
   extendable,
   onVoteEdit,
   onVoteDelete,
   exitEditMode,
 }) => {
-  const { _id, title, content, subtitle, choices, expires, status } = agenda;
+  const {
+    _id,
+    title,
+    content,
+    subtitle,
+    choices,
+    expires,
+    status,
+    participants,
+  } = agenda;
+
+  const [isVoterChoice, setIsVoterChoice] = useState<boolean>(false);
+  const [prevSelected, setPrevSelected] = useState<string[]>(participants);
+
+  const {
+    users,
+    selectedUsers,
+    setSelectedUsers,
+    preset,
+    updateUsers,
+    clickPreset,
+  } = useUsers(socket, participants);
 
   const { register, handleSubmit, errors, reset } = useForm<FormInputs>({
     defaultValues: {
@@ -421,67 +471,101 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
 
   const onSubmit = ({ title, content, subtitle }: FormInputs) => {
     if (choices.length < 1) return;
-    onVoteEdit(_id, title, content, subtitle, choices);
+    onVoteEdit(_id, title, content, subtitle, choices, selectedUsers);
     reset();
   };
 
   const active = Date.now() < Date.parse(expires);
 
   return (
-    <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
-      <TitleInput
-        name="title"
-        className={errors.title && 'error'}
-        ref={register({ required: true })}
-      />
-      <ContentTextArea
-        name="content"
-        className={errors.content && 'error'}
-        ref={register({ required: true })}
-      />
-      <SubtitleInput
-        name="subtitle"
-        className={errors.subtitle && 'error'}
-        ref={register({ required: true })}
-      />
-      <ButtonGroup>
-        {choices.map(choice => (
-          // a button's default type is 'submit', but we don't want this button to submit
-          <BiseoButton type="button" nocursor key={choice}>
-            {choice}
+    <>
+      <AdminContentContainer onSubmit={handleSubmit(onSubmit)}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <TitleInput
+            name="title"
+            className={errors.title && 'error'}
+            ref={register({ required: true })}
+          />
+          <BiseoButton
+            type="button"
+            onClick={() => {
+              setPrevSelected(selectedUsers);
+              setIsVoterChoice(true);
+            }}
+            style={{ marginRight: '0' }}
+          >
+            대상 설정
           </BiseoButton>
-        ))}
-        {extendable && <BiseoButton>+</BiseoButton>}
-      </ButtonGroup>
-      <ButtonGroup alignRight={true}>
-        <BiseoButton
-          type="submit"
-          background="#f2a024"
-          foreground="#ffffff"
-          disabled={!(active && status === AgendaStatus.PREPARE)}
-        >
-          수정
-        </BiseoButton>
-        <BiseoButton
-          type="button"
-          background="#f2a024"
-          foreground="#ffffff"
-          onClick={() => {
-            onVoteDelete(_id);
-          }}
-          disabled={active && status === AgendaStatus.PROGRESS}
-        >
-          삭제
-        </BiseoButton>
-        <BiseoButton
-          type="button"
-          onClick={() => {
-            exitEditMode(_id);
-          }}
-        >
-          취소
-        </BiseoButton>
-      </ButtonGroup>
-    </AdminContentContainer>
+        </div>
+        <ContentTextArea
+          name="content"
+          className={errors.content && 'error'}
+          ref={register({ required: true })}
+        />
+        <SubtitleInput
+          name="subtitle"
+          className={errors.subtitle && 'error'}
+          ref={register({ required: true })}
+        />
+        <ButtonGroup>
+          {choices.map(choice => (
+            // a button's default type is 'submit', but we don't want this button to submit
+            <BiseoButton type="button" nocursor key={choice}>
+              {choice}
+            </BiseoButton>
+          ))}
+          {extendable && <BiseoButton>+</BiseoButton>}
+        </ButtonGroup>
+        <ButtonGroup alignRight={true}>
+          <BiseoButton
+            type="submit"
+            background="#f2a024"
+            foreground="#ffffff"
+            disabled={!(active && status === AgendaStatus.PREPARE)}
+          >
+            수정
+          </BiseoButton>
+          <BiseoButton
+            type="button"
+            background="#f2a024"
+            foreground="#ffffff"
+            onClick={() => {
+              onVoteDelete(_id);
+            }}
+            disabled={active && status === AgendaStatus.PROGRESS}
+          >
+            삭제
+          </BiseoButton>
+          <BiseoButton
+            type="button"
+            onClick={() => {
+              exitEditMode(_id);
+            }}
+          >
+            취소
+          </BiseoButton>
+        </ButtonGroup>
+      </AdminContentContainer>
+      <VoterChoice
+        users={users}
+        shown={isVoterChoice}
+        preset={preset}
+        handlePreset={clickPreset}
+        close={() => {
+          setSelectedUsers(prevSelected);
+          setIsVoterChoice(false);
+        }}
+        confirm={() => setIsVoterChoice(false)}
+        selectedUsers={selectedUsers}
+        select={setSelectedUsers}
+        updateUsers={updateUsers}
+      />
+    </>
   );
 };
