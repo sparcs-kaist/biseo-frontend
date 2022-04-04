@@ -104,7 +104,16 @@ const UserAgenda: React.FC<Props> = ({
   return active ? (
     <ActiveContainer>
       <ActiveContainerTitle>{title}</ActiveContainerTitle>
-      <ActiveContainerContent>{content}</ActiveContainerContent>
+      <ActiveContainerContent>
+        {content.split('\n').map(line => {
+          return (
+            <>
+              {line}
+              <br />
+            </>
+          );
+        })}
+      </ActiveContainerContent>
       <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
       <ButtonGroup>
         {choices.map((choice, index) => (

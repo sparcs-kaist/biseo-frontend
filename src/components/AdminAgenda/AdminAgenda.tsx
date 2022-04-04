@@ -142,7 +142,16 @@ const AdminAgenda: React.FC<Props> = ({
         <ActiveContainerProgress detailed>
           {`재석 ${totalParticipants}명 ${voteResultMessage}`}
         </ActiveContainerProgress>
-        <ActiveContainerContent>{content}</ActiveContainerContent>
+        <ActiveContainerContent>
+          {content.split('\n').map(line => {
+            return (
+              <>
+                {line}
+                <br />
+              </>
+            );
+          })}
+        </ActiveContainerContent>
         <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
         <AgendaNotVote>
           {`${notVoteList.length}명이 아직 투표하지 않음`}
