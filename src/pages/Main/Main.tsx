@@ -8,6 +8,7 @@ import { UserMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
 import Empty from './empty.svg';
 import { useTypedSelector } from '@/hooks';
+import { isUndefined } from 'lodash';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -62,8 +63,10 @@ const Main: React.FC<MainProps> = ({ socket }) => {
     async function getAgendas() {
       const { data } = await axios.get('/agendas').catch(() => ({ data: [] }));
       const agendas: Agenda[] =
-        data.agendas.filter(agenda =>
-          agenda.participants.includes(user.ssoUID)
+        data.agendas.filter(
+          agenda =>
+            isUndefined(agenda.participants) ||
+            agenda.participants.includes(user.ssoUID)
         ) ?? [];
       setAgendas(agendas);
     }
