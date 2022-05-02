@@ -1,3 +1,4 @@
+import { device } from '@/utils/device';
 import styled from 'styled-components';
 
 export const OverlayContainer = styled.div`
@@ -35,6 +36,14 @@ export const VoterChoiceContainer = styled.div`
 export const VoterChoiceHeader = styled.div`
   display: flex;
   align-items: center;
+
+  @media ${device.mobile} {
+    flex-direction: column;
+  }
+
+  @media ${device.tablet} {
+    flex-direction: row;
+  }
 `;
 
 export const VoterList = styled.div`
@@ -56,4 +65,38 @@ export const PresetChoiceContainer = styled.div`
   padding-left: 23px;
   background: #f2a024;
   border-radius: 10px;
+`;
+
+export const CheckButton = styled.button<{
+  check?: boolean;
+}>`
+  width: 120px;
+  min-height: 45px;
+  background-color: ${props => (props.check ? '#FFBF43' : '#ffffff')};
+  border: ${props => (props.check ? '1px solid #FFBF43' : '1px solid #D6D6D6')};
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  color: #000000;
+  display: inline-flex;
+  font-size: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding: 0px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    cursor: pointer;
+    filter: brightness(0.95);
+    transition: filter 0.3s linear;
+  }
+
+  &:active {
+    filter: brightness(0.95);
+    transform: translateY(0.5px);
+    box-shadow: 1px 2px 5px -1px rgba(0, 0, 0, 0.6);
+  }
 `;
