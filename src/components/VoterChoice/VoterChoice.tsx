@@ -6,6 +6,7 @@ import {
   VoterList,
   VoterChoiceBottom,
   PresetChoiceContainer,
+  CheckButton,
 } from './styled';
 import { ActiveContainerTitle } from '../UserAgenda/styled';
 import BiseoButton from '../BiseoButton';
@@ -62,47 +63,49 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
             <ActiveContainerTitle style={{ marginRight: '10px' }}>
               투표 대상 설정
             </ActiveContainerTitle>
-            {users.length === selectedUsers.length ? (
-              <BiseoButton onClick={() => select([])}>전체 해제</BiseoButton>
-            ) : (
-              <BiseoButton
-                background="#f2a024"
-                foreground="#ffffff"
-                onClick={() => select(users.map(user => user.uid))}
+            <span>
+              {users.length === selectedUsers.length ? (
+                <BiseoButton onClick={() => select([])}>전체 해제</BiseoButton>
+              ) : (
+                <BiseoButton
+                  background="#f2a024"
+                  foreground="#ffffff"
+                  onClick={() => select(users.map(user => user.uid))}
+                >
+                  전체 선택
+                </BiseoButton>
+              )}
+              <CheckBiseoButton
+                active={preset === 1}
+                onClick={() => handlePreset(1)}
               >
-                전체 선택
-              </BiseoButton>
-            )}
-            <CheckBiseoButton
-              active={preset === 1}
-              onClick={() => handlePreset(1)}
-            >
-              프리셋1
-            </CheckBiseoButton>
-            <CheckBiseoButton
-              active={preset === 2}
-              onClick={() => handlePreset(2)}
-            >
-              프리셋2
-            </CheckBiseoButton>
-            <CheckBiseoButton
-              active={preset === 3}
-              onClick={() => handlePreset(3)}
-            >
-              프리셋3
-            </CheckBiseoButton>
+                프리셋1
+              </CheckBiseoButton>
+              <CheckBiseoButton
+                active={preset === 2}
+                onClick={() => handlePreset(2)}
+              >
+                프리셋2
+              </CheckBiseoButton>
+              <CheckBiseoButton
+                active={preset === 3}
+                onClick={() => handlePreset(3)}
+              >
+                프리셋3
+              </CheckBiseoButton>
+            </span>
           </VoterChoiceHeader>
           <VoterList>
             {users.map(user => {
               if (preset !== 0) {
                 if (user.isVotable) {
                   return (
-                    <UserBiseoButton active={true} user={user} onClick={null} />
+                    <UserCheckButton active={true} user={user} onClick={null} />
                   );
                 }
               } else if (selectedUsers.includes(user.uid)) {
                 return (
-                  <UserBiseoButton
+                  <UserCheckButton
                     active={true}
                     user={user}
                     onClick={() => {
@@ -115,7 +118,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                 );
               } else {
                 return (
-                  <UserBiseoButton
+                  <UserCheckButton
                     active={false}
                     user={user}
                     onClick={() => select([user.uid, ...selectedUsers])}
@@ -177,43 +180,41 @@ const CheckBiseoButton: React.FC<CheckBiseoButtonProps> = ({
     <BiseoButton onClick={onClick}>{children}</BiseoButton>
   );
 
-interface UserBiseoButtonProps {
+interface UserCheckButtonProps {
   active: boolean;
   user: User;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const UserBiseoButton: React.FC<UserBiseoButtonProps> = ({
+const UserCheckButton: React.FC<UserCheckButtonProps> = ({
   active,
   user,
   onClick,
 }) => {
-  return active ? (
-    <BiseoButton
-      background="#f2a024"
-      foreground="#ffffff"
+  return (
+    <CheckButton
+      check={active}
       onClick={onClick}
       style={{ marginBottom: '12px' }}
     >
-      {user.sparcsId} &nbsp;
-      {user.state === MemberState.ONLINE ? (
-        <Green />
-      ) : user.state === MemberState.VACANT ? (
-        <Orange />
-      ) : (
-        <Red />
-      )}
-    </BiseoButton>
-  ) : (
-    <BiseoButton onClick={onClick} style={{ marginBottom: '12px' }}>
-      {user.sparcsId} &nbsp;
-      {user.state === MemberState.ONLINE ? (
-        <Green />
-      ) : user.state === MemberState.VACANT ? (
-        <Orange />
-      ) : (
-        <Red />
-      )}
-    </BiseoButton>
+      <span
+        style={{
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {user.sparcsId}
+      </span>
+      <span>
+        {user.state === MemberState.ONLINE ? (
+          <Green />
+        ) : user.state === MemberState.VACANT ? (
+          <Orange />
+        ) : (
+          <Red />
+        )}
+      </span>
+    </CheckButton>
   );
 };
