@@ -7,9 +7,19 @@ import {
   ActiveContainerTitle,
   ActiveContainerContent,
   ActiveContainerSubtitle,
+  ActiveContainerProgress,
   ButtonGroup,
   InactiveContainer,
 } from './styled';
+import {
+  AgendaContainer,
+  AgendaContent,
+  AgendaButton,
+  AgendaContentLeft,
+  AgendaNotVote,
+  AgendaNotVoteList,
+  AgendaContentAll,
+} from '../AdminAgenda/styled';
 
 interface Props extends Agenda {
   socket: SocketIOClient.Socket;
@@ -36,6 +46,11 @@ const UserAgenda: React.FC<Props> = ({
   const [alreadySubmitted, setAlreadySubmitted] = useState<boolean>(
     userChoice !== null
   );
+  const [showDetails, setShowDetails] = useState(false);
+
+  const onClick = () => {
+    setShowDetails(!showDetails);
+  };
 
   const active = Date.now() < Date.parse(expires);
 
@@ -138,8 +153,19 @@ const UserAgenda: React.FC<Props> = ({
         </BiseoButton>
       </ButtonGroup>
     </ActiveContainer>
+  ) : showDetails ? (
+    <AgendaContainer onClick={onClick} detailed={showDetails}>
+      <AgendaContentAll>
+        <ActiveContainerTitle detailed>{title}</ActiveContainerTitle>
+        <ActiveContainerProgress detailed>
+          {`재석 ${totalParticipants}명 ${voteResultMessage}`}
+        </ActiveContainerProgress>
+        <ActiveContainerContent>{content}</ActiveContainerContent>
+        <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
+      </AgendaContentAll>
+    </AgendaContainer>
   ) : (
-    <InactiveContainer>
+    <InactiveContainer onClick={onClick}>
       <div className="title">{title}</div>
       <div className="result-info">{`재석 ${totalParticipants}명 ${voteResultMessage}`}</div>
     </InactiveContainer>

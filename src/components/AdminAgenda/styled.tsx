@@ -43,6 +43,12 @@ export const AgendaButton = styled.div`
   display: flex;
 `;
 
+export const AgendaContentAll = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
 export const AgendaContentLeft = styled.div`
   display: flex;
   flex-direction: column;
