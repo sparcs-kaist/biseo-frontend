@@ -6,20 +6,33 @@ export const OverlayContainer = styled.div`
   top: var(--header-size);
   left: 0;
   height: calc(100vh - var(--header-size));
-  width: 100vw;
+  width: 100%;
+  min-width: 500px;
   background: rgba(68, 68, 68, 0.6);
   z-index: 1;
   display: flex;
 `;
 
 export const VoterChoiceContainer = styled.div`
-  width: calc(0.8 * var(--screen-max-width));
+  width: 390px;
   height: 60vh;
   background: #ffffff;
   border-radius: 10px;
   z-index: 2;
   margin: auto auto;
   padding: 30px;
+
+  @media ${device.mobile} {
+    width: 512px;
+  }
+
+  @media ${device.tablet} {
+    width: 630px;
+  }
+
+  @media ${device.laptop} {
+    width: 768px;
+  }
 
   -webkit-animation: scale-in-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
@@ -36,13 +49,21 @@ export const VoterChoiceContainer = styled.div`
 export const VoterChoiceHeader = styled.div`
   display: flex;
   align-items: center;
-
-  @media ${device.mobile} {
-    flex-direction: column;
-  }
+  flex-direction: column;
 
   @media ${device.tablet} {
     flex-direction: row;
+  }
+`;
+
+export const VoterChoiceHeaderTitle = styled.div`
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  margin-right: 15px;
+
+  @media ${device.tablet} {
+    margin-bottom: 0px;
   }
 `;
 
@@ -55,7 +76,11 @@ export const VoterList = styled.div`
 export const VoterChoiceBottom = styled.div`
   display: flex;
   flex-direction: row-reverse;
-  margin-top: auto;
+  /* margin-top: auto; */
+
+  @media ${device.tablet} {
+    margin-top: 34px;
+  }
 `;
 
 export const PresetChoiceContainer = styled.div`

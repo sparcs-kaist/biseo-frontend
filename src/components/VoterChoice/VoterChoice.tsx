@@ -3,12 +3,12 @@ import {
   OverlayContainer,
   VoterChoiceContainer,
   VoterChoiceHeader,
+  VoterChoiceHeaderTitle,
   VoterList,
   VoterChoiceBottom,
   PresetChoiceContainer,
   CheckButton,
 } from './styled';
-import { ActiveContainerTitle } from '../UserAgenda/styled';
 import BiseoButton from '../BiseoButton';
 import Green from '@/public/Green.svg';
 import Red from '@/public/Red.svg';
@@ -60,17 +60,21 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
       <OverlayContainer onClick={close}>
         <VoterChoiceContainer onClick={e => e.stopPropagation()}>
           <VoterChoiceHeader>
-            <ActiveContainerTitle style={{ marginRight: '10px' }}>
-              투표 대상 설정
-            </ActiveContainerTitle>
+            <VoterChoiceHeaderTitle>투표 대상 설정</VoterChoiceHeaderTitle>
             <span>
               {users.length === selectedUsers.length ? (
-                <BiseoButton onClick={() => select([])}>전체 해제</BiseoButton>
+                <BiseoButton
+                  onClick={() => select([])}
+                  style={{ marginRight: '5px' }}
+                >
+                  전체 해제
+                </BiseoButton>
               ) : (
                 <BiseoButton
                   background="#f2a024"
                   foreground="#ffffff"
                   onClick={() => select(users.map(user => user.uid))}
+                  style={{ marginRight: '5px' }}
                 >
                   전체 선택
                 </BiseoButton>
@@ -128,7 +132,9 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
             })}
           </VoterList>
           <VoterChoiceBottom>
-            <BiseoButton onClick={close}>취소</BiseoButton>
+            <BiseoButton onClick={close} style={{ marginRight: '0px' }}>
+              취소
+            </BiseoButton>
             <BiseoButton
               background="#f2a024"
               foreground="#ffffff"
@@ -173,11 +179,18 @@ const CheckBiseoButton: React.FC<CheckBiseoButtonProps> = ({
   onClick,
 }) =>
   active ? (
-    <BiseoButton background="#f2a024" foreground="#ffffff" onClick={onClick}>
+    <BiseoButton
+      background="#f2a024"
+      foreground="#ffffff"
+      onClick={onClick}
+      style={{ marginRight: '5px' }}
+    >
       {children}
     </BiseoButton>
   ) : (
-    <BiseoButton onClick={onClick}>{children}</BiseoButton>
+    <BiseoButton onClick={onClick} style={{ marginRight: '5px' }}>
+      {children}
+    </BiseoButton>
   );
 
 interface UserCheckButtonProps {
