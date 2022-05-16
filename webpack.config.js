@@ -9,7 +9,7 @@ module.exports = {
   entry: './src/index.tsx',
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'bundle.js',
+    filename: 'bundle.[chunkhash:8].js',
     publicPath: '/',
   },
   resolve: {
