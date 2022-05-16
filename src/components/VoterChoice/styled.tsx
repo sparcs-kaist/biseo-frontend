@@ -6,6 +6,7 @@ export const OverlayContainer = styled.div`
   top: var(--header-size);
   left: 0;
   height: calc(100vh - var(--header-size));
+  min-height: 635px;
   width: 100%;
   min-width: 500px;
   background: rgba(68, 68, 68, 0.6);
@@ -16,6 +17,7 @@ export const OverlayContainer = styled.div`
 export const VoterChoiceContainer = styled.div`
   width: 390px;
   height: 60vh;
+  min-height: 400px;
   background: #ffffff;
   border-radius: 10px;
   z-index: 2;
@@ -68,7 +70,7 @@ export const VoterChoiceHeaderTitle = styled.div`
 `;
 
 export const VoterList = styled.div`
-  height: calc(90% - 40px);
+  height: calc(90% - 60px);
   margin-top: 30px;
   overflow: auto;
 `;

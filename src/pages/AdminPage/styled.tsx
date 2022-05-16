@@ -10,6 +10,7 @@ export const AdminMainContainer = styled.div`
   row-gap: 30px;
   width: 100%;
   height: 100%;
+  min-height: 600px;
 
   & > .admin {
     grid-area: admin;
