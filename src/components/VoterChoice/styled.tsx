@@ -2,7 +2,7 @@ import { device } from '@/utils/device';
 import styled from 'styled-components';
 
 export const OverlayContainer = styled.div`
-  position: absolute;
+  position: fixed;
   top: var(--header-size);
   left: 0;
   height: calc(100vh - var(--header-size));

@@ -13,7 +13,6 @@ export const AgendaContainer = styled.div`
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
   box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.25);
-  font-weight: 700;
   padding: 20px 30px;
   position: relative;
 
@@ -70,6 +69,7 @@ export const AgendaNotVote = styled.div`
   font-weight: 400;
   margin-bottom: 15px;
   word-wrap: break-word;
+  cursor: pointer;
 
   &:hover ${AgendaNotVoteList} {
     display: block;

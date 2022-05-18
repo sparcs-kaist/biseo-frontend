@@ -6,7 +6,7 @@ export interface Agenda {
   content: string;
   subtitle: string;
   choices: string[];
-  votesCountMap: Record<string, number>;
+  votesCountMap: Record<string, string[]>;
   userChoice: string | null;
   expires: string; // ISO Date String
   status: AgendaStatus;

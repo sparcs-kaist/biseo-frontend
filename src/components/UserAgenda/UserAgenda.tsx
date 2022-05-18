@@ -92,15 +92,17 @@ const UserAgenda: React.FC<Props> = ({
   );
 
   const totalParticipants = votesCountMap
-    ? Object.values(votesCountMap).reduce((sum, count) => sum + count, 0)
+    ? Object.values(votesCountMap).reduce(
+        (sum, voters) => sum + voters.length,
+        0
+      )
     : 0;
 
   const voteResultMessage =
     votesCountMap && Object.keys(votesCountMap).length > 0
       ? '중 ' +
         Object.entries(votesCountMap)
-          .sort()
-          .map(([choice, count]) => `${choice} ${count}명`)
+          .map(([choice, voters]) => `${choice} ${voters.length}명`)
           .join(', ')
       : '';
 
