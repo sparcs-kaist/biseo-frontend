@@ -18,6 +18,7 @@ import {
   ActiveContainerSubtitle,
 } from '../UserAgenda/styled';
 import EditIcon from './Edit.svg';
+import AgendaVoteStateView from './AgendaVoteStateView';
 
 interface Props extends Agenda {
   socket: SocketIOClient.Socket;
@@ -74,6 +75,7 @@ const AdminAgenda: React.FC<Props> = ({
 
   const [showDetails, setShowDetails] = useState(false);
   const [notVoteList, setNotVote] = useState<string[]>([]);
+  const [isVisibleState, setIsVisibleState] = useState<boolean>(false);
 
   const onClick = () => {
     setShowDetails(!showDetails);
@@ -123,15 +125,17 @@ const AdminAgenda: React.FC<Props> = ({
   };
 
   const totalParticipants = votesCountMap
-    ? Object.values(votesCountMap).reduce((sum, count) => sum + count, 0)
+    ? Object.values(votesCountMap).reduce(
+        (sum, voters) => sum + voters.length,
+        0
+      )
     : 0;
 
   const voteResultMessage =
     votesCountMap && Object.keys(votesCountMap).length > 0
       ? '중 ' +
         Object.entries(votesCountMap)
-          .sort()
-          .map(([choice, count]) => `${choice} ${count}명`)
+          .map(([choice, voters]) => `${choice} ${voters.length}명`)
           .join(', ')
       : '';
 
@@ -153,7 +157,12 @@ const AdminAgenda: React.FC<Props> = ({
           })}
         </ActiveContainerContent>
         <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
-        <AgendaNotVote>
+        <AgendaNotVote
+          onClick={e => {
+            e.stopPropagation();
+            setIsVisibleState(true);
+          }}
+        >
           {`${notVoteList.length}명이 아직 투표하지 않음`}
           <AgendaNotVoteList>
             {notVoteList.map((ppl, index) => {
@@ -161,6 +170,7 @@ const AdminAgenda: React.FC<Props> = ({
               else return `, ${ppl}`;
             })}
           </AgendaNotVoteList>
+          <span style={{ fontSize: '0.5rem' }}>&nbsp;(자세히)</span>
         </AgendaNotVote>
       </AgendaContentLeft>
       <AgendaButton>
@@ -169,6 +179,12 @@ const AdminAgenda: React.FC<Props> = ({
         </BiseoButton>
         <EditIcon onClick={onClickEditIcon} style={{ cursor: 'pointer' }} />
       </AgendaButton>
+      <AgendaVoteStateView
+        visible={isVisibleState}
+        setVisible={setIsVisibleState}
+        voterCountMap={votesCountMap}
+        notVoteList={notVoteList}
+      />
     </AgendaContainer>
   ) : (
     <AgendaContainer onClick={onClick} detailed={showDetails}>
