@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
@@ -76,6 +76,26 @@ const AdminAgenda: React.FC<Props> = ({
   const [showDetails, setShowDetails] = useState(false);
   const [notVoteList, setNotVote] = useState<string[]>([]);
   const [isVisibleState, setIsVisibleState] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (status === AgendaStatus.PROGRESS) {
+      console.log('In useEffect, progress');
+      socket.on(
+        'agenda:voted',
+        ({ agendaId: agendaId, username: username }) => {
+          if (agendaId === _id) {
+            setNotVote(l => l.filter(_n => _n !== username));
+          }
+        }
+      );
+    } else {
+      socket.off('agenda:voted');
+    }
+
+    return () => {
+      socket.off('agenda:voted');
+    };
+  }, [status]);
 
   const onClick = () => {
     setShowDetails(!showDetails);
