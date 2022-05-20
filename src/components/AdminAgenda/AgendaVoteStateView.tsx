@@ -39,23 +39,24 @@ const AgendaVoteStateView: React.FC<Props> = ({
               else return `, ${voter}`;
             })}
           </div>
-          {Object.entries(voterCountMap).map(([choice, voters]) => {
-            return (
-              <div key={choice}>
-                <br />
-                <hr />
-                <ActiveContainerSubtitle style={{ marginTop: '30px' }}>
-                  {choice} ({voters.length}명)
-                </ActiveContainerSubtitle>
-                <div style={{ lineHeight: '200%' }}>
-                  {voters.map((voter, j) => {
-                    if (j === 0) return `${voter}`;
-                    else return `, ${voter}`;
-                  })}
+          {voterCountMap &&
+            Object.entries(voterCountMap).map(([choice, voters]) => {
+              return (
+                <div key={choice}>
+                  <br />
+                  <hr />
+                  <ActiveContainerSubtitle style={{ marginTop: '30px' }}>
+                    {choice} ({voters.length}명)
+                  </ActiveContainerSubtitle>
+                  <div style={{ lineHeight: '200%' }}>
+                    {voters.map((voter, j) => {
+                      if (j === 0) return `${voter}`;
+                      else return `, ${voter}`;
+                    })}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </Container>
       </OverlayContainer>
     )
