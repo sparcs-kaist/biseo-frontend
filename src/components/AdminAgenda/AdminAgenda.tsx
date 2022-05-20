@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, Fragment } from 'react';
 import { toast } from 'react-toastify';
 import { Agenda } from '@/common/types';
 import { AgendaStatus } from '@/common/enums';
@@ -170,12 +170,12 @@ const AdminAgenda: React.FC<Props> = ({
         {showDetails && (
           <>
             <ActiveContainerContent>
-              {content.split('\n').map(line => {
+              {content.split('\n').map((line, i) => {
                 return (
-                  <>
+                  <Fragment key={i}>
                     {line}
                     <br />
-                  </>
+                  </Fragment>
                 );
               })}
             </ActiveContainerContent>
