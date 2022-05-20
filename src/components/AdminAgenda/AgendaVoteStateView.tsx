@@ -23,7 +23,8 @@ const AgendaVoteStateView: React.FC<Props> = ({
   return (
     visible && (
       <OverlayContainer
-        onClick={() => {
+        onClick={e => {
+          e.stopPropagation();
           setVisible(false);
         }}
       >

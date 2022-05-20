@@ -79,7 +79,6 @@ const AdminAgenda: React.FC<Props> = ({
 
   useEffect(() => {
     if (status === AgendaStatus.PROGRESS) {
-      console.log('In useEffect, progress');
       socket.on(
         'agenda:voted',
         ({ agendaId: agendaId, username: username }) => {
@@ -159,39 +158,45 @@ const AdminAgenda: React.FC<Props> = ({
           .join(', ')
       : '';
 
-  return showDetails ? (
+  return (
     <AgendaContainer onClick={onClick} detailed={showDetails}>
       <AgendaContentLeft>
-        <ActiveContainerTitle detailed>{title}</ActiveContainerTitle>
-        <ActiveContainerProgress detailed>
+        <ActiveContainerTitle detailed={showDetails}>
+          {title}
+        </ActiveContainerTitle>
+        <ActiveContainerProgress detailed={showDetails}>
           {`재석 ${totalParticipants}명 ${voteResultMessage}`}
         </ActiveContainerProgress>
-        <ActiveContainerContent>
-          {content.split('\n').map(line => {
-            return (
-              <>
-                {line}
-                <br />
-              </>
-            );
-          })}
-        </ActiveContainerContent>
-        <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
-        <AgendaNotVote
-          onClick={e => {
-            e.stopPropagation();
-            setIsVisibleState(true);
-          }}
-        >
-          {`${notVoteList.length}명이 아직 투표하지 않음`}
-          <AgendaNotVoteList>
-            {notVoteList.map((ppl, index) => {
-              if (index == 0) return `${ppl}`;
-              else return `, ${ppl}`;
-            })}
-          </AgendaNotVoteList>
-          <span style={{ fontSize: '0.5rem' }}>&nbsp;(자세히)</span>
-        </AgendaNotVote>
+        {showDetails && (
+          <>
+            <ActiveContainerContent>
+              {content.split('\n').map(line => {
+                return (
+                  <>
+                    {line}
+                    <br />
+                  </>
+                );
+              })}
+            </ActiveContainerContent>
+            <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
+            <AgendaNotVote
+              onClick={e => {
+                e.stopPropagation();
+                setIsVisibleState(true);
+              }}
+            >
+              {`${notVoteList.length}명이 아직 투표하지 않음`}
+              <AgendaNotVoteList>
+                {notVoteList.map((ppl, index) => {
+                  if (index == 0) return `${ppl}`;
+                  else return `, ${ppl}`;
+                })}
+              </AgendaNotVoteList>
+              <span style={{ fontSize: '0.5rem' }}>&nbsp;(자세히)</span>
+            </AgendaNotVote>
+          </>
+        )}
       </AgendaContentLeft>
       <AgendaButton>
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
@@ -205,23 +210,6 @@ const AdminAgenda: React.FC<Props> = ({
         voterCountMap={votesCountMap}
         notVoteList={notVoteList}
       />
-    </AgendaContainer>
-  ) : (
-    <AgendaContainer onClick={onClick} detailed={showDetails}>
-      <AgendaContent>
-        <AgendaContentLeft>
-          <ActiveContainerTitle>{title}</ActiveContainerTitle>
-          <ActiveContainerProgress>
-            {`재석 ${totalParticipants}명 ${voteResultMessage}`}
-          </ActiveContainerProgress>
-        </AgendaContentLeft>
-        <AgendaButton>
-          <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
-            {buttonText()}
-          </BiseoButton>
-          <EditIcon onClick={onClickEditIcon} style={{ cursor: 'pointer' }} />
-        </AgendaButton>
-      </AgendaContent>
     </AgendaContainer>
   );
 };
