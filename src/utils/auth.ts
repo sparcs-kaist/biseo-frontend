@@ -68,3 +68,15 @@ export const checkLoginStatus = async (): Promise<boolean> => {
 
   return data.success;
 };
+
+export const checkUserAdmin = async (): Promise<boolean> => {
+  type IsAdmin = { success: boolean };
+
+  const { data }: { data: IsAdmin } = await auth
+    .get(`${AUTH_URL}/api/auth/check/admin`)
+    .catch(() => {
+      throw new Error('Admin check error!');
+    });
+
+  return data.success;
+};
