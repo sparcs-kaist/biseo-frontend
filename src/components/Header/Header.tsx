@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom';
 import HomeIcon from './homeIcon.svg';
@@ -23,7 +23,7 @@ import {
 } from './styled';
 import { useState } from 'react';
 import { AwayStatus } from '@/common/enums';
-import { logout } from '@/utils/auth';
+import { checkUserAdmin, logout } from '@/utils/auth';
 import { logout as logoutAction } from '@/store/slices/login';
 import { setUser } from '@/store/slices/user';
 
@@ -41,10 +41,21 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const [awayState, setAwayState] = useState<AwayStatus>(AwayStatus.Entered);
   const [buttonString, setButtonString] = useState<string>('enter');
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  useEffect(() => {
+    checkAdmin();
+  }, [isLoggedIn]);
+
+  async function checkAdmin() {
+    const admin = await checkUserAdmin();
+    setIsAdmin(admin);
+  }
+
   const handleLogout = () => {
     logout();
     dispatch(logoutAction());
-    dispatch(setUser({ sparcsID: null, ssoUID: null, isUserAdmin: false }));
+    dispatch(setUser({ sparcsID: null, ssoUID: null }));
     history.replace('/login');
   };
 
@@ -106,7 +117,7 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
               <HomeIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
             <OptionButton
-              display_none={!user.isUserAdmin || isAdminPage}
+              display_none={!isAdmin || isAdminPage}
               onClick={() => {
                 history.push(adminPagePath);
                 title('Biseo - admin');

@@ -4,7 +4,6 @@ import { User } from '@/common/types';
 const initialState: User = {
   ssoUID: null,
   sparcsID: null,
-  isUserAdmin: false,
 };
 
 export const userSlice = createSlice({
