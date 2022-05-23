@@ -1,6 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom';
-import { MdSettings } from 'react-icons/md';
 import HomeIcon from './homeIcon.svg';
 import AdminIcon from './adminIcon.svg';
 import BiseoButton from '@/components/BiseoButton';
@@ -85,7 +85,9 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
     <div>
       <HeaderContainer>
         <HeaderContent>
-          <Logo style={{ height: 'var(--header-height)' }} />
+          <Link to="/">
+            <Logo style={{ height: 'var(--header-height)' }} />
+          </Link>
           <RHS>
             <BiseoButton
               background={buttonColor}

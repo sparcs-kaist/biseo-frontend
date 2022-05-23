@@ -5,7 +5,7 @@ import AdminAgenda from '@/components/AdminAgenda';
 import axios from '@/utils/axios';
 import { mockTabs } from './mock';
 import { AdminMainContainer } from './styled';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 
 interface CommonMainProps {
   socket: SocketIOClient.Socket;
@@ -59,6 +59,7 @@ interface AdminPageProps {
 const AdminPage: React.FC<AdminPageProps> = ({ socket }) => {
   const [agendas, setAgendas] = useState<Agenda[]>([]);
   const [valid, setValid] = useState(true);
+  const history = useHistory();
 
   socket.on('error', (err: Error) => {
     setValid(false);
@@ -66,11 +67,22 @@ const AdminPage: React.FC<AdminPageProps> = ({ socket }) => {
 
   useEffect(() => {
     async function getAgendas() {
-      const { data } = await axios.get('/agendas').catch(() => ({ data: [] }));
-      const agendas: Agenda[] = data.agendas ?? [];
-      setAgendas(agendas);
+      axios
+        .get('/admin/agendas')
+        .then(response => {
+          // Success 🎉
+          const data = response.data;
+          const agendas: Agenda[] = data.agendas ?? [];
+          setAgendas(agendas);
+        })
+        .catch(function (error) {
+          if (error.response && error.response.status == 403) {
+            history.replace('/');
+          } else {
+            history.replace('/login');
+          }
+        });
     }
-
     getAgendas();
   }, []);
 
