@@ -9,9 +9,9 @@ export const mockTabs = [
     choices: [],
     extendableChoices: true,
   },
-  {
-    title: '새 탬플릿',
-    choices: [],
-    extendableChoices: true,
-  },
+  // {
+  //   title: '새 탬플릿',
+  //   choices: [],
+  //   extendableChoices: true,
+  // },
 ];

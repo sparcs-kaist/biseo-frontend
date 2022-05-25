@@ -65,10 +65,19 @@ interface User {
   state: MemberState;
 }
 
-function useUsers(
+interface UseUsersType {
+  users: User[];
+  selectedUsers: string[];
+  setSelectedUsers: React.Dispatch<React.SetStateAction<string[]>>;
+  preset: number;
+  updateUsers: (_preset: number) => Promise<void>;
+  clickPreset: (n: number) => Promise<void>;
+}
+
+export function useUsers(
   socket: SocketIOClient.Socket,
   defaultSelectedUsers: string[]
-) {
+): UseUsersType {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>(
     defaultSelectedUsers

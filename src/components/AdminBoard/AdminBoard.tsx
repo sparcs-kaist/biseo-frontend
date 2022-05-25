@@ -6,6 +6,8 @@ import {
   AdminContentEdit,
 } from '@/components/AdminContent';
 import { Agenda } from '@/common/types';
+import BiseoButton from '../BiseoButton';
+import AdminContentCreateAuto from '../AdminContent/AdminContentCreateAuto';
 
 interface Props {
   socket: SocketIOClient.Socket;
@@ -35,6 +37,7 @@ const AdminBoard: React.FC<Props> = ({
   confirmEdit,
 }) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
+  const [auto, setAuto] = useState<boolean>(false);
   const selectedTab = tabs[selectedTabIndex];
 
   const onVoteCreate = useCallback(
@@ -89,20 +92,32 @@ const AdminBoard: React.FC<Props> = ({
     />
   ) : (
     <>
-      <AdminTabs
-        selected={selectedTabIndex}
-        handleTabClick={setSelectedTabIndex}
+      <BiseoButton
+        style={{ marginBottom: '10px' }}
+        onClick={() => setAuto(!auto)}
       >
-        {tabs.map(tab => tab.title)}
-      </AdminTabs>
-      <AdminContentCreate
-        socket={socket}
-        tabLength={tabs.length}
-        selected={selectedTabIndex}
-        choices={selectedTab.choices}
-        extendable={selectedTab.extendableChoices}
-        onVoteCreate={onVoteCreate}
-      />
+        자동 생성
+      </BiseoButton>
+      {auto ? (
+        <AdminContentCreateAuto socket={socket} onVoteCreate={onVoteCreate} />
+      ) : (
+        <>
+          <AdminTabs
+            selected={selectedTabIndex}
+            handleTabClick={setSelectedTabIndex}
+          >
+            {tabs.map(tab => tab.title)}
+          </AdminTabs>
+          <AdminContentCreate
+            socket={socket}
+            tabLength={tabs.length}
+            selected={selectedTabIndex}
+            choices={selectedTab.choices}
+            extendable={selectedTab.extendableChoices}
+            onVoteCreate={onVoteCreate}
+          />
+        </>
+      )}
     </>
   );
 };

@@ -14,6 +14,7 @@ export const AdminMainContainer = styled.div`
 
   & > .admin {
     grid-area: admin;
+    overflow: scroll;
   }
 
   & > .agendas {
