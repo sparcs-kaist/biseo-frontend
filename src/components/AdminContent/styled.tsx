@@ -62,9 +62,12 @@ export const SubtitleInput = styled.input`
 `;
 
 export const ButtonGroup = styled.div<{ alignRight?: boolean }>`
-  display: flex;
   margin-top: 30px;
-  ${({ alignRight }) => alignRight && 'justify-content: flex-end;'}
+  ${({ alignRight }) =>
+    alignRight && 'display: flex; justify-content: flex-end;'}
+  overflow: auto;
+  padding: 3px 0px;
+  max-height: 150px;
 `;
 
 export const InputNewChoice = styled.input`
@@ -84,4 +87,20 @@ export const InputNewChoice = styled.input`
   &:focus {
     outline: none;
   }
+`;
+
+export const AdminContentBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
+export const AdminContentText = styled.div<{ isTitle?: boolean }>`
+  font-size: 1rem;
+  ${({ isTitle }) => isTitle && 'font-size: 1.3rem;'}
+  font-weight: 700;
+  word-wrap: break-word;
 `;
