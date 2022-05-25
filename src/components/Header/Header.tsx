@@ -40,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const user = useTypedSelector(state => state.user);
   const [awayState, setAwayState] = useState<AwayStatus>(AwayStatus.Entered);
   const [buttonString, setButtonString] = useState<string>('enter');
+  const [isSubmenu, setIsSubmenu] = useState<boolean>(false);
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -56,6 +57,7 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
     logout();
     dispatch(logoutAction());
     dispatch(setUser({ sparcsID: null, ssoUID: null }));
+    setIsSubmenu(false);
     history.replace('/login');
   };
 
@@ -125,9 +127,12 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
             >
               <AdminIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
-            <AccountDropdown>
+            <AccountDropdown
+              onMouseOver={() => setIsSubmenu(true)}
+              onMouseOut={() => setIsSubmenu(false)}
+            >
               <AccountIcon size="24px" />
-              <AccountSubmenu>
+              <AccountSubmenu visible={isSubmenu}>
                 <AccountSubitem>{user.sparcsID}</AccountSubitem>
                 <hr
                   style={{ border: 'solid 1px #f2a024', margin: '0px 3px' }}

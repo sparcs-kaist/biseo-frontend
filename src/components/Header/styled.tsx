@@ -61,9 +61,9 @@ export const MessageContainer = styled.div`
   font-style: normal;
 `;
 
-export const AccountSubmenu = styled.div`
+export const AccountSubmenu = styled.div<{ visible?: boolean }>`
   z-index: 1;
-  visibility: hidden;
+  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
 
   align-items: center;
   text-align: center;
@@ -78,12 +78,9 @@ export const AccountSubmenu = styled.div`
 
   font-size: 14px;
   font-style: normal;
-
-  opacity: 0;
-  transition: visibility 0.4s linear, opacity 0.3s linear;
-  &:hover {
-    visibility: visible;
-  }
+  opacity: ${props => (props.visible ? '1' : '0')};
+  transition: ${props =>
+    props.visible ? 'visibility 0.4s linear, opacity 0.3s linear' : 'none'};
 `;
 
 export const AccountSubitem = styled.div`
@@ -92,18 +89,10 @@ export const AccountSubitem = styled.div`
   padding: 10px 30px;
   line-height: inherit;
   cursor: default;
-
-  &:hover {
-    visibility: visible;
-  }
 `;
 
 export const AccountIcon = styled(MdAccountCircle)`
   padding: 1px 6px;
-
-  &:hover ~ ${AccountSubmenu} {
-    visibility: visible;
-  }
 `;
 
 export const AccountDropdown = styled.div`
@@ -112,10 +101,4 @@ export const AccountDropdown = styled.div`
   flex-direction: column;
 
   margin-right: 15px;
-
-  &:hover ${AccountSubmenu} {
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0.4s linear, opacity 0.3s linear;
-  }
 `;
