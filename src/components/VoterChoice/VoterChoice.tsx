@@ -100,16 +100,22 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
             </span>
           </VoterChoiceHeader>
           <VoterList>
-            {users.map(user => {
+            {users.map((user, i) => {
               if (preset !== 0) {
                 if (user.isVotable) {
                   return (
-                    <UserCheckButton active={true} user={user} onClick={null} />
+                    <UserCheckButton
+                      key={i}
+                      active={true}
+                      user={user}
+                      onClick={null}
+                    />
                   );
                 }
               } else if (selectedUsers.includes(user.uid)) {
                 return (
                   <UserCheckButton
+                    key={i}
                     active={true}
                     user={user}
                     onClick={() => {
@@ -123,6 +129,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
               } else {
                 return (
                   <UserCheckButton
+                    key={i}
                     active={false}
                     user={user}
                     onClick={() => select([user.uid, ...selectedUsers])}
