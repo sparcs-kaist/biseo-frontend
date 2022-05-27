@@ -26,7 +26,7 @@ export const useAuth = (): LoginStatus => {
       .catch(() => {
         setLoggedIn(LoginStatus.NotLoggedIn);
         dispatch(logout());
-        dispatch(setUser({ sparcsID: null, ssoUID: null }));
+        dispatch(setUser({ sparcsID: null }));
       });
   });
 

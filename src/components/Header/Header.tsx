@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const handleLogout = () => {
     logout();
     dispatch(logoutAction());
-    dispatch(setUser({ sparcsID: null, ssoUID: null }));
+    dispatch(setUser({ sparcsID: null }));
     setIsSubmenu(false);
     history.replace('/login');
   };

@@ -22,7 +22,6 @@ export interface MessageType {
 
 // user type used for redux state
 export interface User {
-  ssoUID: string;
   sparcsID: string;
 }
 
