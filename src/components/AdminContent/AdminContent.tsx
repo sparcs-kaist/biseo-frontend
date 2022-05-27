@@ -161,14 +161,14 @@ export function useUsers(
 
   async function updateUsers(_preset: number) {
     const _users = users.map(user => {
-      if (selectedUsers.includes(user.uid)) {
+      if (selectedUsers.includes(user.sparcsId)) {
         return {
-          uid: user.uid,
+          sparcs_id: user.sparcsId,
           isVotable: true,
         };
       } else {
         return {
-          uid: user.uid,
+          sparcs_id: user.sparcsId,
           isVotable: false,
         };
       }
@@ -193,7 +193,7 @@ export function useUsers(
       setPreset(n);
       const _selectedUser = _users
         .filter(user => user.isVotable)
-        .map(user => user.uid);
+        .map(user => user.sparcsId);
       setSelectedUsers(_selectedUser);
     }
   };
