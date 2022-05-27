@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '@/common/types';
 
 const initialState: User = {
-  ssoUID: null,
   sparcsID: null,
 };
 
