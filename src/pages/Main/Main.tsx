@@ -66,7 +66,7 @@ const Main: React.FC<MainProps> = ({ socket }) => {
         data.agendas.filter(
           agenda =>
             isUndefined(agenda.participants) ||
-            agenda.participants.includes(user.ssoUID)
+            agenda.participants.includes(user.sparcsID)
         ) ?? [];
       setAgendas(agendas);
     }

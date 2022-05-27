@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Fragment } from 'react';
 import { toast } from 'react-toastify';
 import BiseoButton from '@/components/BiseoButton';
 import { Agenda } from '@/common/types';
@@ -11,15 +11,7 @@ import {
   ButtonGroup,
   InactiveContainer,
 } from './styled';
-import {
-  AgendaContainer,
-  AgendaContent,
-  AgendaButton,
-  AgendaContentLeft,
-  AgendaNotVote,
-  AgendaNotVoteList,
-  AgendaContentAll,
-} from '../AdminAgenda/styled';
+import { AgendaContainer, AgendaContentAll } from '../AdminAgenda/styled';
 
 interface Props extends Agenda {
   socket: SocketIOClient.Socket;
@@ -122,12 +114,12 @@ const UserAgenda: React.FC<Props> = ({
     <ActiveContainer>
       <ActiveContainerTitle>{title}</ActiveContainerTitle>
       <ActiveContainerContent>
-        {content.split('\n').map(line => {
+        {content.split('\n').map((line, i) => {
           return (
-            <>
+            <Fragment key={i}>
               {line}
               <br />
-            </>
+            </Fragment>
           );
         })}
       </ActiveContainerContent>
@@ -162,7 +154,16 @@ const UserAgenda: React.FC<Props> = ({
         <ActiveContainerProgress detailed>
           {`재석 ${totalParticipants}명 ${voteResultMessage}`}
         </ActiveContainerProgress>
-        <ActiveContainerContent>{content}</ActiveContainerContent>
+        <ActiveContainerContent>
+          {content.split('\n').map((line, i) => {
+            return (
+              <Fragment key={i}>
+                {line}
+                <br />
+              </Fragment>
+            );
+          })}
+        </ActiveContainerContent>
         <ActiveContainerSubtitle>{subtitle}</ActiveContainerSubtitle>
       </AgendaContentAll>
     </AgendaContainer>

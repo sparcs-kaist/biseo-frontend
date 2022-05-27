@@ -73,7 +73,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                 <BiseoButton
                   background="#f2a024"
                   foreground="#ffffff"
-                  onClick={() => select(users.map(user => user.uid))}
+                  onClick={() => select(users.map(user => user.sparcsId))}
                   style={{ marginRight: '5px' }}
                 >
                   전체 선택
@@ -112,7 +112,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                     />
                   );
                 }
-              } else if (selectedUsers.includes(user.uid)) {
+              } else if (selectedUsers.includes(user.sparcsId)) {
                 return (
                   <UserCheckButton
                     key={i}
@@ -120,7 +120,9 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                     user={user}
                     onClick={() => {
                       const temp = [...selectedUsers];
-                      const idx = temp.findIndex(uid => uid === user.uid);
+                      const idx = temp.findIndex(
+                        sparcsId => sparcsId === user.sparcsId
+                      );
                       temp.splice(idx, 1);
                       select(temp);
                     }}
@@ -132,7 +134,7 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                     key={i}
                     active={false}
                     user={user}
-                    onClick={() => select([user.uid, ...selectedUsers])}
+                    onClick={() => select([user.sparcsId, ...selectedUsers])}
                   />
                 );
               }
