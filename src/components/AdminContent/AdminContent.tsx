@@ -67,6 +67,7 @@ interface User {
 
 interface UseUsersType {
   users: User[];
+  addUser: (user: string) => Promise<void>;
   selectedUsers: string[];
   setSelectedUsers: React.Dispatch<React.SetStateAction<string[]>>;
   preset: number;
@@ -159,6 +160,18 @@ export function useUsers(
     };
   }, [users]);
 
+  async function addUser(user: string) {
+    type Response = { data: { success: boolean; user: User } };
+    const response: Response = await axios
+      .post('/users', {
+        sparcsId: user,
+      })
+      .catch(() => {
+        throw new Error('Error: Add user Failed');
+      });
+    if (response.data.success) setUsers([...users, response.data.user]);
+  }
+
   async function updateUsers(_preset: number) {
     const _users = users.map(user => {
       if (selectedUsers.includes(user.sparcsId)) {
@@ -200,6 +213,7 @@ export function useUsers(
 
   return {
     users,
+    addUser,
     selectedUsers,
     setSelectedUsers,
     preset,
@@ -224,6 +238,7 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
 
   const {
     users,
+    addUser,
     selectedUsers,
     setSelectedUsers,
     preset,
@@ -423,6 +438,7 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
       </AdminContentContainer>
       <VoterChoice
         users={users}
+        addUser={addUser}
         shown={isVoterChoice}
         preset={preset}
         handlePreset={clickPreset}
@@ -463,6 +479,7 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
 
   const {
     users,
+    addUser,
     selectedUsers,
     setSelectedUsers,
     preset,
@@ -563,6 +580,7 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
       </AdminContentContainer>
       <VoterChoice
         users={users}
+        addUser={addUser}
         shown={isVoterChoice}
         preset={preset}
         handlePreset={clickPreset}
