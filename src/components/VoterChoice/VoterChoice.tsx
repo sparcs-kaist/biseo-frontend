@@ -8,6 +8,7 @@ import {
   VoterChoiceBottom,
   PresetChoiceContainer,
   CheckButton,
+  CheckButtonInput,
 } from './styled';
 import BiseoButton from '../BiseoButton';
 import Green from '@/public/Green.svg';
@@ -17,6 +18,7 @@ import { MemberState } from '@/common/enums';
 
 interface VoterChoiceProps {
   users: User[];
+  addUser: (user: string) => void;
   shown: boolean;
   preset: number;
   handlePreset: (n: number) => void;
@@ -36,6 +38,7 @@ interface User {
 
 const VoterChoice: React.FC<VoterChoiceProps> = ({
   users,
+  addUser,
   shown,
   preset,
   handlePreset,
@@ -46,6 +49,8 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
   updateUsers,
 }) => {
   const [expand, setExpand] = useState<boolean>(false);
+  const [addMode, setAddMode] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string>('');
 
   useEffect(() => {
     if (selectedUsers.length === 0) setExpand(false);
@@ -53,6 +58,15 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
   const addPreset = (_preset: number) => {
     setExpand(false);
     updateUsers(_preset);
+  };
+
+  const enterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      addUser(userName);
+      setAddMode(false);
+      setUserName('');
+    }
+    if (e.key === 'Escape') setAddMode(false);
   };
 
   return (
@@ -139,6 +153,20 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
                 );
               }
             })}
+            {preset === 0 &&
+              (addMode ? (
+                <CheckButtonInput
+                  onChange={e => setUserName(e.target.value)}
+                  onKeyUp={enterPress}
+                />
+              ) : (
+                <CheckButton
+                  onClick={() => setAddMode(true)}
+                  style={{ justifyContent: 'center' }}
+                >
+                  +
+                </CheckButton>
+              ))}
           </VoterList>
           <VoterChoiceBottom>
             <BiseoButton onClick={close} style={{ marginRight: '0px' }}>
@@ -214,11 +242,7 @@ const UserCheckButton: React.FC<UserCheckButtonProps> = ({
   onClick,
 }) => {
   return (
-    <CheckButton
-      check={active}
-      onClick={onClick}
-      style={{ marginBottom: '12px' }}
-    >
+    <CheckButton check={active} onClick={onClick}>
       <span
         style={{
           textOverflow: 'ellipsis',

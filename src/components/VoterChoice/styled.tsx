@@ -109,7 +109,7 @@ export const CheckButton = styled.button<{
   align-items: center;
   justify-content: space-between;
   margin-right: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 12px;
   padding: 0px 10px;
   white-space: nowrap;
   overflow: hidden;
@@ -126,4 +126,21 @@ export const CheckButton = styled.button<{
     transform: translateY(0.5px);
     box-shadow: 1px 2px 5px -1px rgba(0, 0, 0, 0.6);
   }
+`;
+
+export const CheckButtonInput = styled.input`
+  width: 108px;
+  min-height: 43px;
+  background-color: #ffffff;
+  border: 1px solid #d6d6d6;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  color: #000000;
+  display: inline-flex;
+  font-size: 1rem;
+  align-items: center;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding: 0px 5px;
+  white-space: nowrap;
 `;

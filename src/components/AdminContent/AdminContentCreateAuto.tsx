@@ -36,6 +36,7 @@ const AdminContentCreateAuto: React.FC<AdminContentCreateProps> = ({
 
   const {
     users,
+    addUser,
     selectedUsers,
     setSelectedUsers,
     preset,
@@ -195,6 +196,7 @@ const AdminContentCreateAuto: React.FC<AdminContentCreateProps> = ({
       </AdminContentContainer>
       <VoterChoice
         users={users}
+        addUser={addUser}
         shown={isVoterChoice}
         preset={preset}
         handlePreset={clickPreset}
