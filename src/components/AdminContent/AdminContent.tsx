@@ -314,6 +314,7 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
   const enterPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') addNewChoice();
+      if (e.key === 'Escape') setExpand(false);
     },
     [newChoice]
   );
@@ -401,7 +402,7 @@ export const AdminContentCreate: React.FC<AdminContentCreateProps> = ({
               {expand ? (
                 <InputNewChoice
                   onChange={handleNewChoice}
-                  onKeyPress={enterPress}
+                  onKeyUp={enterPress}
                 />
               ) : (
                 <BiseoButton onClick={() => setExpand(true)}>+</BiseoButton>
@@ -517,6 +518,7 @@ export const AdminContentEdit: React.FC<AdminContentEditProps> = ({
             name="title"
             className={errors.title && 'error'}
             ref={register({ required: true })}
+            style={{ width: '100%', marginRight: '5px' }}
           />
           <BiseoButton
             type="button"
