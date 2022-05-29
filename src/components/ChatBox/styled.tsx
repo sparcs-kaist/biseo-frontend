@@ -94,7 +94,8 @@ export const ChatBoxInputGroup = styled.div`
     }
 
     &:hover {
-      background-color: #f7f3e9;
+      filter: brightness(0.98);
+      transition: filter 0.2s linear;
     }
   }
 `;
@@ -103,16 +104,10 @@ interface JustificationProps {
   justification: string;
 }
 
-export const MessageContainer = styled.div`
+export const MessageContainer = styled.div<{ username: string }>`
   display: flex;
-  justify-content: ${(props: JustificationProps) =>
-    props.justification === 'around'
-      ? 'space-around'
-      : `flex-${props.justification}`};
-  margin-top: ${(props: JustificationProps) =>
-    props.justification === 'around' ? '20px' : '50px'};
-  ${(props: JustificationProps) =>
-    props.justification === 'around' && `font-weight: bold`};
+  justify-content: ${props => (props.username ? 'flex-start' : 'flex-end')};
+  margin-top: ${props => (props.username ? '35px' : '10px')};
   position: relative;
   max-width: 100%;
 
