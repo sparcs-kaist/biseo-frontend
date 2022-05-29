@@ -51,6 +51,7 @@ export const InactiveContainer = styled.div`
   box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.25);
   padding: 15px 30px;
   position: relative;
+  cursor: pointer;
 
   &::before {
     background: #f2a024;
@@ -72,6 +73,11 @@ export const InactiveContainer = styled.div`
 
   & > .result-info {
     font-size: 0.8rem;
+  }
+
+  &:hover {
+    filter: brightness(0.98);
+    transition: filter 0.3s linear;
   }
 `;
 

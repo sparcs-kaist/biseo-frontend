@@ -52,14 +52,14 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     }
   })();
 
-  const user =
-    message.type === MessageEnum.MESSAGE ? message.username || 'Me' : '';
   const date =
     message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
 
   return (
-    <MessageContainer justification={justification}>
-      {user && <MessageUsername>{user}</MessageUsername>}
+    <MessageContainer username={message.username}>
+      {message.username && (
+        <MessageUsername>{message.username}</MessageUsername>
+      )}
       <MessageContent username={message.username}>
         {content}
         {date && (
@@ -204,6 +204,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     setChatlog([
       {
         type: MessageEnum.MESSAGE,
+        username: '',
         message: msgObject.message,
         date: msgObject.date,
       },
