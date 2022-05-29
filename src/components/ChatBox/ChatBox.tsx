@@ -13,6 +13,7 @@ import {
   ChatBoxParticipants,
   ChatBoxParticipantsBox,
   Participant,
+  ChatBroadcast,
 } from './styled';
 import Green from '@/public/Green.svg';
 import Orange from '@/public/Orange.svg';
@@ -39,10 +40,6 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return message.message;
-      case MessageEnum.NEW:
-        return `${message.username} has entered`;
-      case MessageEnum.OUT:
-        return `${message.username} has left`;
     }
   })();
 
@@ -50,9 +47,6 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return message.username ? 'start' : 'end';
-      case MessageEnum.NEW:
-      case MessageEnum.OUT:
-        return 'around';
       default:
         return '';
     }
@@ -66,7 +60,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   return (
     <MessageContainer justification={justification}>
       {user && <MessageUsername>{user}</MessageUsername>}
-      <MessageContent>
+      <MessageContent username={message.username}>
         {content}
         {date && (
           <MessageDate justification={justification}>
@@ -84,26 +78,41 @@ interface ChatMemberState {
   state: MemberState; // ONLINE or VACANT
 }
 
+interface BroadcastType {
+  active: boolean;
+  sparcsId: string;
+  kinds: 'Enter' | 'Out';
+}
+
 const ChatBox: React.FC<Props> = ({ socket }) => {
   const [_members, setMembers] = useState<ChatMemberState[]>([]);
   const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
   const [chatlog, setChatlog] = useState<MessageType[]>([]);
+  const [broadcast, setBroadcast] = useState<BroadcastType>({
+    active: false,
+    sparcsId: '',
+    kinds: 'Enter',
+  });
   const { loading, list, error } = useFetch(query);
   const loader = useRef(null);
   const ownSparcsId = useTypedSelector(state => state.user.sparcsID);
 
   /* Initialize socket events for 'enter', 'members', 'out', 'vacant', 'message'. */
   useEffect(() => {
+    let broadcastId: number;
     socket.on('chat:enter', (username: string) => {
-      setChatlog(chatlog => [
-        { type: MessageEnum.NEW, username: username },
-        ...chatlog,
-      ]);
       setMembers(members => [
         ...members,
         { sparcsId: username, state: MemberState.ONLINE },
       ]);
+      clearTimeout(broadcastId);
+      setBroadcast({ active: true, sparcsId: username, kinds: 'Enter' });
+      broadcastId = setTimeout(() => {
+        setBroadcast(bc => {
+          return { ...bc, active: false };
+        });
+      }, 3000);
     });
 
     /* Get members */
@@ -113,13 +122,16 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     socket.emit('chat:members');
 
     socket.on('chat:out', (username: string) => {
-      setChatlog(chatlog => [
-        { type: MessageEnum.OUT, username: username },
-        ...chatlog,
-      ]);
       setMembers(members =>
         members.filter(member => member.sparcsId !== username)
       );
+      clearTimeout(broadcastId);
+      setBroadcast({ active: true, sparcsId: username, kinds: 'Out' });
+      broadcastId = setTimeout(() => {
+        setBroadcast(bc => {
+          return { ...bc, active: false };
+        });
+      }, 3000);
     });
 
     socket.on('vacant:on', (sparcsId: string) => {
@@ -165,6 +177,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     );
 
     return () => {
+      clearTimeout(broadcastId);
       socket.off('chat:enter');
       socket.off('chat:members');
       socket.off('chat:out');
@@ -213,6 +226,15 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     [chatlog]
   );
 
+  const broadcastContent = useCallback(() => {
+    switch (broadcast.kinds) {
+      case 'Enter':
+        return `${broadcast.sparcsId}님이 입장하셨습니다.`;
+      case 'Out':
+        return `${broadcast.sparcsId}님이 퇴장하셨습니다.`;
+    }
+  }, [broadcast]);
+
   useEffect(() => {
     setChatlog(list);
   }, [list]);
@@ -234,7 +256,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     <ChatBoxExternalContainer>
       <ChatBoxInternalContainer>
         <ChatBoxParticipants>
-          참여자: {_members.length}명
+          <span>참여자: {_members.length}명</span>
           <ChatBoxParticipantsBox>
             <Participant style={{ fontWeight: 'bold' }}>
               {ownSparcsId} (You)
@@ -264,6 +286,9 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
             })}
           </ChatBoxParticipantsBox>
         </ChatBoxParticipants>
+        <ChatBroadcast visible={broadcast.active}>
+          {broadcastContent()}
+        </ChatBroadcast>
         <ChatBoxScrollable>
           {chatlog.map((chat, idx) => (
             <Message key={idx} message={chat} />

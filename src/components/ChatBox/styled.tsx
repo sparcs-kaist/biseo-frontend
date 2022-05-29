@@ -8,6 +8,7 @@ export const ChatBoxExternalContainer = styled.div`
 `;
 
 export const ChatBoxInternalContainer = styled.div`
+  position: relative;
   background-color: #ffffff;
   box-sizing: border-box;
   height: 100%;
@@ -18,14 +19,16 @@ export const ChatBoxInternalContainer = styled.div`
 export const ChatBoxParticipantsBox = styled.div`
   visibility: hidden;
   position: absolute;
+  right: 3%;
   background-color: #ffffff;
   box-sizing: border-box;
   border: 1px solid #f2a024;
   border-radius: 10px;
-  margin-top: 20px;
+  margin-top: 0px;
   padding: 10px 20px;
   width: 180px;
-  height: 30%;
+  height: 35%;
+  max-height: 300px;
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -39,9 +42,10 @@ export const ChatBoxParticipantsBox = styled.div`
 `;
 
 export const ChatBoxParticipants = styled.div`
-  display: flex;
+  display: block;
   font-size: 0.9rem;
   padding: 10px 20px;
+  text-align: right;
 
   &:hover ${ChatBoxParticipantsBox} {
     visibility: visible;
@@ -146,8 +150,8 @@ export const MessageUsername = styled.span`
   position: absolute;
 `;
 
-export const MessageContent = styled.div`
-  background-color: #f7f6f3;
+export const MessageContent = styled.div<{ username: string }>`
+  background-color: ${props => (props.username === '' ? '#fec46c' : '#f7f6f3')};
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 18px;
@@ -187,4 +191,23 @@ export const ChatBoxScrollable = styled.div`
   height: calc(100% - 50px);
   overflow: auto;
   padding: 0px 40px;
+`;
+
+export const ChatBroadcast = styled.div<{ visible: boolean }>`
+  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
+  opacity: ${props => (props.visible ? '1' : '0')};
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #111111cc;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  color: #ffffff;
+  max-width: 90%;
+  padding: 7px 20px;
+  word-break: break-word;
+  transition: visibility 0.4s linear, opacity 0.3s linear;
+  z-index: 1;
 `;
