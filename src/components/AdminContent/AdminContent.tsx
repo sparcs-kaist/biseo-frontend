@@ -176,12 +176,12 @@ export function useUsers(
     const _users = users.map(user => {
       if (selectedUsers.includes(user.sparcsId)) {
         return {
-          sparcs_id: user.sparcsId,
+          sparcsId: user.sparcsId,
           isVotable: true,
         };
       } else {
         return {
-          sparcs_id: user.sparcsId,
+          sparcsId: user.sparcsId,
           isVotable: false,
         };
       }
