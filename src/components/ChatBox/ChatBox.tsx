@@ -20,6 +20,8 @@ import Orange from '@/public/Orange.svg';
 import useFetch from '@/hooks/useFetch';
 import { useTypedSelector } from '@/hooks';
 
+const CHATMAXLENGTH = 500;
+
 interface Props {
   socket: SocketIOClient.Socket;
 }
@@ -302,6 +304,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       <ChatBoxInputGroup>
         <input
           type="text"
+          maxLength={CHATMAXLENGTH}
           value={message}
           onChange={handleMessageChange}
           onKeyPress={handleMessageKeypress}
