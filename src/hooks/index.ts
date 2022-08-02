@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { logout, login } from '@/store/slices/login';
 import { setUser } from '@/store/slices/user';
 import { LoginStatus } from '@/common/enums';
-import { checkLoginStatus } from '@/utils/auth';
+import { checkLoginStatus, saveToken } from '@/utils/auth';
 import type { RootState } from '@/common/types';
 import type { AppDispatch } from '@/store';
 
@@ -17,10 +17,14 @@ export const useAuth = (): LoginStatus => {
 
   useEffect(() => {
     checkLoginStatus()
-      .then(isLoggedIn => {
+      .then(data => {
         setLoggedIn(
-          isLoggedIn ? LoginStatus.LoggedIn : LoginStatus.NotLoggedIn
+          data.success ? LoginStatus.LoggedIn : LoginStatus.NotLoggedIn
         );
+        if (data.token) {
+          dispatch(logout());
+          saveToken(data.token);
+        }
         dispatch(login());
       })
       .catch(() => {
