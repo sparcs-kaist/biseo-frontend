@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MemberState, MessageEnum } from '@/common/enums';
-import { MessageType } from '@/common/types';
+import { Agenda, MessageType } from '@/common/types';
 import {
   ChatBoxScrollable,
   MessageContainer,
@@ -42,6 +42,10 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return message.message;
+      case MessageEnum.VOTESTART:
+        return message.message;
+      case MessageEnum.VOTEEND:
+        return message.message;
     }
   })();
 
@@ -49,6 +53,9 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
         return message.username ? 'start' : 'end';
+      case MessageEnum.VOTESTART:
+      case MessageEnum.VOTEEND:
+        return 'around';
       default:
         return '';
     }
@@ -58,11 +65,11 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
 
   return (
-    <MessageContainer username={message.username}>
+    <MessageContainer justification={justification}>
       {message.username && (
         <MessageUsername>{message.username}</MessageUsername>
       )}
-      <MessageContent username={message.username}>
+      <MessageContent username={message.username} messageType={message.type}>
         {content}
         {date && (
           <MessageDate justification={justification}>
@@ -177,6 +184,30 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         ]);
       }
     );
+
+    socket.on('agenda:started', (payload: Agenda) => {
+      setChatlog(chatlog => [
+        {
+          type: MessageEnum.VOTESTART,
+          message: `새로운 투표 : ${payload.title}가 시작되었습니다`,
+          date: currentTime(),
+          username: '',
+        },
+        ...chatlog,
+      ]);
+    });
+
+    socket.on('agenda:terminated', (payload: Agenda) => {
+      setChatlog(chatlog => [
+        {
+          type: MessageEnum.VOTEEND,
+          message: `투표 : ${payload.title}가 종료되었습니다`,
+          date: currentTime(),
+          username: '',
+        },
+        ...chatlog,
+      ]);
+    });
 
     return () => {
       clearTimeout(broadcastId);
