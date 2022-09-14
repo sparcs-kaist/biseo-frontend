@@ -1,3 +1,4 @@
+import { MessageEnum } from '@/common/enums';
 import styled from 'styled-components';
 
 export const ChatBoxExternalContainer = styled.div`
@@ -104,10 +105,16 @@ interface JustificationProps {
   justification: string;
 }
 
-export const MessageContainer = styled.div<{ username: string }>`
+export const MessageContainer = styled.div`
   display: flex;
-  justify-content: ${props => (props.username ? 'flex-start' : 'flex-end')};
-  margin-top: ${props => (props.username ? '35px' : '10px')};
+  justify-content: ${(props: JustificationProps) =>
+    props.justification === 'around'
+      ? 'space-around'
+      : `flex-${props.justification}`};
+  margin-top: ${(props: JustificationProps) =>
+    props.justification === 'around' ? '20px' : '50px'};
+  ${(props: JustificationProps) =>
+    props.justification === 'around' && `font-weight: bold`};
   position: relative;
   max-width: 100%;
 
@@ -145,8 +152,17 @@ export const MessageUsername = styled.span`
   position: absolute;
 `;
 
-export const MessageContent = styled.div<{ username: string }>`
-  background-color: ${props => (props.username === '' ? '#fec46c' : '#f7f6f3')};
+export const MessageContent = styled.div<{
+  username: string;
+  messageType: MessageEnum;
+}>`
+  background-color: ${props =>
+    props.messageType === MessageEnum.VOTESTART ||
+    props.messageType === MessageEnum.VOTEEND
+      ? '#fec46c'
+      : props.username
+      ? '#fec46c'
+      : '#f7f6f3'}; //109, 110 번째 줄과의 통일 성을 위해서 수정
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 18px;
