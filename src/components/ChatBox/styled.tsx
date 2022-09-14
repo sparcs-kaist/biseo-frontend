@@ -161,8 +161,8 @@ export const MessageContent = styled.div<{
     props.messageType === MessageEnum.VOTEEND
       ? '#fec46c'
       : props.username
-      ? '#fec46c'
-      : '#f7f6f3'}; //109, 110 번째 줄과의 통일 성을 위해서 수정
+      ? '#f7f6f3'
+      : '#fec46c'}; //109, 110 번째 줄과의 통일 성을 위해서 수정
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 18px;
