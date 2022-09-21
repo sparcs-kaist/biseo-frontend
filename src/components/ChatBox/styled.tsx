@@ -112,7 +112,11 @@ export const MessageContainer = styled.div`
       ? 'space-around'
       : `flex-${props.justification}`};
   margin-top: ${(props: JustificationProps) =>
-    props.justification === 'around' ? '20px' : '50px'};
+    props.justification === 'around'
+      ? '20px'
+      : props.justification === 'start'
+      ? '35px'
+      : '10px'};
   ${(props: JustificationProps) =>
     props.justification === 'around' && `font-weight: bold`};
   position: relative;

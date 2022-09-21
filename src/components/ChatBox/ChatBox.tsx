@@ -209,6 +209,18 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       ]);
     });
 
+    socket.on('agenda:hurry', (payload: string) => {
+      setChatlog(chatlog => [
+        {
+          type: MessageEnum.VOTEEND,
+          message: `관리자가 투표 : ${payload}를 재촉합니다`,
+          date: currentTime(),
+          username: '',
+        },
+        ...chatlog,
+      ]);
+    });
+
     return () => {
       clearTimeout(broadcastId);
       socket.off('chat:enter');
