@@ -143,6 +143,18 @@ const AdminAgenda: React.FC<Props> = ({
     onEdit(_id);
   };
 
+  const onClickAgendaHurry = e => {
+    e.stopPropagation();
+    if (status === AgendaStatus.PROGRESS) {
+      socket.emit('admin:hurry', { _id }, (res: AgendaResponse) => {
+        if (res.success) toast.success('🦄 Agenda Hurried Successfully!');
+        else toast.error('Error while Hurrying agenda!');
+      });
+    } else {
+      return;
+    }
+  };
+
   const totalParticipants = votesCountMap
     ? Object.values(votesCountMap).reduce(
         (sum, voters) => sum + voters.length,
@@ -201,6 +213,9 @@ const AdminAgenda: React.FC<Props> = ({
       <AgendaButton>
         <BiseoButton {...buttonProps()} onClick={onClickAdminAgenda}>
           {buttonText()}
+        </BiseoButton>
+        <BiseoButton {...buttonProps()} onClick={onClickAgendaHurry}>
+          {'독촉'}
         </BiseoButton>
         <EditIcon onClick={onClickEditIcon} style={{ cursor: 'pointer' }} />
       </AgendaButton>
