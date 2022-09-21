@@ -20,12 +20,16 @@ import {
   AccountSubmenu,
   AccountSubitem,
   AccountIcon,
+  OverlayContainer,
+  NameChangeContainer,
+  NameChangeInput,
 } from './styled';
 import { useState } from 'react';
 import { AwayStatus } from '@/common/enums';
 import { checkUserAdmin, logout } from '@/utils/auth';
 import { logout as logoutAction } from '@/store/slices/login';
 import { setUser } from '@/store/slices/user';
+import axios from '@/utils/axios';
 
 interface HeaderProps {
   socket: SocketIOClient.Socket;
@@ -43,6 +47,8 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const [isSubmenu, setIsSubmenu] = useState<boolean>(false);
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isNameChangeMode, SetIsNameChangeMode] = useState<boolean>(true);
+  const [newName, setNewName] = useState<string>('');
 
   useEffect(() => {
     checkAdmin();
@@ -94,6 +100,16 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const isUserPage = location.pathname == userPagePath;
   const isAdminPage = location.pathname == adminPagePath;
 
+  async function submitNewName() {
+    const res = await axios.patch('/users/changename', {
+      newId: newName,
+    });
+    if (res.data.success) {
+      SetIsNameChangeMode(false);
+      handleLogout();
+    }
+  }
+
   return (
     <div>
       <HeaderContainer>
@@ -138,6 +154,15 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
                   style={{ border: 'solid 1px #f2a024', margin: '0px 3px' }}
                 />
                 <AccountSubitem
+                  onClick={() => SetIsNameChangeMode(true)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  닉네임 변경
+                </AccountSubitem>
+                <hr
+                  style={{ border: 'solid 1px #f2a024', margin: '0px 3px' }}
+                />
+                <AccountSubitem
                   onClick={handleLogout}
                   style={{ cursor: 'pointer' }}
                 >
@@ -151,6 +176,21 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
       <AwayContainer>
         <MessageContainer>{AwayStateMessage}</MessageContainer>
       </AwayContainer>
+      {isNameChangeMode && (
+        <OverlayContainer onClick={() => SetIsNameChangeMode(false)}>
+          <NameChangeContainer onClick={e => e.stopPropagation()}>
+            {'닉네임 변경'}
+            <NameChangeInput
+              type="text"
+              value={newName}
+              onChange={e => setNewName(e.target.value)}
+            />
+            <BiseoButton style={{ marginRight: '0' }} onClick={submitNewName}>
+              변경
+            </BiseoButton>
+          </NameChangeContainer>
+        </OverlayContainer>
+      )}
     </div>
   );
 };
