@@ -102,3 +102,50 @@ export const AccountDropdown = styled.div`
 
   margin-right: 15px;
 `;
+
+export const OverlayContainer = styled.div`
+  position: fixed;
+  top: var(--header-size);
+  left: 0;
+  height: calc(100vh - var(--header-size));
+  min-height: 635px;
+  width: 100%;
+  min-width: 500px;
+  background: rgba(68, 68, 68, 0.6);
+  z-index: 1;
+  display: flex;
+`;
+
+export const NameChangeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  height: 120px;
+  background: #ffffff;
+  border-radius: 10px;
+  z-index: 2;
+  margin: auto auto;
+  padding: 30px;
+
+  -webkit-animation: scale-in-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @keyframes scale-in-center {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+`;
+
+export const NameChangeInput = styled.input`
+  width: calc(100% - 50px);
+  height: 30px;
+  outline: none;
+  border: 1px solid #f2a024;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 20px;
+`;
