@@ -117,11 +117,12 @@ export const OverlayContainer = styled.div`
 `;
 
 export const NameChangeContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 200px;
-  height: 120px;
+  height: 130px;
   background: #ffffff;
   border-radius: 10px;
   z-index: 2;
@@ -142,10 +143,10 @@ export const NameChangeContainer = styled.div`
 
 export const NameChangeInput = styled.input`
   width: calc(100% - 50px);
-  height: 30px;
+  height: 25px;
   outline: none;
   border: 1px solid #f2a024;
   border-radius: 5px;
   padding: 5px;
-  margin: 20px;
+  margin: 20px 20px 0px 20px;
 `;

@@ -35,6 +35,13 @@ interface HeaderProps {
   socket: SocketIOClient.Socket;
 }
 
+enum ChangeNameStatus {
+  NORMAL,
+  LOADING,
+  ERROR,
+  DUPLICATE,
+}
+
 const Header: React.FC<HeaderProps> = ({ socket }) => {
   const title = useTitle();
   const history = useHistory();
@@ -47,8 +54,12 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const [isSubmenu, setIsSubmenu] = useState<boolean>(false);
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
   const [isNameChangeMode, SetIsNameChangeMode] = useState<boolean>(true);
   const [newName, setNewName] = useState<string>('');
+  const [changeNameStatus, setChangeNameStatus] = useState<ChangeNameStatus>(
+    ChangeNameStatus.NORMAL
+  );
 
   useEffect(() => {
     checkAdmin();
@@ -101,14 +112,37 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const isAdminPage = location.pathname == adminPagePath;
 
   async function submitNewName() {
+    setChangeNameStatus(ChangeNameStatus.LOADING);
     const res = await axios.patch('/users/changename', {
       newId: newName,
     });
+    setChangeNameStatus(ChangeNameStatus.NORMAL);
     if (res.data.success) {
       SetIsNameChangeMode(false);
       handleLogout();
+    } else {
+      if (res.status === 200) {
+        setChangeNameStatus(ChangeNameStatus.DUPLICATE);
+      } else {
+        handleLogout();
+      }
     }
   }
+
+  const statusText = (() => {
+    switch (changeNameStatus) {
+      case ChangeNameStatus.NORMAL:
+        return ' ';
+      case ChangeNameStatus.LOADING:
+        return '로딩중...';
+      case ChangeNameStatus.DUPLICATE:
+        return '중복되는 닉네임이 있습니다.';
+      case ChangeNameStatus.ERROR:
+        return '에러';
+      default:
+        return '';
+    }
+  })();
 
   return (
     <div>
@@ -185,7 +219,13 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
               value={newName}
               onChange={e => setNewName(e.target.value)}
             />
-            <BiseoButton style={{ marginRight: '0' }} onClick={submitNewName}>
+            <p style={{ fontSize: '12px', marginBottom: '3px' }}>
+              {statusText}
+            </p>
+            <BiseoButton
+              style={{ position: 'absolute', marginRight: '0', bottom: '20px' }}
+              onClick={submitNewName}
+            >
               변경
             </BiseoButton>
           </NameChangeContainer>
