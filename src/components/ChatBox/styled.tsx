@@ -68,23 +68,26 @@ export const ChatBoxInputGroup = styled.div`
   display: flex;
   width: 100%;
   min-height: 60px;
+  justify-content: center;
+  padding: 8px 12px;
+  box-sizing: border-box;
 
-  & input {
+  & textarea {
     background-color: inherit;
-    border: 0;
+    border: none;
     color: #444444;
     flex-grow: 1;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
+    font-family: 'NanumGothic';
     height: 100%;
     outline: 0;
-    padding: 0 20px;
+    resize: none;
   }
 
   & button {
     background-color: inherit;
-    border: 0;
-    border-radius: 5px;
+    border: none;
     color: #f2a024;
     font-size: 15px;
     font-weight: bold;
@@ -151,7 +154,7 @@ export const MessageContainer = styled.div`
 
 export const MessageUsername = styled.span`
   bottom: calc(100% + 8px);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   position: absolute;
 `;
@@ -169,7 +172,7 @@ export const MessageContent = styled.div<{
       : '#fec46c'}; //109, 110 번째 줄과의 통일 성을 위해서 수정
   border-radius: 10px;
   box-sizing: border-box;
-  font-size: 18px;
+  font-size: 16px;
   max-width: 90%;
   padding: 10px 15px;
   position: relative;
