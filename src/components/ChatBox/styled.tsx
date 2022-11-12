@@ -174,6 +174,7 @@ export const MessageContent = styled.div<{
   padding: 10px 15px;
   position: relative;
   word-break: break-word;
+  white-space: pre-wrap;
 `;
 
 export const MessageDate = styled.div`

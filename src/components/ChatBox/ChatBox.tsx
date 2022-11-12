@@ -30,6 +30,11 @@ interface MessageProps {
   message: MessageType;
 }
 
+const messageParse = (message: string) => {
+  const str = message.replace(/<BreakLine>/g, '\r\n');
+  return str;
+};
+
 const Message: React.FC<MessageProps> = ({ message }) => {
   const parseDate = (date: string) => {
     const splitted = date.split('T');
@@ -39,9 +44,10 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   };
 
   const content = (() => {
+    const str = messageParse(message.message);
     switch (message.type) {
       case MessageEnum.MESSAGE:
-        return message.message;
+        return str;
       case MessageEnum.VOTESTART:
         return message.message;
       case MessageEnum.VOTEEND:
@@ -258,7 +264,9 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
   };
 
   const handleMessageKeypress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') sendMessage();
+    if (e.key === 'Enter' && !e.shiftKey) sendMessage();
+    if (e.key === 'Enter' && e.shiftKey) setMessage(message + '<BreakLine>');
+    console.log(message);
   };
 
   const handleObserver = useCallback(
