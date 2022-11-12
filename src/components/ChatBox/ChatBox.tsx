@@ -31,8 +31,7 @@ interface MessageProps {
 }
 
 const messageParse = (message: string) => {
-  const str = message.replace(/<BreakLine>/g, '\r\n');
-  return str;
+  return message;
 };
 
 const Message: React.FC<MessageProps> = ({ message }) => {
@@ -243,7 +242,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     return new Date(Date.now() - offset).toISOString();
   };
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
 
@@ -263,10 +262,13 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     ]);
   };
 
-  const handleMessageKeypress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) sendMessage();
-    if (e.key === 'Enter' && e.shiftKey) setMessage(message + '<BreakLine>');
-    console.log(message);
+  const handleMessageKeypress = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   };
 
   const handleObserver = useCallback(
@@ -353,8 +355,8 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         </ChatBoxScrollable>
       </ChatBoxInternalContainer>
       <ChatBoxInputGroup>
-        <input
-          type="text"
+        <textarea
+          //type="text"
           maxLength={CHATMAXLENGTH}
           value={message}
           onChange={handleMessageChange}
