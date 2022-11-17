@@ -44,7 +44,11 @@ const parseURL = content => {
 
   let URL_index_end = URL_index_start;
 
-  while (content[URL_index_end] !== ' ' && content.length > URL_index_end)
+  while (
+    content[URL_index_end] !== ' ' &&
+    content[URL_index_end] !== '\n' &&
+    content.length > URL_index_end
+  )
     URL_index_end++;
   const URL_String = content.slice(URL_index_start, URL_index_end);
   return (
