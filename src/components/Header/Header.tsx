@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
   const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-  const [isNameChangeMode, SetIsNameChangeMode] = useState<boolean>(true);
+  const [isNameChangeMode, SetIsNameChangeMode] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>('');
   const [changeNameStatus, setChangeNameStatus] = useState<ChangeNameStatus>(
     ChangeNameStatus.NORMAL

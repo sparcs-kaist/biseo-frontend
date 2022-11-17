@@ -172,7 +172,7 @@ export const MessageContent = styled.div<{
       : '#fec46c'}; //109, 110 번째 줄과의 통일 성을 위해서 수정
   border-radius: 10px;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 14px;
   max-width: 90%;
   padding: 10px 15px;
   position: relative;

@@ -54,7 +54,16 @@ const parseURL = content => {
   return (
     <>
       {content.slice(0, URL_index_start)}
-      <a href={URL_String} target="_blank" rel="noreferrer">
+      <a
+        href={URL_String}
+        target="_blank"
+        rel="noreferrer"
+        style={{
+          textDecoration: `None`,
+          color: `#595959`,
+          fontStyle: `italic`,
+        }}
+      >
         {URL_String}
       </a>
       {parseURL(content.slice(URL_index_end))}
@@ -103,7 +112,9 @@ const Message: React.FC<MessageProps> = ({ message }) => {
         <MessageUsername>{message.username}</MessageUsername>
       )}
       <MessageContent username={message.username} messageType={message.type}>
+        <div style={{lineHeight: "140%"}}>
         {parseURL(content)}
+        </div>
         {date && (
           <MessageDate justification={justification}>
             <span>{date.day}</span>
@@ -222,7 +233,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       setChatlog(chatlog => [
         {
           type: MessageEnum.VOTESTART,
-          message: `새로운 투표 : ${payload.title}가 시작되었습니다`,
+          message: `새로운 투표 : ${payload.title} 이(가) 시작되었습니다`,
           date: currentTime(),
           username: '',
         },
@@ -234,7 +245,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       setChatlog(chatlog => [
         {
           type: MessageEnum.VOTEEND,
-          message: `투표 : ${payload.title}가 종료되었습니다`,
+          message: `투표 : ${payload.title} 이(가) 종료되었습니다`,
           date: currentTime(),
           username: '',
         },
