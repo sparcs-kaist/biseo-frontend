@@ -112,9 +112,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
         <MessageUsername>{message.username}</MessageUsername>
       )}
       <MessageContent username={message.username} messageType={message.type}>
-        <div style={{lineHeight: "140%"}}>
-        {parseURL(content)}
-        </div>
+        <div style={{ lineHeight: '140%' }}>{parseURL(content)}</div>
         {date && (
           <MessageDate justification={justification}>
             <span>{date.day}</span>
