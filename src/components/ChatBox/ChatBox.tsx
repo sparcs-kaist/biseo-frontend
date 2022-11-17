@@ -275,8 +275,9 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
   };
 
   const sendMessage = () => {
-    if (message.trim() === '') return;
-    const msgObject = { message, date: currentTime() };
+    const trimMsg = message.trim();
+    if (trimMsg === '') return;
+    const msgObject = { message: trimMsg, date: currentTime() };
     setMessage('');
     socket.emit('chat:message', msgObject);
     setChatlog([
@@ -384,7 +385,6 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       </ChatBoxInternalContainer>
       <ChatBoxInputGroup>
         <textarea
-          //type="text"
           maxLength={CHATMAXLENGTH}
           value={message}
           onChange={handleMessageChange}
