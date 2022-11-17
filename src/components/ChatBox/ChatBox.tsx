@@ -34,6 +34,30 @@ const messageParse = (message: string) => {
   return message;
 };
 
+const parseURL = content => {
+  if (content.length <= 3) return <>{content}</>;
+
+  let URL_index_start = content.search(/(https?:\/\/[^\s]+)/);
+  if (URL_index_start === -1)
+    URL_index_start = content.search(/(http?:\/\/[^\s]+)/);
+  if (URL_index_start === -1) return <>{content}</>;
+
+  let URL_index_end = URL_index_start;
+
+  while (content[URL_index_end] !== ' ' && content.length > URL_index_end)
+    URL_index_end++;
+  const URL_String = content.slice(URL_index_start, URL_index_end);
+  return (
+    <>
+      {content.slice(0, URL_index_start)}
+      <a href={URL_String} target="_blank" rel="noreferrer">
+        {URL_String}
+      </a>
+      {parseURL(content.slice(URL_index_end))}
+    </>
+  );
+};
+
 const Message: React.FC<MessageProps> = ({ message }) => {
   const parseDate = (date: string) => {
     const splitted = date.split('T');
@@ -75,7 +99,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
         <MessageUsername>{message.username}</MessageUsername>
       )}
       <MessageContent username={message.username} messageType={message.type}>
-        {content}
+        {parseURL(content)}
         {date && (
           <MessageDate justification={justification}>
             <span>{date.day}</span>
