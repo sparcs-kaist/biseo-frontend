@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { GlobalStyle } from '@/common/style';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { AuthedRoute, AdminAuthedRoute } from '@/components/AuthedRoute';
@@ -9,9 +9,13 @@ import { AppContainer } from './styled';
 import io from 'socket.io-client';
 import { getToken } from '@/utils/auth';
 import { useTypedSelector } from '@/hooks';
+import { ThemeProvider } from 'styled-components';
+import { darkTheme, lightTheme } from '@/common/theme';
 
 const App: React.FC = () => {
   const isLoggedIn = useTypedSelector(state => state.loggedIn);
+  const [dark, setDark] = useState<boolean>(false);
+
   const socket = useMemo(
     () =>
       io(process.env.SERVER_URL, {
@@ -21,31 +25,35 @@ const App: React.FC = () => {
       }),
     [isLoggedIn]
   );
+  const getTheme = dark ? darkTheme : lightTheme;
+  const toggleTheme = () => setDark(!dark);
 
   return (
     <Router>
-      <GlobalStyle />
-      <Header socket={socket} />
-      <AppContainer>
-        <Switch>
-          <Route exact path="/login/redirect">
-            <LoginRedirect />
-          </Route>
-          <Route exact path="/login/callback">
-            <LoginCallback />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <AdminAuthedRoute path="/admin">
-            <AdminPage socket={socket} />
-          </AdminAuthedRoute>
-          <AuthedRoute path="/">
-            <Main socket={socket} />
-          </AuthedRoute>
-        </Switch>
-      </AppContainer>
-      <BiseoToastContainer />
+      <ThemeProvider theme={getTheme}>
+        <GlobalStyle />
+        <Header socket={socket} toggleTheme={toggleTheme} />
+        <AppContainer>
+          <Switch>
+            <Route exact path="/login/redirect">
+              <LoginRedirect />
+            </Route>
+            <Route exact path="/login/callback">
+              <LoginCallback />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <AdminAuthedRoute path="/admin">
+              <AdminPage socket={socket} />
+            </AdminAuthedRoute>
+            <AuthedRoute path="/">
+              <Main socket={socket} />
+            </AuthedRoute>
+          </Switch>
+        </AppContainer>
+        <BiseoToastContainer />
+      </ThemeProvider>
     </Router>
   );
 };
