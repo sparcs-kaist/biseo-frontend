@@ -33,6 +33,7 @@ import axios from '@/utils/axios';
 
 interface HeaderProps {
   socket: SocketIOClient.Socket;
+  toggleTheme: () => void;
 }
 
 enum ChangeNameStatus {
@@ -42,7 +43,7 @@ enum ChangeNameStatus {
   DUPLICATE,
 }
 
-const Header: React.FC<HeaderProps> = ({ socket }) => {
+const Header: React.FC<HeaderProps> = ({ socket, toggleTheme }) => {
   const title = useTitle();
   const history = useHistory();
   const location = useLocation();
@@ -177,6 +178,7 @@ const Header: React.FC<HeaderProps> = ({ socket }) => {
             >
               <AdminIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
+            <button onClick={toggleTheme}>다크모드!!</button>
             <AccountDropdown
               onMouseOver={() => setIsSubmenu(true)}
               onMouseOut={() => setIsSubmenu(false)}
