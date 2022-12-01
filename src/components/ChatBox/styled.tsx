@@ -10,7 +10,7 @@ export const ChatBoxExternalContainer = styled.div`
 
 export const ChatBoxInternalContainer = styled.div`
   position: relative;
-  background-color: #ffffff;
+  background-color: ${props => props.theme.CHATBOX_INTERNAL_BG};
   box-sizing: border-box;
   height: 100%;
   min-height: 200px;
@@ -21,9 +21,9 @@ export const ChatBoxParticipantsBox = styled.div`
   visibility: hidden;
   position: absolute;
   right: 3%;
-  background-color: #ffffff;
+  background-color: ${props => props.theme.CHATBOX_PARTICIPANTSBOX_BG};
   box-sizing: border-box;
-  border: 1px solid #f2a024;
+  border: 1px solid ${props => props.theme.CHATBOX_PARTICIPANTSBOX_BORDER};
   border-radius: 10px;
   margin-top: 0px;
   padding: 10px 20px;
@@ -35,7 +35,7 @@ export const ChatBoxParticipantsBox = styled.div`
   z-index: 1;
   overflow: auto;
   opacity: 0;
-
+  color: ${props => props.theme.CHATBOX_PARTICIPANTS_TEXT};
   transition: visibility 0.3s linear, opacity 0.2s linear;
   &:hover: {
     visibility: visible;
@@ -63,8 +63,8 @@ export const Participant = styled.div`
 `;
 
 export const ChatBoxInputGroup = styled.div`
-  background-color: #fffbf0;
-  border-top: 0.7px solid #f2a024;
+  background-color: ${props => props.theme.CHATBOX_INPUTGROUP_BG};
+  border-top: 0.7px solid ${props => props.theme.CHATBOX_INPUTGROUP_BORDER_TOP};
   display: flex;
   width: 100%;
   min-height: 60px;
@@ -75,7 +75,7 @@ export const ChatBoxInputGroup = styled.div`
   & textarea {
     background-color: inherit;
     border: none;
-    color: #444444;
+    color: ${props => props.theme.CHATBOX_INPUTGROUP_TEXTAREA};
     flex-grow: 1;
     font-size: 16px;
     font-weight: bold;
@@ -88,7 +88,7 @@ export const ChatBoxInputGroup = styled.div`
   & button {
     background-color: inherit;
     border: none;
-    color: #f2a024;
+    color: ${props => props.theme.CHATBOX_INPUTGROUP_BTN};
     font-size: 15px;
     font-weight: bold;
     min-width: 80px;
@@ -166,10 +166,11 @@ export const MessageContent = styled.div<{
   background-color: ${props =>
     props.messageType === MessageEnum.VOTESTART ||
     props.messageType === MessageEnum.VOTEEND
-      ? '#fec46c'
+      ? props.theme.MSG_CONTENT_USER_BACK
       : props.username
-      ? '#f7f6f3'
-      : '#fec46c'}; //109, 110 번째 줄과의 통일 성을 위해서 수정
+      ? props.theme.MSG_CONTENT_AWAY_BACK
+      : props.theme
+          .MSG_CONTENT_USER_BACK}; //109, 110 번째 줄과의 통일 성을 위해서 수정
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 14px;
@@ -178,6 +179,10 @@ export const MessageContent = styled.div<{
   position: relative;
   word-break: break-word;
   white-space: pre-wrap;
+  color: ${props =>
+    props.username
+      ? props.theme.MSG_CONTENT_AWAY_TEXT
+      : props.theme.MSG_CONTENT_USER_TEXT};
 `;
 
 export const MessageDate = styled.div`
@@ -219,11 +224,11 @@ export const ChatBroadcast = styled.div<{ visible: boolean }>`
   position: absolute;
   left: 50%;
   transform: translate(-50%);
-  background-color: #111111cc;
+  background-color: ${props => props.theme.CHATBOX_BROADCAST_BG};
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 1rem;
-  color: #ffffff;
+  color: ${props => props.theme.CHATBOX_BROADCAST_TEXT};
   max-width: 90%;
   padding: 7px 20px;
   word-break: break-word;
