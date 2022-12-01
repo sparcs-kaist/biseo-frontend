@@ -70,7 +70,7 @@ export const AccountSubmenu = styled.div<{ visible?: boolean }>`
   position: absolute;
   top: 40px;
 
-  background: #ffffff;
+  background: ${props => props.theme.HEADER_BG};
   border: 1px solid #eaeaea;
   box-sizing: border-box;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -78,6 +78,7 @@ export const AccountSubmenu = styled.div<{ visible?: boolean }>`
 
   font-size: 14px;
   font-style: normal;
+  color: ${props => props.theme.DEFAULT_TEXT};
   opacity: ${props => (props.visible ? '1' : '0')};
   transition: ${props =>
     props.visible ? 'visibility 0.4s linear, opacity 0.3s linear' : 'none'};
