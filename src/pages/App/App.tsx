@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { GlobalStyle } from '@/common/style';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { AuthedRoute, AdminAuthedRoute } from '@/components/AuthedRoute';
@@ -19,6 +19,10 @@ const App: React.FC = () => {
   const [dark, setDark] = useState<boolean>(
     useTypedSelector(state => state.dark)
   );
+
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
 
   const socket = useMemo(
     () =>

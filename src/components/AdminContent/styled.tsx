@@ -92,11 +92,11 @@ export const ButtonGroup = styled.div<{ alignRight?: boolean }>`
 export const InputNewChoice = styled.input`
   width: 60px;
   align-items: center;
-  background: '#ffffff';
+  background: ${props => props.theme.AGENDA_CONTAINER_INACTIVE_BG};
   border: 1px solid #f2a024;
   border-radius: 16px;
   box-shadow: 2px 3px 5px -1px rgba(0, 0, 0, 0.4);
-  color: '#000000';
+  color: ${props => props.theme.DEFAULT_TEXT};
   display: inline-flex;
   font-size: 0.8rem;
   justify-content: center;
@@ -122,4 +122,5 @@ export const AdminContentText = styled.div<{ isTitle?: boolean }>`
   ${({ isTitle }) => isTitle && 'font-size: 1.3rem;'}
   font-weight: 700;
   word-wrap: break-word;
+  color: ${props => props.theme.DEFAULT_TEXT};
 `;

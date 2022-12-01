@@ -19,6 +19,7 @@ import Green from '@/public/Green.svg';
 import Orange from '@/public/Orange.svg';
 import useFetch from '@/hooks/useFetch';
 import { useTypedSelector } from '@/hooks';
+import { spawnNotification } from '@/utils/notification';
 
 const CHATMAXLENGTH = 500;
 
@@ -237,6 +238,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         },
         ...chatlog,
       ]);
+      spawnNotification('새로운 투표가 시작되었습니다.', `${payload.title}`);
     });
 
     socket.on('agenda:terminated', (payload: Agenda) => {
@@ -249,18 +251,23 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         },
         ...chatlog,
       ]);
+      spawnNotification('투표가 종료되었습니다.', `${payload.title}`);
     });
 
     socket.on('agenda:hurry', (payload: string) => {
       setChatlog(chatlog => [
         {
           type: MessageEnum.VOTEEND,
-          message: `관리자가 투표 : ${payload}를 재촉합니다`,
+          message: `관리자가 투표 : "${payload}"를 재촉합니다`,
           date: currentTime(),
           username: '',
         },
         ...chatlog,
       ]);
+      spawnNotification(
+        '투표를 해주세요.',
+        `관리자가 투표 : "${payload}"를 재촉합니다.`
+      );
     });
 
     return () => {

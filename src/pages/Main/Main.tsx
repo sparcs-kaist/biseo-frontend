@@ -4,7 +4,7 @@ import { AgendaStatus } from '@/common/enums';
 import ChatBox from '@/components/ChatBox';
 import UserAgenda from '@/components/UserAgenda';
 import axios from '@/utils/axios';
-import { UserMainContainer } from './styled';
+import { DefaultText, UserMainContainer } from './styled';
 import { Redirect } from 'react-router-dom';
 import Empty from './empty.svg';
 import { useTypedSelector } from '@/hooks';
@@ -30,7 +30,7 @@ const UserMain: React.FC<CommonMainProps> = ({ socket, agendas }) => {
               }}
             >
               <Empty style={{ marginBottom: '10px' }} />
-              안건이 없습니다. 안건을 추가해 주세요!
+              <DefaultText>안건이 없습니다. 안건을 추가해 주세요!</DefaultText>
             </div>
           ) : (
             agendas.map(item => (
