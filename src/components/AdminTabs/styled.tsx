@@ -14,8 +14,8 @@ export const AdminTab = styled.div<{ selected?: boolean }>`
     props.selected
       ? props.theme.HEADER_TAB_INACTIVE_BG
       : props.theme.HEADER_TAB_ACTIVE_BG};
-  font-family: monospace;
-  font-size: 1.2rem;
+  font-family: 'NanumGothic';
+  font-size: 1rem;
   margin-bottom: -1px;
   margin-right: 3px;
   padding: 5px 30px;

@@ -2,13 +2,15 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom';
 import HomeIcon from './homeIcon.svg';
+import HomeIconDark from './homeIcon_dark.svg';
 import AdminIcon from './adminIcon.svg';
+import AdminIconDark from './adminIcon_dark.svg';
 import DarkIcon from './darkIcon.svg';
+import DarkIconDark from './darkIcon_dark.svg';
 import BiseoButton from '@/components/BiseoButton';
 import { useTypedSelector, useTypedDispatch } from '@/hooks';
 import useTitle from '@/hooks/useTitle';
 import Logo from '@/public/biseoLogo.svg';
-import { COLOR } from '@/common/style';
 import {
   HeaderContainer,
   HeaderContent,
@@ -55,7 +57,6 @@ const Header: React.FC<HeaderProps> = ({ socket, toggleTheme, dark }) => {
   const [awayState, setAwayState] = useState<AwayStatus>(AwayStatus.Entered);
   const [buttonString, setButtonString] = useState<string>('enter');
   const [isSubmenu, setIsSubmenu] = useState<boolean>(false);
-  const [buttonColor, setButtonColor] = useState<string>(COLOR.primary);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const [isNameChangeMode, SetIsNameChangeMode] = useState<boolean>(false);
@@ -86,13 +87,11 @@ const Header: React.FC<HeaderProps> = ({ socket, toggleTheme, dark }) => {
       case AwayStatus.Entered:
         setAwayState(AwayStatus.Vacant);
         setButtonString('vacant');
-        setButtonColor(COLOR.vacant);
         socket.emit('vacant:on');
         break;
       case AwayStatus.Vacant:
         setAwayState(AwayStatus.Entered);
         setButtonString('enter');
-        setButtonColor(COLOR.primary);
         socket.emit('vacant:off');
         break;
     }
@@ -156,8 +155,7 @@ const Header: React.FC<HeaderProps> = ({ socket, toggleTheme, dark }) => {
           </Link>
           <RHS>
             <BiseoButton
-              background={buttonColor}
-              foreground="white"
+              vacant={awayState === AwayStatus.Vacant}
               onClick={isLoggedIn ? changeAwayState : loginClick}
             >
               {isLoggedIn ? buttonString : 'login'}
@@ -169,7 +167,11 @@ const Header: React.FC<HeaderProps> = ({ socket, toggleTheme, dark }) => {
                 title('Biseo');
               }}
             >
-              <HomeIcon style={{ height: 24, width: 24 }} />
+              {dark ? (
+                <HomeIconDark style={{ height: 24, width: 24 }} />
+              ) : (
+                <HomeIcon style={{ height: 24, width: 24 }} />
+              )}
             </OptionButton>
             <OptionButton
               display_none={!isAdmin || isAdminPage}
@@ -178,16 +180,24 @@ const Header: React.FC<HeaderProps> = ({ socket, toggleTheme, dark }) => {
                 title('Biseo - admin');
               }}
             >
-              <AdminIcon style={{ height: 24, width: 24 }} />
+              {dark ? (
+                <AdminIconDark style={{ height: 24, width: 24 }} />
+              ) : (
+                <AdminIcon style={{ height: 24, width: 24 }} />
+              )}
             </OptionButton>
             <OptionButton onClick={toggleTheme}>
-              <DarkIcon style={{ height: 24, width: 24 }} />
+              {dark ? (
+                <DarkIconDark style={{ height: 24, width: 24 }} />
+              ) : (
+                <DarkIcon style={{ height: 24, width: 24 }} />
+              )}
             </OptionButton>
             <AccountDropdown
               onMouseOver={() => setIsSubmenu(true)}
               onMouseOut={() => setIsSubmenu(false)}
             >
-              <AccountIcon size="24px" />
+              <AccountIcon size="24px" color={dark ? '#ffffff' : '#000000'} />
               <AccountSubmenu visible={isSubmenu}>
                 <AccountSubitem>{user.sparcsID}</AccountSubitem>
                 <hr

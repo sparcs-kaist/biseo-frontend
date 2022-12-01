@@ -28,4 +28,5 @@ export interface User {
 export interface RootState {
   user: User;
   loggedIn: boolean;
+  dark: boolean;
 }
