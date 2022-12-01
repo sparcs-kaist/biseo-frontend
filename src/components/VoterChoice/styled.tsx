@@ -9,7 +9,7 @@ export const OverlayContainer = styled.div`
   min-height: 635px;
   width: 100%;
   min-width: 500px;
-  background: rgba(68, 68, 68, 0.6);
+  background: ${props => props.theme.AGENDA_STATEVIEW_OVERLAY_BG};
   z-index: 1;
   display: flex;
 `;
@@ -18,11 +18,12 @@ export const VoterChoiceContainer = styled.div`
   width: 390px;
   height: 60vh;
   min-height: 400px;
-  background: #ffffff;
+  background: ${props => props.theme.AGENDA_STATEVIEW_BG};
   border-radius: 10px;
   z-index: 2;
   margin: auto auto;
   padding: 30px;
+  color: ${props => props.theme.DEFAULT_TEXT};
 
   @media ${device.mobile} {
     width: 512px;
@@ -99,11 +100,17 @@ export const CheckButton = styled.button<{
 }>`
   width: 120px;
   min-height: 45px;
-  background-color: ${props => (props.check ? '#FFBF43' : '#ffffff')};
-  border: ${props => (props.check ? '1px solid #FFBF43' : '1px solid #D6D6D6')};
+  background-color: ${props =>
+    props.check
+      ? props.theme.VOTERCHOICE_BUTTON_CHECK_BG
+      : props.theme.VOTERCHOICE_BUTTON_UNCHECK_BG};
+  border: ${props =>
+    props.check
+      ? `1px solid ${props.theme.VOTERCHOICE_BUTTON_CHECK_BORDER}`
+      : `1px solid ${props.theme.VOTERCHOICE_BUTTON_UNCHECK_BORDER}`};
   border-radius: 5px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  color: #000000;
+  color: ${props => (props.check ? '#000000' : props.theme.DEFAULT_TEXT)};
   display: inline-flex;
   font-size: 1rem;
   align-items: center;

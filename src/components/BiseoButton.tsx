@@ -4,14 +4,17 @@ const BiseoButton = styled.button<{
   background?: string;
   foreground?: string;
   nocursor?: boolean;
+  select?: boolean;
 }>`
   align-items: center;
-  background: ${props => (props.background ? props.background : '#ffffff')};
-  border: 1px solid
-    ${props => (props.background ? props.background : '#f2a024')};
+  background: ${props =>
+    props.select
+      ? props.theme.BISEO_BUTTON_SELECT_BG
+      : props.theme.BISEO_BUTTON_DEFAULT_BG};
+  border: 1px solid ${props => props.theme.BISEO_BUTTON_BORDER};
   border-radius: 16px;
   box-shadow: 2px 3px 5px -1px rgba(0, 0, 0, 0.4);
-  color: ${props => (props.foreground ? props.foreground : '#000000')};
+  color: ${props => props.theme.DEFAULT_TEXT};
   display: inline-flex;
   font-size: 0.9rem;
   justify-content: center;

@@ -69,7 +69,7 @@ const Container = styled.div`
   width: 390px;
   height: 60vh;
   min-height: 400px;
-  background: #ffffff;
+  background: ${props => props.theme.AGENDA_STATEVIEW_BG};
   border-radius: 10px;
   z-index: 2;
   margin: auto auto;

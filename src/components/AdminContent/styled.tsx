@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const AdminContentContainer = styled.form`
-  background: white;
+  background: ${props => props.theme.AGENDA_CONTAINER_INACTIVE_BG};
   border: 1px solid #f2a024;
   box-shadow: 1px 4px 5px 0px rgba(0, 0, 0, 0.4);
   display: flex;
@@ -15,6 +15,12 @@ export const TitleInput = styled.input`
   font-weight: bold;
   padding: 15px 0;
   display: block;
+  color: ${props => props.theme.DEFAULT_TEXT};
+  background: ${props => props.theme.AGENDA_CONTAINER_INACTIVE_BG};
+
+  ::placeholder {
+    color: ${props => props.theme.DEFAULT_PLACEHOLDER};
+  }
 
   &:focus {
     outline: none;
@@ -27,13 +33,20 @@ export const TitleInput = styled.input`
 `;
 
 export const ContentTextArea = styled.textarea`
+  background: ${props => props.theme.AGENDA_CONTAINER_INACTIVE_BG};
   border: none;
   border-bottom: 1px solid #f2a024;
   border-top: 1px solid #f2a024;
   font-size: 1.1rem;
+  font-family: 'NanumGothic';
+  color: ${props => props.theme.DEFAULT_TEXT};
   min-height: 150px;
   padding: 15px 0;
   resize: none;
+
+  ::placeholder {
+    color: ${props => props.theme.DEFAULT_PLACEHOLDER};
+  }
 
   &:focus {
     outline: none;
@@ -46,10 +59,16 @@ export const ContentTextArea = styled.textarea`
 `;
 
 export const SubtitleInput = styled.input`
+  background: ${props => props.theme.AGENDA_CONTAINER_INACTIVE_BG};
   border: none;
   font-size: 1.2rem;
   font-weight: 600;
   padding: 15px 0;
+  color: ${props => props.theme.DEFAULT_TEXT};
+
+  ::placeholder {
+    color: ${props => props.theme.DEFAULT_PLACEHOLDER};
+  }
 
   &:focus {
     outline: none;
