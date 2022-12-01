@@ -15,6 +15,7 @@ declare module 'styled-components' {
     MSG_CONTENT_USER_TEXT: string;
     MSG_CONTENT_AWAY_BACK: string;
     MSG_CONTENT_AWAY_TEXT: string;
+    MSG_USERNAME: string;
 
     CHATBOX_INPUTGROUP_TEXTAREA: string;
     CHATBOX_INPUTGROUP_BG: string;
@@ -63,6 +64,7 @@ export const lightTheme = {
   MSG_CONTENT_USER_TEXT: '#000000',
   MSG_CONTENT_AWAY_BACK: '#f7f6f3',
   MSG_CONTENT_AWAY_TEXT: '#000000',
+  MSG_USERNAME: '#000000',
 
   CHATBOX_INPUTGROUP_TEXTAREA: '#444444',
   CHATBOX_INPUTGROUP_BG: '#fffbf0',
@@ -110,6 +112,7 @@ export const darkTheme = {
   MSG_CONTENT_USER_TEXT: '#ffffff',
   MSG_CONTENT_AWAY_BACK: '#686868',
   MSG_CONTENT_AWAY_TEXT: '#ffffff',
+  MSG_USERNAME: '#ffffff',
 
   CHATBOX_INPUTGROUP_TEXTAREA: '#ffffff',
   CHATBOX_INPUTGROUP_BG: '#8C6C4F',
