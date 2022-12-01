@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom';
 import HomeIcon from './homeIcon.svg';
 import AdminIcon from './adminIcon.svg';
+import DarkIcon from './darkIcon.svg';
 import BiseoButton from '@/components/BiseoButton';
 import { useTypedSelector, useTypedDispatch } from '@/hooks';
 import useTitle from '@/hooks/useTitle';
@@ -178,7 +179,9 @@ const Header: React.FC<HeaderProps> = ({ socket, toggleTheme }) => {
             >
               <AdminIcon style={{ height: 24, width: 24 }} />
             </OptionButton>
-            <button onClick={toggleTheme}>다크모드!!</button>
+            <OptionButton onClick={toggleTheme}>
+              <DarkIcon style={{ height: 24, width: 24 }} />
+            </OptionButton>
             <AccountDropdown
               onMouseOver={() => setIsSubmenu(true)}
               onMouseOut={() => setIsSubmenu(false)}
