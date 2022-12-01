@@ -5,7 +5,7 @@ import { AuthedRoute, AdminAuthedRoute } from '@/components/AuthedRoute';
 import { Login, LoginRedirect, LoginCallback, Main, AdminPage } from '@/pages';
 import BiseoToastContainer from '@/components/BiseoToastContainer';
 import Header from '@/components/Header';
-import { AppContainer } from './styled';
+import { AppContainer, RootBackground } from './styled';
 import io from 'socket.io-client';
 import { getToken } from '@/utils/auth';
 import { useTypedSelector } from '@/hooks';
@@ -32,26 +32,28 @@ const App: React.FC = () => {
     <Router>
       <ThemeProvider theme={getTheme}>
         <GlobalStyle />
-        <Header socket={socket} toggleTheme={toggleTheme} />
-        <AppContainer>
-          <Switch>
-            <Route exact path="/login/redirect">
-              <LoginRedirect />
-            </Route>
-            <Route exact path="/login/callback">
-              <LoginCallback />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <AdminAuthedRoute path="/admin">
-              <AdminPage socket={socket} />
-            </AdminAuthedRoute>
-            <AuthedRoute path="/">
-              <Main socket={socket} />
-            </AuthedRoute>
-          </Switch>
-        </AppContainer>
+        <RootBackground>
+          <Header socket={socket} toggleTheme={toggleTheme} />
+          <AppContainer>
+            <Switch>
+              <Route exact path="/login/redirect">
+                <LoginRedirect />
+              </Route>
+              <Route exact path="/login/callback">
+                <LoginCallback />
+              </Route>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <AdminAuthedRoute path="/admin">
+                <AdminPage socket={socket} />
+              </AdminAuthedRoute>
+              <AuthedRoute path="/">
+                <Main socket={socket} />
+              </AuthedRoute>
+            </Switch>
+          </AppContainer>
+        </RootBackground>
         <BiseoToastContainer />
       </ThemeProvider>
     </Router>

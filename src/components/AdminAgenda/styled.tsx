@@ -1,24 +1,23 @@
 import styled from 'styled-components';
 
-interface AgendaContainerProps {
-  detailed: boolean;
-}
-
-export const AgendaContainer = styled.div`
+export const AgendaContainer = styled.div<{ detailed?: boolean }>`
   align-items: center;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: #ffffff;
+  background: ${props => props.theme.AGENDA_CONTAINER_INACTIVE_BG};
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
   box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.25);
   padding: 20px 30px;
   position: relative;
+  color: ${props => props.theme.DEFAULT_TEXT};
 
   &::before {
-    background: ${(props: AgendaContainerProps) =>
-      props.detailed ? '#f2a024' : '#8c8c8c'};
+    background: ${props =>
+      props.detailed
+        ? props.theme.AGENDA_CONTAINER_DETAILED
+        : props.theme.AGENDA_CONTAINER_NOT_DETAILED};
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     content: '';

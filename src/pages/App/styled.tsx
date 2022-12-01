@@ -10,3 +10,8 @@ export const AppContainer = styled.div`
   margin-top: var(--main-margin-top);
   margin-bottom: var(--main-margin-bottom);
 `;
+
+export const RootBackground = styled.div`
+  height: 100%;
+  background-color: ${props => props.theme.ROOT_BG};
+`;

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { toast } from 'react-toastify';
 import BiseoButton from '@/components/BiseoButton';
 import { Agenda } from '@/common/types';
@@ -73,16 +73,6 @@ const UserAgenda: React.FC<Props> = ({
     setAlreadySubmitted(true);
   };
 
-  const selectedStyle = useMemo(
-    () => ({ foreground: '#ffffff', background: '#f2a024' }),
-    []
-  );
-
-  const unselectedStyle = useMemo(
-    () => ({ foreground: '#000000', background: '#ffffff' }),
-    []
-  );
-
   const totalParticipants = votesCountMap
     ? Object.values(votesCountMap).reduce(
         (sum, voters) => sum + voters.length,
@@ -131,7 +121,7 @@ const UserAgenda: React.FC<Props> = ({
             // clickable only if user has not submitted
             onClick={() => !alreadySubmitted && handleChoiceClick(index)}
             // use selectedStyle as props if button is selected, use unselectedStyle otherwise
-            {...(selectedState[index] ? selectedStyle : unselectedStyle)}
+            select={selectedState[index]}
           >
             {choice}
           </BiseoButton>

@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 export const ActiveContainer = styled.div`
-  background: #fdfbee;
+  background: ${props => props.theme.AGENDA_CONTAINER_ACTIVE_BG};
   border-radius: 10px;
   box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.25);
   padding: 30px;
+  color: ${props => props.theme.DEFAULT_TEXT};
 `;
 
 export const ActiveContainerTitle = styled.div<{ detailed?: boolean }>`
@@ -45,16 +46,17 @@ export const ActiveContainerSubtitle = styled.div`
 
 export const InactiveContainer = styled.div`
   align-items: center;
-  background: #ffffff;
+  background: ${props => props.theme.AGENDA_CONTAINER_INACTIVE_BG};
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
   box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.25);
   padding: 15px 30px;
   position: relative;
   cursor: pointer;
+  color: ${props => props.theme.DEFAULT_TEXT};
 
   &::before {
-    background: #f2a024;
+    background: ${props => props.theme.AGENDA_CONTAINER_DETAILED};
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     content: '';

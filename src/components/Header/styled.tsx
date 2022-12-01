@@ -3,7 +3,7 @@ import { MdAccountCircle } from 'react-icons/md';
 
 export const HeaderContainer = styled.div`
   height: calc(var(--header-height) + var(--header-margin));
-  background: white;
+  background: ${props => props.theme.HEADER_BG};
   display: flex;
   align-items: center;
   justify-content: center;
