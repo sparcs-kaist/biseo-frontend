@@ -82,3 +82,7 @@ export const AdminMainContainer = styled.div`
     max-width: ${size.laptopL};
   }
 `;
+
+export const DefaultText = styled.div`
+  color: ${props => props.theme.DEFAULT_TEXT};
+`;
