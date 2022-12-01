@@ -5,16 +5,19 @@ const BiseoButton = styled.button<{
   foreground?: string;
   nocursor?: boolean;
   select?: boolean;
+  vacant?: boolean;
 }>`
   align-items: center;
   background: ${props =>
-    props.select
+    props.vacant
+      ? '#3C3C3C'
+      : props.select
       ? props.theme.BISEO_BUTTON_SELECT_BG
       : props.theme.BISEO_BUTTON_DEFAULT_BG};
   border: 1px solid ${props => props.theme.BISEO_BUTTON_BORDER};
   border-radius: 16px;
   box-shadow: 2px 3px 5px -1px rgba(0, 0, 0, 0.4);
-  color: ${props => props.theme.DEFAULT_TEXT};
+  color: ${props => (props.vacant ? '#ffffff' : props.theme.DEFAULT_TEXT)};
   display: inline-flex;
   font-size: 0.9rem;
   justify-content: center;

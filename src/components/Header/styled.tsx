@@ -112,7 +112,7 @@ export const OverlayContainer = styled.div`
   min-height: 635px;
   width: 100%;
   min-width: 500px;
-  background: rgba(68, 68, 68, 0.6);
+  background: ${props => props.theme.AGENDA_STATEVIEW_OVERLAY_BG};
   z-index: 1;
   display: flex;
 `;
@@ -124,7 +124,8 @@ export const NameChangeContainer = styled.div`
   align-items: center;
   width: 200px;
   height: 130px;
-  background: #ffffff;
+  color: ${props => props.theme.DEFAULT_TEXT};
+  background: ${props => props.theme.AGENDA_STATEVIEW_BG};
   border-radius: 10px;
   z-index: 2;
   margin: auto auto;
@@ -146,6 +147,8 @@ export const NameChangeInput = styled.input`
   width: calc(100% - 50px);
   height: 25px;
   outline: none;
+  color: ${props => props.theme.DEFAULT_TEXT};
+  background: ${props => props.theme.AGENDA_STATEVIEW_BG};
   border: 1px solid #f2a024;
   border-radius: 5px;
   padding: 5px;

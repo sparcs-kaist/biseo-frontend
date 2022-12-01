@@ -8,13 +8,17 @@ import Header from '@/components/Header';
 import { AppContainer, RootBackground } from './styled';
 import io from 'socket.io-client';
 import { getToken } from '@/utils/auth';
-import { useTypedSelector } from '@/hooks';
+import { useTypedSelector, useTypedDispatch } from '@/hooks';
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from '@/common/theme';
+import { setDarkMode, setLightMode } from '@/store/slices/dark';
 
 const App: React.FC = () => {
   const isLoggedIn = useTypedSelector(state => state.loggedIn);
-  const [dark, setDark] = useState<boolean>(false);
+  const dispatch = useTypedDispatch();
+  const [dark, setDark] = useState<boolean>(
+    useTypedSelector(state => state.dark)
+  );
 
   const socket = useMemo(
     () =>
@@ -26,7 +30,10 @@ const App: React.FC = () => {
     [isLoggedIn]
   );
   const getTheme = dark ? darkTheme : lightTheme;
-  const toggleTheme = () => setDark(!dark);
+  const toggleTheme = () => {
+    dispatch(dark ? setLightMode() : setDarkMode());
+    setDark(!dark);
+  };
 
   return (
     <Router>
