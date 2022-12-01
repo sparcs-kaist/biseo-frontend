@@ -47,7 +47,7 @@ export const ChatBoxParticipants = styled.div`
   font-size: 0.9rem;
   padding: 10px 20px;
   text-align: right;
-
+  color: ${props => props.theme.CHATBOX_PARTICIPANTS_TEXT};
   &:hover ${ChatBoxParticipantsBox} {
     visibility: visible;
     opacity: 1;
@@ -157,6 +157,7 @@ export const MessageUsername = styled.span`
   font-size: 14px;
   font-weight: bold;
   position: absolute;
+  color: ${props => props.theme.MSG_USERNAME};
 `;
 
 export const MessageContent = styled.div<{
