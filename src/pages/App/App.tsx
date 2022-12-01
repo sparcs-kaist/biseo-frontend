@@ -33,7 +33,7 @@ const App: React.FC = () => {
       <ThemeProvider theme={getTheme}>
         <GlobalStyle />
         <RootBackground>
-          <Header socket={socket} toggleTheme={toggleTheme} />
+          <Header socket={socket} toggleTheme={toggleTheme} dark={dark} />
           <AppContainer>
             <Switch>
               <Route exact path="/login/redirect">

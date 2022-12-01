@@ -35,6 +35,7 @@ import axios from '@/utils/axios';
 interface HeaderProps {
   socket: SocketIOClient.Socket;
   toggleTheme: () => void;
+  dark: boolean;
 }
 
 enum ChangeNameStatus {
@@ -44,7 +45,7 @@ enum ChangeNameStatus {
   DUPLICATE,
 }
 
-const Header: React.FC<HeaderProps> = ({ socket, toggleTheme }) => {
+const Header: React.FC<HeaderProps> = ({ socket, toggleTheme, dark }) => {
   const title = useTitle();
   const history = useHistory();
   const location = useLocation();
