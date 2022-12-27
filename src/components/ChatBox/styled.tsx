@@ -236,3 +236,9 @@ export const ChatBroadcast = styled.div<{ visible: boolean }>`
   transition: visibility 0.4s linear, opacity 0.3s linear;
   z-index: 1;
 `;
+
+export const ChatURL = styled.a`
+  text-decoration: None;
+  color: ${props => props.theme.CHATBOX_URL};
+  font-style: italic;
+`;

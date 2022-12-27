@@ -14,6 +14,7 @@ import {
   ChatBoxParticipantsBox,
   Participant,
   ChatBroadcast,
+  ChatURL,
 } from './styled';
 import Green from '@/public/Green.svg';
 import Orange from '@/public/Orange.svg';
@@ -55,18 +56,9 @@ const parseURL = content => {
   return (
     <>
       {content.slice(0, URL_index_start)}
-      <a
-        href={URL_String}
-        target="_blank"
-        rel="noreferrer"
-        style={{
-          textDecoration: `None`,
-          color: `#595959`,
-          fontStyle: `italic`,
-        }}
-      >
+      <ChatURL href={URL_String} target="_blank" rel="noreferrer">
         {URL_String}
-      </a>
+      </ChatURL>
       {parseURL(content.slice(URL_index_end))}
     </>
   );
