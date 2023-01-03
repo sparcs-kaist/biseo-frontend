@@ -114,45 +114,70 @@ const VoterChoice: React.FC<VoterChoiceProps> = ({
             </span>
           </VoterChoiceHeader>
           <VoterList>
-            {users.map((user, i) => {
-              if (preset !== 0) {
-                if (user.isVotable) {
+            {users
+              .sort((a, b) => {
+                if (a.sparcsId < b.sparcsId) return -1;
+                else return 1;
+              })
+              .map((user, i) => {
+                if (preset !== 0) {
+                  if (user.isVotable && selectedUsers.includes(user.sparcsId)) {
+                    return (
+                      <UserCheckButton
+                        key={i}
+                        active={true}
+                        user={user}
+                        onClick={() => {
+                          const temp = [...selectedUsers];
+                          const idx = temp.findIndex(
+                            sparcsId => sparcsId === user.sparcsId
+                          );
+                          temp.splice(idx, 1);
+                          console.log(temp);
+                          select(temp);
+                        }}
+                      />
+                    );
+                  } else {
+                    return (
+                      <UserCheckButton
+                        key={i}
+                        active={false}
+                        user={user}
+                        onClick={() =>
+                          select([user.sparcsId, ...selectedUsers])
+                        }
+                      />
+                    );
+                  }
+                } else if (selectedUsers.includes(user.sparcsId)) {
                   return (
                     <UserCheckButton
                       key={i}
                       active={true}
                       user={user}
-                      onClick={null}
+                      onClick={() => {
+                        const temp = [...selectedUsers];
+                        const idx = temp.findIndex(
+                          sparcsId => sparcsId === user.sparcsId
+                        );
+                        temp.splice(idx, 1);
+                        console.log(temp);
+                        select(temp);
+                      }}
+                    />
+                  );
+                } else {
+                  return (
+                    <UserCheckButton
+                      key={i}
+                      active={false}
+                      user={user}
+                      onClick={() => select([user.sparcsId, ...selectedUsers])}
                     />
                   );
                 }
-              } else if (selectedUsers.includes(user.sparcsId)) {
-                return (
-                  <UserCheckButton
-                    key={i}
-                    active={true}
-                    user={user}
-                    onClick={() => {
-                      const temp = [...selectedUsers];
-                      const idx = temp.findIndex(
-                        sparcsId => sparcsId === user.sparcsId
-                      );
-                      temp.splice(idx, 1);
-                      select(temp);
-                    }}
-                  />
-                );
-              } else {
-                return (
-                  <UserCheckButton
-                    key={i}
-                    active={false}
-                    user={user}
-                    onClick={() => select([user.sparcsId, ...selectedUsers])}
-                  />
-                );
-              }
-            })}
+              })}
             {preset === 0 &&
               (addMode ? (
                 <CheckButtonInput
