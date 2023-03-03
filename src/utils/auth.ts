@@ -43,9 +43,19 @@ export const logout = (): void => {
 export const requestUserInfo = async (
   code: string,
   state: string
-): Promise<{ token: string; refreshToken: string; user: User }> => {
+): Promise<{
+  token: string | null;
+  refreshToken: string | null;
+  user: User | null;
+  isSparcs: boolean;
+}> => {
   type TokenResponse = {
-    data: { token: string; refreshToken: string; user: User };
+    data: {
+      token: string | null;
+      refreshToken: string | null;
+      user: User | null;
+      isSparcs: boolean;
+    };
   };
 
   const response: TokenResponse = await auth

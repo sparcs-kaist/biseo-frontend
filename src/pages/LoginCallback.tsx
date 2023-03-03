@@ -17,8 +17,11 @@ const LoginCallback: React.FC = () => {
 
   useEffect(() => {
     requestUserInfo(code as string, state as string).then(
-      ({ token, refreshToken, user }) => {
-        if (token) {
+      ({ token, refreshToken, user, isSparcs }) => {
+        if (!isSparcs) {
+          console.log('Not Sparcs!!');
+          setValid(false);
+        } else if (token) {
           saveToken(token);
           saveRefreshToken(refreshToken);
           setValid(true);
