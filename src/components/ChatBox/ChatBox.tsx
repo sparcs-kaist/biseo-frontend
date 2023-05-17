@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MemberState, MessageEnum } from '@/common/enums';
 import { Agenda, MessageType } from '@/common/types';
+import Modal from './Modal';
 import {
   ChatBoxScrollable,
   MessageContainer,
   MessageUsername,
   MessageContent,
   MessageDate,
+  MessageDelete,
   ChatBoxInputGroup,
   ChatBoxInternalContainer,
   ChatBoxExternalContainer,
@@ -30,6 +32,7 @@ interface Props {
 
 interface MessageProps {
   message: MessageType;
+  socket: SocketIOClient.Socket;
 }
 
 const messageParse = (message: string) => {
@@ -64,7 +67,7 @@ const parseURL = content => {
   );
 };
 
-const Message: React.FC<MessageProps> = ({ message }) => {
+const Message: React.FC<MessageProps> = ({ message, socket }) => {
   const parseDate = (date: string) => {
     const splitted = date.split('T');
     const day = splitted[0];
@@ -81,12 +84,16 @@ const Message: React.FC<MessageProps> = ({ message }) => {
         return message.message;
       case MessageEnum.VOTEEND:
         return message.message;
+      case MessageEnum.MSGDELETED:
+        return '삭제된 메시지입니다. ';
     }
   })();
 
   const justification = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
+        return message.username ? 'start' : 'end';
+      case MessageEnum.MSGDELETED:
         return message.username ? 'start' : 'end';
       case MessageEnum.VOTESTART:
       case MessageEnum.VOTEEND:
@@ -97,14 +104,56 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   })();
 
   const date =
-    message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
+    message.type === MessageEnum.MESSAGE || MessageEnum.MSGDELETED
+      ? parseDate(message.date)
+      : null;
+
+  const [isModalOn, setIsModalOn] = useState(false);
+  const containerRef = useRef(null);
+
+  const handleMouseEnter = useCallback(() => {
+    setIsModalOn(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setTimeout(() => {
+      setIsModalOn(false);
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setIsModalOn(false);
+      }
+    };
+
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // const [modalProps, setModalProps] = useState{{ "modal": null })
 
   return (
-    <MessageContainer justification={justification}>
+    <MessageContainer
+      ref={containerRef}
+      onMouseDown={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      justification={justification}
+    >
       {message.username && (
         <MessageUsername>{message.username}</MessageUsername>
       )}
-      <MessageContent username={message.username} messageType={message.type}>
+      <MessageContent
+        isModalOn={isModalOn}
+        username={message.username}
+        messageType={message.type}
+      >
         <div style={{ lineHeight: '140%' }}>{parseURL(content)}</div>
         {date && (
           <MessageDate justification={justification}>
@@ -113,6 +162,9 @@ const Message: React.FC<MessageProps> = ({ message }) => {
           </MessageDate>
         )}
       </MessageContent>
+      {message.type === MessageEnum.MESSAGE && !message.username && (
+        <Modal isVisible={isModalOn} message={message} socket={socket} />
+      )}
     </MessageContainer>
   );
 };
@@ -144,8 +196,11 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
 
   /* Initialize socket events for 'enter', 'members', 'out', 'vacant', 'message'. */
   useEffect(() => {
+    // debugger;
+    // console.log("members", _members);
     let broadcastId: number;
     socket.on('chat:enter', (username: string) => {
+      console.log('members', _members);
       setMembers(members => [
         ...members,
         { sparcsId: username, state: MemberState.ONLINE },
@@ -283,6 +338,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
   };
 
   const sendMessage = () => {
+    console.log('members', _members);
     const trimMsg = message.trim();
     if (trimMsg === '') return;
     const msgObject = { message: trimMsg, date: currentTime() };
@@ -384,7 +440,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         </ChatBroadcast>
         <ChatBoxScrollable>
           {chatlog.map((chat, idx) => (
-            <Message key={idx} message={chat} />
+            <Message key={idx} message={chat} socket={socket} />
           ))}
           {loading && <p>Loading...</p>}
           {error && <p>Error...</p>}
