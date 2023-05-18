@@ -8,29 +8,26 @@ import { MemberState, MessageEnum } from '@/common/enums';
 interface ModalProps {
   isVisible: boolean;
   message: MessageType;
-  socket: SocketIOClient.Socket; // Add socket prop
+  deleteHandler: Function;
+  editHandler: Function;
+  // socket: SocketIOClient.Socket; // Add socket prop
 }
 
-const Modal: React.FC<ModalProps> = ({ isVisible, message, socket }) => {
-  const handleDelete = () => {
-    // Arbitrary name
-    socket.emit('delete:message', message);
-    message.type = MessageEnum.MSGDELETED;
-  };
-
-  useEffect(() => {
-    socket.on('delete:message', (receivedMessage: MessageType) => {
-      message.type = MessageEnum.MSGDELETED;
-      debugger;
-    });
-  }, []);
+const Modal: React.FC<ModalProps> = ({
+  isVisible,
+  message,
+  deleteHandler,
+  editHandler,
+}) => {
+  const onClickDelete = () => deleteHandler();
+  const onClickEdit = () => editHandler();
 
   return (
     <ModalBox isVisible={isVisible}>
-      <ModalElement onClick={handleDelete}>
+      <ModalElement onClick={onClickDelete}>
         <FaTimes style={{ marginRight: '8px' }} /> 삭제
       </ModalElement>
-      <ModalElement>
+      <ModalElement onClick={onClickEdit}>
         <IoMdCreate style={{ marginRight: '8px' }} /> 수정
       </ModalElement>
     </ModalBox>

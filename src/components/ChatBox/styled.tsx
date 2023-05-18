@@ -1,5 +1,6 @@
 import { MessageEnum } from '@/common/enums';
-import styled from 'styled-components';
+import { MessageType } from '@/common/types';
+import styled, { css } from 'styled-components';
 
 interface ModalBoxProps {
   isVisible: boolean;
@@ -221,17 +222,17 @@ export const MessageUsername = styled.span`
 `;
 
 export const MessageContent = styled.div<{
-  username: string;
-  messageType: MessageEnum;
   isModalOn: boolean;
+  username: string;
+  message: MessageType;
 }>`
   background-color: ${props =>
-    props.messageType === MessageEnum.VOTESTART ||
-    props.messageType === MessageEnum.VOTEEND
+    props.message.type === MessageEnum.VOTESTART ||
+    props.message.type === MessageEnum.VOTEEND
       ? props.theme.MSG_CONTENT_USER_BACK
-      : props.username
+      : props.message.username && props.message.username !== props.username
       ? props.theme.MSG_CONTENT_AWAY_BACK
-      : props.messageType === MessageEnum.MSGDELETED
+      : props.message.type === MessageEnum.DELETED
       ? props.theme.MSG_DELETED
       : props.theme
           .MSG_CONTENT_USER_BACK}; //109, 110 번째 줄과의 통일 성을 위해서 수정
@@ -314,4 +315,10 @@ export const ChatURL = styled.a`
   text-decoration: None;
   color: ${props => props.theme.CHATBOX_URL};
   font-style: italic;
+`;
+
+export const ChatContextMenu = styled.div<{ top: number; left: number }>`
+  position: absolute;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left})px;
 `;
