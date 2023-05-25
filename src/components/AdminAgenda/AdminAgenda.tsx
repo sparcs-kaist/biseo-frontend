@@ -49,6 +49,7 @@ const AdminAgenda: React.FC<Props> = ({
   choices,
   expires,
   votesCountMap,
+  participants,
   status,
   socket,
   onEdit,
@@ -76,17 +77,30 @@ const AdminAgenda: React.FC<Props> = ({
   const [showDetails, setShowDetails] = useState(false);
   const [notVoteList, setNotVote] = useState<string[]>([]);
   const [isVisibleState, setIsVisibleState] = useState<boolean>(false);
+  const [votesMap, setVotesMap] = useState<Record<string, string[]>>(
+    votesCountMap
+  );
+
+  useEffect(() => {
+    if (votesCountMap) {
+      // console.log("VOTESCOUNTMAP", votesCountMap);
+      setVotesMap(votesCountMap);
+    }
+  }, [votesCountMap]);
 
   useEffect(() => {
     if (status === AgendaStatus.PROGRESS) {
-      socket.on(
-        'agenda:voted',
-        ({ agendaId: agendaId, username: username }) => {
-          if (agendaId === _id) {
-            setNotVote(l => l.filter(_n => _n !== username));
-          }
+      socket.on('agenda:voted', ({ agendaId, username, choice }) => {
+        if (agendaId === _id) {
+          setNotVote(l => l.filter(_n => _n !== username));
+
+          setVotesMap(votesMap => ({
+            ...votesMap,
+            [choice]: [...votesMap[choice], username],
+          }));
+          //console.log(votesMap[choice]);
         }
-      );
+      });
     } else {
       socket.off('agenda:voted');
     }
@@ -94,7 +108,7 @@ const AdminAgenda: React.FC<Props> = ({
     return () => {
       socket.off('agenda:voted');
     };
-  }, [status]);
+  }, [status, setVotesMap, setNotVote]);
 
   const onClick = () => {
     setShowDetails(!showDetails);
@@ -109,7 +123,7 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickPrepareAgenda = useCallback(
     (_id: string) => {
-      socket.emit('admin:start', { _id }, (res: AgendaResponse) => {
+      socket.emit('admin:start', _id, (res: AgendaResponse) => {
         if (res.success) toast.success('🦄 Agenda Start Successfully!');
         else toast.error('Agenda Start Error!');
       });
@@ -155,17 +169,12 @@ const AdminAgenda: React.FC<Props> = ({
     }
   };
 
-  const totalParticipants = votesCountMap
-    ? Object.values(votesCountMap).reduce(
-        (sum, voters) => sum + voters.length,
-        0
-      )
-    : 0;
+  const totalParticipants = participants.length;
 
   const voteResultMessage =
-    votesCountMap && Object.keys(votesCountMap).length > 0
+    votesMap && Object.keys(votesMap).length > 0
       ? '중 ' +
-        Object.entries(votesCountMap)
+        Object.entries(votesMap)
           .map(([choice, voters]) => `${choice} ${voters.length}명`)
           .join(', ')
       : '';
@@ -222,7 +231,7 @@ const AdminAgenda: React.FC<Props> = ({
       <AgendaVoteStateView
         visible={isVisibleState}
         setVisible={setIsVisibleState}
-        voterCountMap={votesCountMap}
+        voterCountMap={votesMap}
         notVoteList={notVoteList}
       />
     </AgendaContainer>
