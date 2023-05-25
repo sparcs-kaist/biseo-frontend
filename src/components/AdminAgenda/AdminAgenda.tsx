@@ -123,7 +123,7 @@ const AdminAgenda: React.FC<Props> = ({
 
   const onClickPrepareAgenda = useCallback(
     (_id: string) => {
-      socket.emit('admin:start', _id, (res: AgendaResponse) => {
+      socket.emit('admin:start', { _id }, (res: AgendaResponse) => {
         if (res.success) toast.success('🦄 Agenda Start Successfully!');
         else toast.error('Agenda Start Error!');
       });
@@ -160,7 +160,7 @@ const AdminAgenda: React.FC<Props> = ({
   const onClickAgendaHurry = e => {
     e.stopPropagation();
     if (status === AgendaStatus.PROGRESS) {
-      socket.emit('admin:hurry', { _id }, (res: AgendaResponse) => {
+      socket.emit('admin:hurry', _id, (res: AgendaResponse) => {
         if (res.success) toast.success('🦄 Agenda Hurried Successfully!');
         else toast.error('Error while Hurrying agenda!');
       });
