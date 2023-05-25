@@ -227,15 +227,15 @@ export const MessageContent = styled.div<{
   message: MessageType;
 }>`
   background-color: ${props =>
-    props.message.type === MessageEnum.VOTESTART ||
-    props.message.type === MessageEnum.VOTEEND
-      ? props.theme.MSG_CONTENT_USER_BACK
-      : props.message.username && props.message.username !== props.username
-      ? props.theme.MSG_CONTENT_AWAY_BACK
-      : props.message.type === MessageEnum.DELETED
+    props.message.type === MessageEnum.DELETED
       ? props.theme.MSG_DELETED
+      : props.message.type === MessageEnum.VOTESTART ||
+        props.message.type === MessageEnum.VOTEEND
+      ? props.theme.MSG_CONTENT_USER_BACK
+      : props.message.username === props.username
+      ? props.theme.MSG_CONTENT_USER_BACK
       : props.theme
-          .MSG_CONTENT_USER_BACK}; //109, 110 번째 줄과의 통일 성을 위해서 수정
+          .MSG_CONTENT_AWAY_BACK}; //109, 110 번째 줄과의 통일 성을 위해서 수정
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 14px;

@@ -78,7 +78,7 @@ const Message: React.FC<MessageProps> = ({ message, user, deleteHandler }) => {
   };
 
   const deleteHandlerWrapper = () => deleteHandler(message);
-  const editHandlerWrapper = () => deleteHandler(message); // TODO
+  const editHandlerWrapper = () => console.log('TODO'); // deleteHandler(message); // TODO
 
   const content = (() => {
     switch (message.type) {
@@ -95,7 +95,7 @@ const Message: React.FC<MessageProps> = ({ message, user, deleteHandler }) => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
       case MessageEnum.DELETED:
-        return !message.username || message.username === user ? 'end' : 'start';
+        return message.username === user ? 'end' : 'start';
       case MessageEnum.VOTESTART:
       case MessageEnum.VOTEEND:
         return 'around';
@@ -110,20 +110,7 @@ const Message: React.FC<MessageProps> = ({ message, user, deleteHandler }) => {
   const [isModalOn, setIsModalOn] = useState(false);
   const containerRef = useRef(null);
 
-  // const handleMouseEnter = useCallback(() => {
-  //   setIsModalOn(true);
-  // }, []);
-
-  // const handleMouseLeave = useCallback(() => {
-  //   setTimeout(() => {
-  //     setIsModalOn(false);
-  //   }, 3000);
-  // }, []);
-
-  const handleClickMessage = () => {
-    console.log(message);
-    setIsModalOn(true);
-  };
+  const handleClickMessage = () => setIsModalOn(true);
 
   useEffect(() => {
     const handleClickOutside = event => {
@@ -162,15 +149,14 @@ const Message: React.FC<MessageProps> = ({ message, user, deleteHandler }) => {
           </MessageDate>
         )}
       </MessageContent>
-      {message.type === MessageEnum.MESSAGE &&
-        (!message.username || message.username === user) && (
-          <Modal
-            isVisible={isModalOn}
-            message={message}
-            deleteHandler={deleteHandlerWrapper}
-            editHandler={editHandlerWrapper}
-          />
-        )}
+      {message.type === MessageEnum.MESSAGE && message.username === user && (
+        <Modal
+          isVisible={isModalOn}
+          message={message}
+          deleteHandler={deleteHandlerWrapper}
+          editHandler={editHandlerWrapper}
+        />
+      )}
     </MessageContainer>
   );
 };
@@ -343,11 +329,6 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     return new Date(Date.now() - offset).toISOString();
   };
 
-  // const handleRightClick = (e) => {
-  //   e.preventDefault();
-  //   console.log(message)
-  // }
-
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
@@ -358,15 +339,6 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     const msgObject = { message: trimMsg, date: currentTime() };
     setMessage('');
     socket.emit('chat:message', msgObject);
-    // setChatlog([
-    //   {
-    //     type: MessageEnum.MESSAGE,
-    //     username: '',
-    //     message: msgObject.message,
-    //     date: msgObject.date,
-    //   },
-    //   ...chatlog,
-    // ]);
   };
 
   const handleMessageKeypress = (
@@ -476,14 +448,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
           onChange={handleMessageChange}
           onKeyPress={handleMessageKeypress}
         />
-        <button
-          onClick={() => {
-            console.log(chatlog);
-            sendMessage();
-          }}
-        >
-          SEND
-        </button>
+        <button onClick={() => sendMessage()}>SEND</button>
       </ChatBoxInputGroup>
     </ChatBoxExternalContainer>
   );
