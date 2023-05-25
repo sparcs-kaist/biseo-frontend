@@ -14,6 +14,7 @@ export interface Agenda {
 }
 
 export interface MessageType {
+  _id?: string;
   type: MessageEnum;
   message?: string;
   username?: string;

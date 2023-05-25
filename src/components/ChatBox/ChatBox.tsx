@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MemberState, MessageEnum } from '@/common/enums';
 import { Agenda, MessageType } from '@/common/types';
+import Modal from './Modal';
 import {
   ChatBoxScrollable,
   MessageContainer,
   MessageUsername,
   MessageContent,
   MessageDate,
+  MessageDelete,
   ChatBoxInputGroup,
   ChatBoxInternalContainer,
   ChatBoxExternalContainer,
@@ -21,6 +23,7 @@ import Orange from '@/public/Orange.svg';
 import useFetch from '@/hooks/useFetch';
 import { useTypedSelector } from '@/hooks';
 import { spawnNotification } from '@/utils/notification';
+import { Socket } from 'socket.io-client';
 
 const CHATMAXLENGTH = 500;
 
@@ -30,6 +33,8 @@ interface Props {
 
 interface MessageProps {
   message: MessageType;
+  user: string;
+  deleteHandler: Function;
 }
 
 const messageParse = (message: string) => {
@@ -64,7 +69,7 @@ const parseURL = content => {
   );
 };
 
-const Message: React.FC<MessageProps> = ({ message }) => {
+const Message: React.FC<MessageProps> = ({ message, user, deleteHandler }) => {
   const parseDate = (date: string) => {
     const splitted = date.split('T');
     const day = splitted[0];
@@ -72,22 +77,25 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     return { day, time };
   };
 
+  const deleteHandlerWrapper = () => deleteHandler(message);
+  const editHandlerWrapper = () => console.log('TODO'); // deleteHandler(message); // TODO
+
   const content = (() => {
-    const str = messageParse(message.message);
     switch (message.type) {
       case MessageEnum.MESSAGE:
-        return str;
       case MessageEnum.VOTESTART:
-        return message.message;
       case MessageEnum.VOTEEND:
-        return message.message;
+        return messageParse(message.message);
+      case MessageEnum.DELETED:
+        return '삭제된 메시지입니다.';
     }
   })();
 
   const justification = (() => {
     switch (message.type) {
       case MessageEnum.MESSAGE:
-        return message.username ? 'start' : 'end';
+      case MessageEnum.DELETED:
+        return message.username === user ? 'end' : 'start';
       case MessageEnum.VOTESTART:
       case MessageEnum.VOTEEND:
         return 'around';
@@ -99,12 +107,40 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   const date =
     message.type === MessageEnum.MESSAGE ? parseDate(message.date) : null;
 
+  const [isModalOn, setIsModalOn] = useState(false);
+  const containerRef = useRef(null);
+
+  const handleClickMessage = () => setIsModalOn(true);
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setIsModalOn(false);
+      }
+    };
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [setIsModalOn]);
+
+  // const [modalProps, setModalProps] = useState{{ "modal": null })
+
   return (
     <MessageContainer justification={justification}>
-      {message.username && (
+      {message.username !== user && (
         <MessageUsername>{message.username}</MessageUsername>
       )}
-      <MessageContent username={message.username} messageType={message.type}>
+      <MessageContent
+        ref={containerRef}
+        isModalOn={isModalOn}
+        username={user}
+        message={message}
+        onClick={handleClickMessage}
+      >
         <div style={{ lineHeight: '140%' }}>{parseURL(content)}</div>
         {date && (
           <MessageDate justification={justification}>
@@ -113,6 +149,14 @@ const Message: React.FC<MessageProps> = ({ message }) => {
           </MessageDate>
         )}
       </MessageContent>
+      {message.type === MessageEnum.MESSAGE && message.username === user && (
+        <Modal
+          isVisible={isModalOn}
+          message={message}
+          deleteHandler={deleteHandlerWrapper}
+          editHandler={editHandlerWrapper}
+        />
+      )}
     </MessageContainer>
   );
 };
@@ -138,6 +182,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     sparcsId: '',
     kinds: 'Enter',
   });
+
   const { loading, list, error } = useFetch(query);
   const loader = useRef(null);
   const ownSparcsId = useTypedSelector(state => state.user.sparcsID);
@@ -202,23 +247,29 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       );
     });
 
-    socket.on(
-      'chat:message',
-      (
-        user: string,
-        msg: { type: MessageEnum; message: string; date: string }
-      ) => {
-        setChatlog(chatlog => [
-          {
-            type: MessageEnum.MESSAGE,
-            message: msg.message,
-            date: msg.date,
-            username: user, // if user === name, then should be displayed as 'Me'
-          },
-          ...chatlog,
-        ]);
-      }
-    );
+    socket.on('chat:message', (user: string, msg: MessageType) => {
+      setChatlog(chatlog => [
+        {
+          _id: msg._id,
+          type: MessageEnum.MESSAGE,
+          message: msg.message,
+          date: msg.date,
+          username: user, // if user === name, then should be displayed as 'Me'
+        },
+        ...chatlog,
+      ]);
+    });
+
+    socket.on('chat:delete', (chatid: string) => {
+      setChatlog(chatlog => {
+        return chatlog.map(chat => {
+          if (chat._id === chatid) {
+            return { ...chat, type: MessageEnum.DELETED };
+          }
+          return chat;
+        });
+      });
+    });
 
     socket.on('agenda:started', (payload: Agenda) => {
       setChatlog(chatlog => [
@@ -288,15 +339,6 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
     const msgObject = { message: trimMsg, date: currentTime() };
     setMessage('');
     socket.emit('chat:message', msgObject);
-    setChatlog([
-      {
-        type: MessageEnum.MESSAGE,
-        username: '',
-        message: msgObject.message,
-        date: msgObject.date,
-      },
-      ...chatlog,
-    ]);
   };
 
   const handleMessageKeypress = (
@@ -307,6 +349,9 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
       sendMessage();
     }
   };
+
+  const handleChatDelete = (msg: MessageType) =>
+    socket.emit('chat:delete', msg, ownSparcsId);
 
   const handleObserver = useCallback(
     entries => {
@@ -384,7 +429,12 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
         </ChatBroadcast>
         <ChatBoxScrollable>
           {chatlog.map((chat, idx) => (
-            <Message key={idx} message={chat} />
+            <Message
+              key={idx}
+              message={chat}
+              user={ownSparcsId}
+              deleteHandler={handleChatDelete}
+            />
           ))}
           {loading && <p>Loading...</p>}
           {error && <p>Error...</p>}
@@ -398,7 +448,7 @@ const ChatBox: React.FC<Props> = ({ socket }) => {
           onChange={handleMessageChange}
           onKeyPress={handleMessageKeypress}
         />
-        <button onClick={sendMessage}>SEND</button>
+        <button onClick={() => sendMessage()}>SEND</button>
       </ChatBoxInputGroup>
     </ChatBoxExternalContainer>
   );

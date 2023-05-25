@@ -3,6 +3,7 @@ export enum MessageEnum {
   MESSAGE = 'message',
   VOTESTART = 'votestart',
   VOTEEND = 'voteend',
+  DELETED = 'deleted',
 }
 
 export enum AgendaStatus {

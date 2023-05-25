@@ -59,7 +59,7 @@ export const requestUserInfo = async (
   };
 
   const response: TokenResponse = await auth
-    .get(`${AUTH_URL}/api/auth/login/callback?code=${code}&state=${state}`)
+    .get(`/auth/login/callback?code=${code}&state=${state}`)
     .catch(() => {
       throw new Error('Login callback error!');
     });
@@ -71,7 +71,7 @@ export const requestRedirectURL = async (): Promise<string> => {
   type RedirectURLResponse = { data: { url: string } };
 
   const response: RedirectURLResponse = await auth
-    .post(`${AUTH_URL}/api/auth/login`)
+    .post(`/auth/login`)
     .catch(() => {
       throw new Error('Redirect URL fetch error!');
     });

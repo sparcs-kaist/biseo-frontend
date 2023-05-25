@@ -1,5 +1,71 @@
 import { MessageEnum } from '@/common/enums';
-import styled from 'styled-components';
+import { MessageType } from '@/common/types';
+import styled, { css } from 'styled-components';
+
+interface ModalBoxProps {
+  isVisible: boolean;
+}
+
+interface JustificationProps {
+  justification: string;
+}
+
+export const ModalBox = styled.div<ModalBoxProps>`
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 2px;
+  right: 3 %;
+  background-color: white;
+  font-size: 12px;
+  box-sizing: border-box;
+  border: 1px solid #d9d9d9; /* light gray border color */
+  border-radius: 10px;
+  margin-top: 0;
+  width: 80;
+  height: 100 %;
+  max-height: 800px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  z-index: 2;
+  color: black;
+  opacity: ${props =>
+    props.isVisible ? 1 : 0} !important; /* Show/hide the modal box */
+  visibility: ${props =>
+    props.isVisible ? 'visible' : 'hidden'}; /* Show/hide the modal box */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2); /* Add a pretty shadow */
+  transition: ${props =>
+    props.isVisible
+      ? 'all 0.3s ease-in-out'
+      : 'none'}; /* Add a transition effect or none */
+`;
+
+export const ModalElement = styled.div`
+  display: flex;
+  height: 100%;
+  flex: 1;
+
+  padding-left: 10px;
+  padding: 8px 12px;
+  justify-content: space-between;
+  transition: background-color 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 1px;
+    width: 100%;
+    background-color: #d9d9d9; /* light gray color */
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f7f7f7;
+  }
+`;
 
 export const ChatBoxExternalContainer = styled.div`
   display: flex;
@@ -104,10 +170,6 @@ export const ChatBoxInputGroup = styled.div`
   }
 `;
 
-interface JustificationProps {
-  justification: string;
-}
-
 export const MessageContainer = styled.div`
   display: flex;
   justify-content: ${(props: JustificationProps) =>
@@ -120,11 +182,10 @@ export const MessageContainer = styled.div`
       : props.justification === 'start'
       ? '35px'
       : '10px'};
-  ${(props: JustificationProps) =>
-    props.justification === 'around' && `font-weight: bold`};
+  ${props => props.justification === 'around' && `font-weight: bold`};
   position: relative;
   max-width: 100%;
-
+  opacity: 1;
   -webkit-animation: bound 1s linear;
 
   @keyframes bound {
@@ -161,17 +222,20 @@ export const MessageUsername = styled.span`
 `;
 
 export const MessageContent = styled.div<{
+  isModalOn: boolean;
   username: string;
-  messageType: MessageEnum;
+  message: MessageType;
 }>`
   background-color: ${props =>
-    props.messageType === MessageEnum.VOTESTART ||
-    props.messageType === MessageEnum.VOTEEND
+    props.message.type === MessageEnum.DELETED
+      ? props.theme.MSG_DELETED
+      : props.message.type === MessageEnum.VOTESTART ||
+        props.message.type === MessageEnum.VOTEEND
       ? props.theme.MSG_CONTENT_USER_BACK
-      : props.username
-      ? props.theme.MSG_CONTENT_AWAY_BACK
+      : props.message.username === props.username
+      ? props.theme.MSG_CONTENT_USER_BACK
       : props.theme
-          .MSG_CONTENT_USER_BACK}; //109, 110 번째 줄과의 통일 성을 위해서 수정
+          .MSG_CONTENT_AWAY_BACK}; //109, 110 번째 줄과의 통일 성을 위해서 수정
   border-radius: 10px;
   box-sizing: border-box;
   font-size: 14px;
@@ -180,10 +244,20 @@ export const MessageContent = styled.div<{
   position: relative;
   word-break: break-word;
   white-space: pre-wrap;
+  opacity: ${props => (props.isModalOn ? 0.4 : 1)};
+  transition: opacity 0.2s ease-in-out;
   color: ${props =>
     props.username
       ? props.theme.MSG_CONTENT_AWAY_TEXT
       : props.theme.MSG_CONTENT_USER_TEXT};
+`;
+
+export const MessageDelete = styled.button`
+  position: relative;
+  font-size: 6px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 `;
 
 export const MessageDate = styled.div`
@@ -199,7 +273,7 @@ export const MessageDate = styled.div`
         align-items: flex-start;
       `
       : `
-        right: calc(100% + 8px);
+        right: calc(100% + 8px); 
         align-items: flex-end;
       `}
 
@@ -241,4 +315,10 @@ export const ChatURL = styled.a`
   text-decoration: None;
   color: ${props => props.theme.CHATBOX_URL};
   font-style: italic;
+`;
+
+export const ChatContextMenu = styled.div<{ top: number; left: number }>`
+  position: absolute;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left})px;
 `;
